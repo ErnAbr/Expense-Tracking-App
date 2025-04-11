@@ -1,7 +1,10 @@
+import "./app.scss";
+import { AppNavBar } from "./components/AppBar/AppBar";
+
 function App() {
   return (
     <>
-      <h1>TEST</h1>
+      <AppNavBar />
     </>
   );
 }

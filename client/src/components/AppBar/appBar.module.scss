@@ -1,0 +1,31 @@
+.burgerBox {
+  flex-grow: 1;
+
+  display: flex;
+  justify-content: space-around;
+
+  @media (min-width: 900px) {
+    display: none;
+  }
+}
+
+.smallScreenAuthMenu {
+  display: flex;
+  padding: 0;
+  gap: 5%;
+}
+
+.largerScreenBox {
+  flex-grow: 1;
+  display: none; // xs (default)
+  justify-content: center;
+
+  @media (min-width: 900px) {
+    display: flex;
+  }
+}
+
+.largeScreenLogoBox {
+  display: flex;
+  align-items: center;
+}
