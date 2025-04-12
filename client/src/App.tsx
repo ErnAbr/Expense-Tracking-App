@@ -1,10 +1,10 @@
 import "./app.scss";
-import { AppNavBar } from "./components/AppBar/AppBar";
+import { Routes } from "./navigation/routes/router";
 
 function App() {
   return (
     <>
-      <AppNavBar />
+      <Routes />
     </>
   );
 }

@@ -1,5 +1,5 @@
 import * as React from "react";
-import styles from "./appBar.module.scss";
+import styles from "./AppNavBar.module.scss";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -8,12 +8,20 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import { Link } from "react-router-dom";
+import { routes } from "../../navigation/routes/routes";
 
-const pages = ["Spending", "Budget", "Data"];
-const login = ["Login", "Register"];
+const pages = [
+  { name: "Spending", path: routes.SPENDINGS },
+  { name: "Budget", path: routes.BUDGET },
+  { name: "Data", path: routes.DATA },
+];
+const login = [
+  { name: "Login", path: routes.HOME },
+  { name: "Register", path: routes.REGISTER },
+];
 
 export const AppNavBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -52,8 +60,13 @@ export const AppNavBar = () => {
               onClose={handleCloseNavMenu}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography>{page}</Typography>
+                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                  <Link
+                    className={styles.smallScreenDropdownLinkstyles}
+                    to={page.path}
+                  >
+                    <Typography>{page.name}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>
@@ -61,10 +74,12 @@ export const AppNavBar = () => {
               {login.map((page) => (
                 <MenuItem
                   sx={{ padding: 0 }}
-                  key={page}
+                  key={page.name}
                   onClick={handleCloseNavMenu}
                 >
-                  <Typography>{page}</Typography>
+                  <Link className={styles.smallScreenLinkStyles} to={page.path}>
+                    <Typography>{page.name}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Box>
@@ -73,20 +88,17 @@ export const AppNavBar = () => {
           {/* this one gives links to larger screens */}
           <Box className={styles.largerScreenBox}>
             <Box className={styles.largeScreenLogoBox}>
-              <AdbIcon sx={{ mr: 1 }} />
+              <AdbIcon sx={{ mr: 1 }} fontSize="large" />
             </Box>
             {pages.map((page) => (
-              <Button
-                key={page}
+              <Link
+                className={styles.largeScreenLinkStyles}
+                to={page.path}
+                key={page.name}
                 onClick={handleCloseNavMenu}
-                sx={{
-                  my: 2,
-                  color: "white",
-                  fontSize: "1.2rem",
-                }}
               >
-                {page}
-              </Button>
+                {page.name}
+              </Link>
             ))}
           </Box>
         </Toolbar>
