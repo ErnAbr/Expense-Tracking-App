@@ -1,0 +1,17 @@
+.inputStyle {
+  width: 27%;
+}
+
+@media (max-width: 600px) {
+  .inputStyle {
+    width: 66%;
+  }
+}
+
+.inputStyle label {
+  font-size: smaller;
+}
+
+form div {
+  margin-bottom: 0.75rem;
+}

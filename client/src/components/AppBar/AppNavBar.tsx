@@ -37,7 +37,7 @@ export const AppNavBar = () => {
   };
 
   return (
-    <AppBar color="secondary" position="static">
+    <AppBar color="primary" position="static">
       <Container maxWidth="xl">
         <Toolbar>
           {/* this part is responsible for burger on smaller screens */}
