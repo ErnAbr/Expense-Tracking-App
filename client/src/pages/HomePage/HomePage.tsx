@@ -16,16 +16,13 @@ const schema = yup.object({
 });
 
 export const HomePage = () => {
-  const {
-    handleSubmit,
-    reset,
-    control,
-  } = useForm<FormValues>({
+  const { handleSubmit, reset, control } = useForm<FormValues>({
     resolver: yupResolver(schema),
   });
 
   const handleFormSubmit = (data: FormValues) => {
     console.log(data);
+    reset();
   };
 
   const clearTheForm = () => {
