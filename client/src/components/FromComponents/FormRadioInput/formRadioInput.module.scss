@@ -1,0 +1,21 @@
+.radioGroupContainer {
+  display: flex;
+  flex-direction: column;
+  margin-left: 25%;
+  margin-bottom: 0;
+
+  @media (min-width: 500px) {
+    flex-direction: row;
+    gap: 1rem;
+    margin-left: 0%;
+  }
+}
+
+.radioGroupContainer div {
+  margin-bottom: 0;
+}
+
+.errorHelperText {
+  margin-top: 0 !important;
+  color: red !important;
+}

@@ -1,18 +1,21 @@
 import styles from "./homepage.module.scss";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { FormInputText } from "../../components/FromComponents/FormInputText";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { FormInputText } from "../../components/FromComponents/FormInputText/FormInputText";
+// import { FormRadioInput } from "../../components/FromComponents/FormRadioInput/FormRadioInput";
 
 type FormValues = {
   userEmail: string;
   userPassword: string;
+  userGender: string;
 };
 
 const schema = yup.object({
   userEmail: yup.string().email().required(),
   userPassword: yup.string().required(),
+  userGender: yup.string().required("Role is required"),
 });
 
 export const HomePage = () => {
@@ -58,6 +61,15 @@ export const HomePage = () => {
           label={"Your Password"}
           type="password"
         />
+        {/* <FormRadioInput
+          name="userGender"
+          control={control}
+          label="Select Gender"
+          options={[
+            { label: "Male", value: "Male" },
+            { label: "Female", value: "Female" },
+          ]}
+        /> */}
         <Box className={styles.buttonContainer}>
           <Button variant="contained" type="submit">
             Submit
