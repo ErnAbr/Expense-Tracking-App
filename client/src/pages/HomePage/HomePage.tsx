@@ -9,13 +9,13 @@ import { FormInputText } from "../../components/FromComponents/FormInputText/For
 type FormValues = {
   userEmail: string;
   userPassword: string;
-  userGender: string;
+  // userGender: string;
 };
 
 const schema = yup.object({
   userEmail: yup.string().email().required(),
   userPassword: yup.string().required(),
-  userGender: yup.string().required("Role is required"),
+  // userGender: yup.string().required("Role is required"),
 });
 
 export const HomePage = () => {
