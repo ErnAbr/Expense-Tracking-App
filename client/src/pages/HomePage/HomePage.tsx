@@ -5,17 +5,22 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormInputText } from "../../components/FromComponents/FormInputText/FormInputText";
 // import { FormRadioInput } from "../../components/FromComponents/FormRadioInput/FormRadioInput";
+import countryList from "react-select-country-list";
+import { FormAutocompleteInput } from "../../components/FromComponents/FormAutocompleteInput/FormAutocompleteInput";
+// import { FormDropdown } from "../../components/FromComponents/FormDropdown/FormDropdown";
 
 type FormValues = {
   userEmail: string;
   userPassword: string;
   // userGender: string;
+  selectCountry: string;
 };
 
 const schema = yup.object({
   userEmail: yup.string().email().required(),
   userPassword: yup.string().required(),
   // userGender: yup.string().required("Role is required"),
+  selectCountry: yup.string().required("Country is required"),
 });
 
 export const HomePage = () => {
@@ -31,6 +36,9 @@ export const HomePage = () => {
   const clearTheForm = () => {
     reset();
   };
+
+
+  const options = countryList().getData();
 
   return (
     <Box className={styles.loginFormContainer}>
@@ -70,6 +78,18 @@ export const HomePage = () => {
             { label: "Female", value: "Female" },
           ]}
         /> */}
+        {/* <FormDropdown
+          name="selectCountry"
+          control={control}
+          label="Select Your Country"
+          options={options}
+        /> */}
+        <FormAutocompleteInput
+          name="selectCountry"
+          control={control}
+          options={options}
+          label="Select a Country"
+        />
         <Box className={styles.buttonContainer}>
           <Button variant="contained" type="submit">
             Submit

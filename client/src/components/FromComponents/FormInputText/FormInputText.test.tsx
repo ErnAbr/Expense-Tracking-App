@@ -19,7 +19,7 @@ const TestWrapper = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<TestFormValues> = () => {};
+  const onSubmit = vi.fn();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
