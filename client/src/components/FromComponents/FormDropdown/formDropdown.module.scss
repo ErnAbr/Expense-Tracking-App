@@ -1,5 +1,11 @@
 .dropdownContainer {
-  width: 50%;
+  width: 45%;
+
+  @media (max-width: 1200px) {
+    .dropdownContainer {
+      width: 66%;
+    }
+  }
 }
 
 .errorHelperText {

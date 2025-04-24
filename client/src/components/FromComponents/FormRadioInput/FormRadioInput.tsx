@@ -6,22 +6,16 @@ import {
   Radio,
   RadioGroup,
 } from "@mui/material";
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
+import { Controller, FieldValues } from "react-hook-form";
 import styles from "./formRadioInput.module.scss";
-
-interface FormRadioProps<T extends FieldValues> {
-  name: Path<T>;
-  control: Control<T>;
-  label: string;
-  options: { label: string; value: string }[];
-}
+import { SelectFormProps } from "../../../interfaces/formProps";
 
 export const FormRadioInput = <T extends FieldValues>({
   label,
   name,
   control,
   options,
-}: FormRadioProps<T>) => {
+}: SelectFormProps<T>) => {
   return (
     <Controller
       name={name}

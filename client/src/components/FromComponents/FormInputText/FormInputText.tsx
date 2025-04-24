@@ -1,20 +1,14 @@
 import styles from "./formComponentStyles.module.scss";
 import { TextField } from "@mui/material";
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
-
-interface FormInputProps<T extends FieldValues> {
-  name: Path<T>;
-  type: string;
-  control: Control<T>;
-  label: string;
-}
+import { Controller, FieldValues } from "react-hook-form";
+import { InputFormProps } from "../../../interfaces/formProps";
 
 export const FormInputText = <T extends FieldValues>({
   name,
   control,
   label,
   type,
-}: FormInputProps<T>) => {
+}: InputFormProps<T>) => {
   return (
     <Controller
       name={name}

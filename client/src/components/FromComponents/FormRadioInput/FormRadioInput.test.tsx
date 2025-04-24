@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { FormRadioInput } from "./FormRadioInput";
 import { render, screen, waitFor } from "@testing-library/react";

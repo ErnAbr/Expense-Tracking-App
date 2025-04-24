@@ -1,4 +1,4 @@
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
+import { Controller, FieldValues } from "react-hook-form";
 import styles from "./formDropdown.module.scss";
 import {
   FormControl,
@@ -7,28 +7,26 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-
-interface FormDropdownProps<T extends FieldValues> {
-  name: Path<T>;
-  control: Control<T>;
-  label: string;
-  options: { value: string; label: string }[];
-}
+import { SelectFormProps } from "../../../interfaces/formProps";
 
 export const FormDropdown = <T extends FieldValues>({
   name,
   control,
   label,
   options,
-}: FormDropdownProps<T>) => {
+}: SelectFormProps<T>) => {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <FormControl className={styles.dropdownContainer}>
-          <InputLabel>{label}</InputLabel>
-          <Select label={label} onChange={onChange} value={value ?? ""}>
+          <InputLabel id={`${name}-label`}>{label}</InputLabel>
+          <Select
+            labelId={`${name}-label`}
+            onChange={onChange}
+            value={value ?? ""}
+          >
             {options.map((opt) => (
               <MenuItem key={opt.value} value={opt.label}>
                 {opt.label}

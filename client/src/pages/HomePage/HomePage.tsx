@@ -4,10 +4,8 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormInputText } from "../../components/FromComponents/FormInputText/FormInputText";
-// import { FormRadioInput } from "../../components/FromComponents/FormRadioInput/FormRadioInput";
 import countryList from "react-select-country-list";
 import { FormAutocompleteInput } from "../../components/FromComponents/FormAutocompleteInput/FormAutocompleteInput";
-// import { FormDropdown } from "../../components/FromComponents/FormDropdown/FormDropdown";
 
 type FormValues = {
   userEmail: string;
@@ -36,7 +34,6 @@ export const HomePage = () => {
   const clearTheForm = () => {
     reset();
   };
-
 
   const options = countryList().getData();
 
@@ -86,9 +83,9 @@ export const HomePage = () => {
         /> */}
         <FormAutocompleteInput
           name="selectCountry"
+          label="Select a Country"
           control={control}
           options={options}
-          label="Select a Country"
         />
         <Box className={styles.buttonContainer}>
           <Button variant="contained" type="submit">
