@@ -3,15 +3,17 @@ import { Box, Button, Paper, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FormInputText } from "../../components/FromComponents/FormInputText/FormInputText";
+import { FormInputText } from "../../components/FormComponents/FormInputText/FormInputText";
 import countryList from "react-select-country-list";
-import { FormAutocompleteInput } from "../../components/FromComponents/FormAutocompleteInput/FormAutocompleteInput";
+import { FormAutocompleteInput } from "../../components/FormComponents/FormAutocompleteInput/FormAutocompleteInput";
+import { FormDatePicker } from "../../components/FormComponents/FormDatePicker/FormDatePicker";
 
 type FormValues = {
   userEmail: string;
   userPassword: string;
   // userGender: string;
   selectCountry: string;
+  birthDate: Date;
 };
 
 const schema = yup.object({
@@ -19,6 +21,7 @@ const schema = yup.object({
   userPassword: yup.string().required(),
   // userGender: yup.string().required("Role is required"),
   selectCountry: yup.string().required("Country is required"),
+  birthDate: yup.date().required("birth date required"),
 });
 
 export const HomePage = () => {
@@ -86,6 +89,11 @@ export const HomePage = () => {
           label="Select a Country"
           control={control}
           options={options}
+        />
+        <FormDatePicker
+          name="birthDate"
+          control={control}
+          label="Enter Your Date of Birth"
         />
         <Box className={styles.buttonContainer}>
           <Button variant="contained" type="submit">

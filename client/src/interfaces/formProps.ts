@@ -1,6 +1,6 @@
 import { Control, FieldValues, Path } from "react-hook-form";
 
-interface BaseFormProps<T extends FieldValues> {
+export interface BaseFormProps<T extends FieldValues> {
   name: Path<T>;
   control: Control<T>;
   label: string;

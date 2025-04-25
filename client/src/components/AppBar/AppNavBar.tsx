@@ -12,6 +12,9 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
 import { routes } from "../../navigation/routes/routes";
+import { FormControlLabel, Switch } from "@mui/material";
+import { useStore } from "zustand";
+import { useAppContext } from "../../context/appContext";
 
 const pages = [
   { name: "Spending", path: routes.SPENDINGS },
@@ -24,6 +27,7 @@ const login = [
 ];
 
 export const AppNavBar = () => {
+  const { setDarkMode, darkMode } = useStore(useAppContext);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -84,7 +88,6 @@ export const AppNavBar = () => {
               ))}
             </Box>
           </Box>
-
           {/* this one gives links to larger screens */}
           <Box className={styles.largerScreenBox}>
             <Box className={styles.largeScreenLogoBox}>
@@ -101,6 +104,15 @@ export const AppNavBar = () => {
               </Link>
             ))}
           </Box>
+          <FormControlLabel
+            control={<Switch onChange={setDarkMode} checked={darkMode} />}
+            label={darkMode ? "Dark Mode" : "Light Mode"}
+            labelPlacement="end"
+            sx={{
+              ml: 2,
+              whiteSpace: "nowrap",
+            }}
+          />
         </Toolbar>
       </Container>
     </AppBar>
