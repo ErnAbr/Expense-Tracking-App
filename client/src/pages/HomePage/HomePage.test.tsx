@@ -1,6 +1,8 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { HomePage } from "./HomePage";
 import userEvent from "@testing-library/user-event";
+
+const onSubmit = vi.fn();
 
 test("renders email and password inputs", () => {
   render(<HomePage />);
@@ -23,10 +25,11 @@ test("shows validation errors if inputs are empty on submit", async () => {
 });
 
 test("submits the form with valid inputs", async () => {
+  const logSpy = vi.spyOn(console, "log");
   render(<HomePage />);
 
-  const emailInput = screen.getByLabelText(/your email/i);
-  const passwordInput = screen.getByLabelText(/your password/i);
+  const emailInput = screen.getByLabelText(/Your Email/i);
+  const passwordInput = screen.getByLabelText(/Your Password/i);
   const submitButton = screen.getByRole("button", { name: /submit/i });
 
   await userEvent.type(emailInput, "test@example.com");
@@ -34,8 +37,15 @@ test("submits the form with valid inputs", async () => {
 
   await userEvent.click(submitButton);
 
-  expect(emailInput).toHaveValue("");
-  expect(passwordInput).toHaveValue("");
+  expect(logSpy).toHaveBeenCalledWith({
+    userEmail: "test@example.com",
+    userPassword: "securepassword",
+  });
+
+  await waitFor(() => {
+    expect(emailInput).toHaveValue("");
+    expect(passwordInput).toHaveValue("");
+  });
 });
 
 test("clears the form when Clear button is clicked", async () => {

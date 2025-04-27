@@ -4,7 +4,6 @@ import { BaseFormProps } from "../../../interfaces/formProps";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { FormHelperText } from "@mui/material";
 
 export const FormDatePicker = <T extends FieldValues>({
   name,

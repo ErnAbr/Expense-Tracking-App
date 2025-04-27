@@ -4,41 +4,44 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormInputText } from "../../components/FormComponents/FormInputText/FormInputText";
-import countryList from "react-select-country-list";
-import { FormAutocompleteInput } from "../../components/FormComponents/FormAutocompleteInput/FormAutocompleteInput";
-import { FormDatePicker } from "../../components/FormComponents/FormDatePicker/FormDatePicker";
+// import countryList from "react-select-country-list";
+// import { FormAutocompleteInput } from "../../components/FormComponents/FormAutocompleteInput/FormAutocompleteInput";
+// import { FormDatePicker } from "../../components/FormComponents/FormDatePicker/FormDatePicker";
 
 type FormValues = {
   userEmail: string;
   userPassword: string;
   // userGender: string;
-  selectCountry: string;
-  birthDate: Date;
+  // selectCountry: string;
+  // birthDate: Date;
 };
 
 const schema = yup.object({
   userEmail: yup.string().email().required(),
   userPassword: yup.string().required(),
   // userGender: yup.string().required("Role is required"),
-  selectCountry: yup.string().required("Country is required"),
-  birthDate: yup.date().required("birth date required"),
+  // selectCountry: yup.string().required("Country is required"),
+  // birthDate: yup.date().required("birth date required"),
 });
 
 export const HomePage = () => {
   const { handleSubmit, reset, control } = useForm<FormValues>({
     resolver: yupResolver(schema),
+    defaultValues: { userEmail: "", userPassword: "" },
   });
 
-  const handleFormSubmit = (data: FormValues) => {
+  const handleFormSubmit = async (data: FormValues) => {
     console.log(data);
-    reset();
+    setTimeout(() => {
+      reset();
+    }, 100);
   };
 
   const clearTheForm = () => {
     reset();
   };
 
-  const options = countryList().getData();
+  // const options = countryList().getData();
 
   return (
     <Box className={styles.loginFormContainer}>
@@ -84,7 +87,7 @@ export const HomePage = () => {
           label="Select Your Country"
           options={options}
         /> */}
-        <FormAutocompleteInput
+        {/* <FormAutocompleteInput
           name="selectCountry"
           label="Select a Country"
           control={control}
@@ -94,7 +97,7 @@ export const HomePage = () => {
           name="birthDate"
           control={control}
           label="Enter Your Date of Birth"
-        />
+        /> */}
         <Box className={styles.buttonContainer}>
           <Button variant="contained" type="submit">
             Submit
