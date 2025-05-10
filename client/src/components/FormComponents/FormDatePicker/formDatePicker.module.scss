@@ -1,9 +1,18 @@
 .datePickerContainer {
   width: 45%;
+
+  label {
+    font-size: 0.8rem;
+    margin-top: 5px;
+  }
 }
 
 @media (max-width: 1200px) {
   .datePickerContainer {
     width: 66%;
   }
+}
+
+.datePickerContainer svg {
+  margin-top: 12px;
 }

@@ -1,4 +1,4 @@
-import styles from "./formAutocompleteInput.module.scss"
+import styles from "./formAutocompleteInput.module.scss";
 import { Autocomplete, TextField } from "@mui/material";
 import { Controller, FieldValues } from "react-hook-form";
 import { SelectFormProps } from "../../../interfaces/formProps";
@@ -24,7 +24,12 @@ export const FormAutocompleteInput = <T extends FieldValues>({
               onChange(selectedOption?.label || "")
             }
             renderInput={(params) => (
-              <TextField {...params} label={label} error={!!error} />
+              <TextField
+                {...params}
+                label={label}
+                error={!!error}
+                size="small"
+              />
             )}
           />
         )}

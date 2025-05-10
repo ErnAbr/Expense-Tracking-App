@@ -25,6 +25,8 @@ export const FormDatePicker = <T extends FieldValues>({
             slotProps={{
               textField: {
                 error: !!error,
+                size: "small",
+                helperText: error?.message,
               },
             }}
           />

@@ -28,9 +28,9 @@ test("submits the form with valid inputs", async () => {
   const logSpy = vi.spyOn(console, "log");
   render(<HomePage />);
 
-  const emailInput = screen.getByLabelText(/Your Email/i);
-  const passwordInput = screen.getByLabelText(/Your Password/i);
-  const submitButton = screen.getByRole("button", { name: /submit/i });
+  const emailInput = await screen.findByLabelText(/Your Email/i);
+  const passwordInput = await screen.findByLabelText(/Your Password/i);
+  const submitButton = await screen.findByRole("button", { name: /submit/i });
 
   await userEvent.type(emailInput, "test@example.com");
   await userEvent.type(passwordInput, "securepassword");
