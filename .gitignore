@@ -26,3 +26,7 @@ RTL Books
 /client/*.njsproj
 /client/*.sln
 /client/*.sw?
+
+# Server File Ignore
+/server/bin/
+/server/obj/
