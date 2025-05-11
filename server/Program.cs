@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Models;
@@ -32,15 +33,26 @@ builder.Services.AddCors((options) =>
 
 var app = builder.Build();
 
-//test data seed
+// test data seed
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+    void CreatePasswordHash(string password, out byte[] hash, out byte[] salt)
+    {
+        using var hmac = new HMACSHA512();
+        salt = hmac.Key;
+        hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+    }
+
+    CreatePasswordHash("password123", out byte[] hash1, out byte[] salt1);
+    CreatePasswordHash("password123", out byte[] hash2, out byte[] salt2);
+
     context.Users.Add(new User
     {
         Email = "test@example.com",
-        Password = "password123",
+        PasswordHash = hash1,
+        PasswordSalt = salt1,
         Gender = "Male",
         Country = "USA",
         BirthDate = new DateTime(2000, 1, 1)
@@ -49,7 +61,8 @@ using (var scope = app.Services.CreateScope())
     context.Users.Add(new User
     {
         Email = "test2@example.com",
-        Password = "password123",
+        PasswordHash = hash2,
+        PasswordSalt = salt2,
         Gender = "Female",
         Country = "RU",
         BirthDate = new DateTime(2000, 1, 1)
@@ -57,7 +70,7 @@ using (var scope = app.Services.CreateScope())
 
     context.SaveChanges();
 }
-//test data seed
+// test data seed
 
 if (app.Environment.IsDevelopment())
 {
