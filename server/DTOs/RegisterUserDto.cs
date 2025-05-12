@@ -1,4 +1,4 @@
-namespace Server.Dto
+namespace Server.Dtos
 {
     public class RegisterUserDto
 {
