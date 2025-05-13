@@ -1,5 +1,8 @@
 using System.Security.Cryptography;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Server.Data;
 using Server.Helpers;
 using Server.Models;
@@ -34,9 +37,27 @@ builder.Services.AddCors((options) =>
             });
     });
 
+SymmetricSecurityKey tokenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes
+    (builder.Configuration.GetSection("AppSettings:TokenKey").Value ??
+         throw new InvalidOperationException("TokenKey not configured in appsettings.")));
+
+TokenValidationParameters tokenValidationParameters = new TokenValidationParameters()
+{
+    IssuerSigningKey = tokenKey,
+    ValidateIssuer = true,
+    ValidateIssuerSigningKey = true,
+    ValidateAudience = true
+};
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = tokenValidationParameters;
+    });
+
 var app = builder.Build();
 
-// test data seed
+// test data seed - start
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -73,7 +94,7 @@ using (var scope = app.Services.CreateScope())
 
     context.SaveChanges();
 }
-// test data seed
+// test data seed - end
 
 if (app.Environment.IsDevelopment())
 {
@@ -86,6 +107,9 @@ else
     app.UseCors("ProdCors");
     app.UseHttpsRedirection();
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

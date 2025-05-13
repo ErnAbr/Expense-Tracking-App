@@ -65,6 +65,16 @@ namespace Server.Controllers
             {
                 return Unauthorized("Invalid Email or Password");
             }
+
+            string token = _authHelper.GenerateToken(user);
+
+            Response.Cookies.Append("jwt", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false, // true for production HTTPS
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.UtcNow.AddDays(1)
+            });
             
              return Ok("Login successful");
         }

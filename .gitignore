@@ -30,3 +30,4 @@ RTL Books
 # Server File Ignore
 /server/bin/
 /server/obj/
+/server/appsettings.json
