@@ -2,7 +2,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Server.Dtos;
 using Server.Models;
 
 namespace Server.Helpers
@@ -15,19 +18,28 @@ namespace Server.Helpers
             _config = config;
         }
 
-        public void CreatePasswordHash(string password, out byte[] hash, out byte[] salt)
+        public byte[] CreatePasswordHash(string password, byte[] passwordSalt)
         {
-            using var hmac = new HMACSHA512();
-            salt = hmac.Key;
-            hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            string passwordSaltPlusString = _config.GetSection("AppSettings:PasswordKey").Value
+                + Convert.ToBase64String(passwordSalt);
+
+            return KeyDerivation.Pbkdf2(
+                password: password,
+                salt: Encoding.ASCII.GetBytes(passwordSaltPlusString),
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 1000000,
+                numBytesRequested: 256 / 8
+            );
         }
 
-        public bool VerifyPassword(string enteredPassword, byte[] storedHash, byte[] storedSalt)
+        public bool VerifyPassword(LoginUserDto loginUser, User user)
         {
-            using var hmac = new HMACSHA512(storedSalt);
-            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(enteredPassword));
+            byte[] passwordHash = CreatePasswordHash(loginUser.Password, user.PasswordSalt);
 
-            return computedHash.SequenceEqual(storedHash);
+            Console.WriteLine("Generated Hash: " + Convert.ToBase64String(passwordHash));
+            Console.WriteLine("Stored Hash:    " + Convert.ToBase64String(user.PasswordHash));
+
+            return CryptographicOperations.FixedTimeEquals(passwordHash, user.PasswordHash);
         }
 
         public string GenerateToken(User user)

@@ -61,37 +61,35 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var authHelper = scope.ServiceProvider.GetRequiredService<AuthHelper>();
 
-    void CreatePasswordHash(string password, out byte[] hash, out byte[] salt)
-    {
-        using var hmac = new HMACSHA512();
-        salt = hmac.Key;
-        hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-    }
+    byte[] salt1 = new byte[128 / 8];
+    RandomNumberGenerator.Fill(salt1);
 
-    CreatePasswordHash("password123", out byte[] hash1, out byte[] salt1);
-    CreatePasswordHash("password123", out byte[] hash2, out byte[] salt2);
-
-    context.Users.Add(new User
+    var user = new User
     {
         Email = "test@example.com",
-        PasswordHash = hash1,
         PasswordSalt = salt1,
+        PasswordHash = authHelper.CreatePasswordHash("password123", salt1),
         Gender = "Male",
         Country = "USA",
         BirthDate = new DateTime(2000, 1, 1)
-    });
+    };
 
-    context.Users.Add(new User
+    byte[] salt2 = new byte[128 / 8];
+    RandomNumberGenerator.Fill(salt2);
+
+    var user2 = new User
     {
         Email = "test2@example.com",
-        PasswordHash = hash2,
         PasswordSalt = salt2,
+        PasswordHash = authHelper.CreatePasswordHash("password123", salt2),
         Gender = "Female",
         Country = "RU",
         BirthDate = new DateTime(2000, 1, 1)
-    });
+    };
 
+    context.Users.AddRange(user, user2);
     context.SaveChanges();
 }
 // test data seed - end

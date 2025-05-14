@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -37,10 +38,14 @@ namespace Server.Controllers
                 return Conflict("A user with this email already exists.");
             }
 
-            _authHelper.CreatePasswordHash(registerUser.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            byte[] passwordSalt = new byte[128 / 8];
+            using (RandomNumberGenerator rng = RandomNumberGenerator.Create()) 
+            {
+                rng.GetNonZeroBytes(passwordSalt);
+            }
 
             User userToAdd = _mapper.Map<User>(registerUser);
-            userToAdd.PasswordHash = passwordHash;
+            userToAdd.PasswordHash = _authHelper.CreatePasswordHash(registerUser.Password, passwordSalt);
             userToAdd.PasswordSalt = passwordSalt;
 
             _context.Users.Add(userToAdd);
@@ -61,7 +66,7 @@ namespace Server.Controllers
                 return Unauthorized("Invalid Email or Password");
             }
 
-            if (!_authHelper.VerifyPassword(loginUser.Password, user.PasswordHash, user.PasswordSalt))
+            if (!_authHelper.VerifyPassword(loginUser, user))
             {
                 return Unauthorized("Invalid Email or Password");
             }
