@@ -4,24 +4,17 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormInputText } from "../../components/FormComponents/FormInputText/FormInputText";
-// import countryList from "react-select-country-list";
-// import { FormAutocompleteInput } from "../../components/FormComponents/FormAutocompleteInput/FormAutocompleteInput";
-// import { FormDatePicker } from "../../components/FormComponents/FormDatePicker/FormDatePicker";
+import { api } from "../../api/api";
+import axios from "axios";
 
 type FormValues = {
   userEmail: string;
   userPassword: string;
-  // userGender: string;
-  // selectCountry: string;
-  // birthDate: Date;
 };
 
 const schema = yup.object({
   userEmail: yup.string().email().required(),
   userPassword: yup.string().required(),
-  // userGender: yup.string().required("Role is required"),
-  // selectCountry: yup.string().required("Country is required"),
-  // birthDate: yup.date().required("birth date required"),
 });
 
 export const HomePage = () => {
@@ -31,17 +24,26 @@ export const HomePage = () => {
   });
 
   const handleFormSubmit = async (data: FormValues) => {
-    console.log(data);
-    setTimeout(() => {
+    const payload = {
+      email: data.userEmail,
+      password: data.userPassword,
+    };
+
+    try {
+      const response = await api.User.login(payload);
+      console.log(response);
       reset();
-    }, 100);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log("err:", error.response?.data);
+      }
+      reset();
+    }
   };
 
   const clearTheForm = () => {
     reset();
   };
-
-  // const options = countryList().getData();
 
   return (
     <Box className={styles.loginFormContainer}>
@@ -72,32 +74,6 @@ export const HomePage = () => {
           label={"Your Password"}
           type="password"
         />
-        {/* <FormRadioInput
-          name="userGender"
-          control={control}
-          label="Select Gender"
-          options={[
-            { label: "Male", value: "Male" },
-            { label: "Female", value: "Female" },
-          ]}
-        /> */}
-        {/* <FormDropdown
-          name="selectCountry"
-          control={control}
-          label="Select Your Country"
-          options={options}
-        /> */}
-        {/* <FormAutocompleteInput
-          name="selectCountry"
-          label="Select a Country"
-          control={control}
-          options={options}
-        />
-        <FormDatePicker
-          name="birthDate"
-          control={control}
-          label="Enter Your Date of Birth"
-        /> */}
         <Box className={styles.buttonContainer}>
           <Button variant="contained" type="submit">
             Submit

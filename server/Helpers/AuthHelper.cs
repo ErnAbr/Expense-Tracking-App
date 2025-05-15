@@ -20,8 +20,10 @@ namespace Server.Helpers
 
         public byte[] CreatePasswordHash(string password, byte[] passwordSalt)
         {
-            string passwordSaltPlusString = _config.GetSection("AppSettings:PasswordKey").Value
-                + Convert.ToBase64String(passwordSalt);
+            string pepper = _config.GetSection("AppSettings:PasswordKey").Value 
+                ?? throw new InvalidOperationException("PasswordKey not configured in appsettings.");
+
+            string passwordSaltPlusString = pepper + Convert.ToBase64String(passwordSalt);
 
             return KeyDerivation.Pbkdf2(
                 password: password,
@@ -35,9 +37,6 @@ namespace Server.Helpers
         public bool VerifyPassword(LoginUserDto loginUser, User user)
         {
             byte[] passwordHash = CreatePasswordHash(loginUser.Password, user.PasswordSalt);
-
-            Console.WriteLine("Generated Hash: " + Convert.ToBase64String(passwordHash));
-            Console.WriteLine("Stored Hash:    " + Convert.ToBase64String(user.PasswordHash));
 
             return CryptographicOperations.FixedTimeEquals(passwordHash, user.PasswordHash);
         }

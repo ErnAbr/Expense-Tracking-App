@@ -10,7 +10,7 @@ using Server.Models;
 namespace Server.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/auth/")]
     public class UserController : ControllerBase
     {
         private readonly AppDbContext _context;
