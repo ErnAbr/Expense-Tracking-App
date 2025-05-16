@@ -51,7 +51,7 @@ namespace Server.Controllers
             _context.Users.Add(userToAdd);
             if (await _context.SaveChangesAsync() > 0)
             {
-                return Ok();
+                return Ok("Registration Successful");
             }
 
             return StatusCode(500, "Failed to register user due to server error.");

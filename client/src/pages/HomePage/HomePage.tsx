@@ -8,29 +8,24 @@ import { api } from "../../api/api";
 import axios from "axios";
 
 type FormValues = {
-  userEmail: string;
-  userPassword: string;
+  email: string;
+  password: string;
 };
 
 const schema = yup.object({
-  userEmail: yup.string().email().required(),
-  userPassword: yup.string().required(),
+  email: yup.string().email().required(),
+  password: yup.string().required(),
 });
 
 export const HomePage = () => {
   const { handleSubmit, reset, control } = useForm<FormValues>({
     resolver: yupResolver(schema),
-    defaultValues: { userEmail: "", userPassword: "" },
+    defaultValues: { email: "", password: "" },
   });
 
   const handleFormSubmit = async (data: FormValues) => {
-    const payload = {
-      email: data.userEmail,
-      password: data.userPassword,
-    };
-
     try {
-      const response = await api.User.login(payload);
+      const response = await api.User.login(data);
       console.log(response);
       reset();
     } catch (error) {
@@ -63,13 +58,13 @@ export const HomePage = () => {
           Please Log In
         </Typography>
         <FormInputText
-          name={"userEmail"}
+          name={"email"}
           control={control}
           label={"Your Email"}
           type="email"
         />
         <FormInputText
-          name={"userPassword"}
+          name={"password"}
           control={control}
           label={"Your Password"}
           type="password"

@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { LoginData } from "../interfaces/userAuth";
+import { LoginData, RegisterData } from "../interfaces/userAuth";
 
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
@@ -34,8 +34,15 @@ const requests = {
 
 const User = {
   login: (body: LoginData) => requests.post<string>("/user/auth/login", body),
+  register: (body: RegisterData) =>
+    requests.post<string>("/user/auth/register", body),
+};
+
+const Test = {
+  allUSers: () => requests.get("/user/auth/"),
 };
 
 export const api = {
   User,
+  Test,
 };

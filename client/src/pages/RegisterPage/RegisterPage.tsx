@@ -8,9 +8,11 @@ import { FormAutocompleteInput } from "../../components/FormComponents/FormAutoc
 import { FormDatePicker } from "../../components/FormComponents/FormDatePicker/FormDatePicker";
 import { FormRadioInput } from "../../components/FormComponents/FormRadioInput/FormRadioInput";
 import countryList from "react-select-country-list";
+import axios from "axios";
+import { api } from "../../api/api";
 
 type FormValues = {
-  userEmail: string;
+  email: string;
   password: string;
   repPassword: string;
   gender: string;
@@ -19,7 +21,7 @@ type FormValues = {
 };
 
 const schema = yup.object({
-  userEmail: yup.string().email().required(),
+  email: yup.string().email().required(),
   password: yup.string().required(),
   repPassword: yup
     .string()
@@ -42,10 +44,23 @@ export const RegisterPage = () => {
   });
 
   const handleFormSubmit = async (data: FormValues) => {
-    console.log(data);
-    setTimeout(() => {
+    const { repPassword, birthDate, ...rest } = data;
+
+    const payload = {
+      ...rest,
+      birthDate: birthDate.toISOString(),
+    };
+
+    try {
+      const response = await api.User.register(payload);
+      console.log(response);
       reset();
-    }, 100);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log("err:", error.response?.data);
+      }
+      reset();
+    }
   };
 
   const clearTheForm = () => {
@@ -72,7 +87,7 @@ export const RegisterPage = () => {
           Please Register
         </Typography>
         <FormInputText
-          name={"userEmail"}
+          name={"email"}
           control={control}
           label={"Your Email"}
           type="email"
