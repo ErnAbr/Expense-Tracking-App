@@ -1,7 +1,7 @@
 // tests.ts
 import { server, handlers } from "./server";
 
-it("works", async () => {
+test("works with get", async () => {
   server.use(handlers("get", "/user/auth/", { message: "Hey!" }));
 
   const res = await fetch("/user/auth/");
@@ -10,7 +10,7 @@ it("works", async () => {
   expect(data.message).toBe("Hey!");
 });
 
-it("works2", async () => {
+test("works with post", async () => {
   server.use(handlers("post", "/user/auth/", { message: "Hey!" }));
 
   const res = await fetch("/user/auth/", { method: "POST" });
