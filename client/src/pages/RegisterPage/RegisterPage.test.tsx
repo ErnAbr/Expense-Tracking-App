@@ -3,42 +3,61 @@ import userEvent from "@testing-library/user-event";
 import { server, handlers } from "../../test/server";
 import { RegisterPage } from "./RegisterPage";
 
-it("submits form and returns response", async () => {
+test("checks form values and submits the form", async () => {
   server.use(
-    handlers("post", "/user/auth/register", {
-      message: "Registration Successful",
-    })
+    handlers("post", "/user/auth/register", "Registration Successful")
   );
-  const onSuccess = vi.fn();
-  render(<RegisterPage onSuccess={onSuccess} />);
 
-  await userEvent.type(screen.getByLabelText(/your email/i), "ern@ern.lt");
+  const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+
+  render(<RegisterPage />);
+
+  //user email
+  await userEvent.type(screen.getByLabelText(/your email/i), "ern5@ern.lt");
+  expect(screen.getByLabelText(/your email/i)).toHaveValue("ern5@ern.lt");
+
+  //user password
   await userEvent.type(screen.getByLabelText(/your password/i), "string");
+  expect(screen.getByLabelText(/your password/i)).toHaveValue("string");
+
+  //user repPassword
   await userEvent.type(screen.getByLabelText(/repeat password/i), "string");
-  await userEvent.type(screen.getByLabelText(/select a country/i), "Lithuania");
-  await userEvent.keyboard("{Enter}");
+  expect(screen.getByLabelText(/repeat password/i)).toHaveValue("string");
 
-  await userEvent.clear(screen.getByRole("spinbutton", { name: /day/i }));
-  await userEvent.type(screen.getByRole("spinbutton", { name: /day/i }), "18");
+  //user selectCountry
+  const countryInput = screen.getByRole("combobox", {
+    name: /select a country/i,
+  });
+  await userEvent.click(countryInput);
+  const optionLithuania = await screen.findByText("Lithuania");
+  await userEvent.click(optionLithuania);
+  expect(countryInput).toHaveValue("Lithuania");
 
-  await userEvent.clear(screen.getByRole("spinbutton", { name: /month/i }));
-  await userEvent.type(
-    screen.getByRole("spinbutton", { name: /month/i }),
-    "05"
-  );
+  //user birthDate
+  const dayInput = screen.getByRole("spinbutton", { name: /day/i });
+  await userEvent.clear(dayInput);
+  await userEvent.type(dayInput, "018");
+  expect(dayInput).toHaveValue(18);
 
-  await userEvent.clear(screen.getByRole("spinbutton", { name: /year/i }));
-  await userEvent.type(
-    screen.getByRole("spinbutton", { name: /year/i }),
-    "2000"
-  );
+  const monthInput = screen.getByRole("spinbutton", { name: /month/i });
+  await userEvent.clear(monthInput);
+  await userEvent.type(monthInput, "05");
+  expect(monthInput).toHaveValue(5);
 
+  const yearInput = screen.getByRole("spinbutton", { name: /year/i });
+  await userEvent.clear(yearInput);
+  await userEvent.type(yearInput, "02000");
+  expect(yearInput).toHaveValue(2000);
+
+  //user gender
   await userEvent.click(screen.getByDisplayValue("Male"));
+  expect(screen.getByDisplayValue("Male")).toBeChecked();
+
   await userEvent.click(screen.getByRole("button", { name: /register/i }));
 
   await waitFor(() => {
-    expect(onSuccess).toHaveBeenCalledWith({
-      message: "Registration Successful",
-    });
+    expect(consoleSpy).toHaveBeenCalledWith("Registration Successful");
+
+    consoleSpy.mockRestore();
   });
 });

@@ -8,7 +8,9 @@ type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue };
 
 const server = setupServer();
 const handlers = (method: HttpMethod, route: string, response: JsonValue) => {
-  return http[method](route, () => HttpResponse.json(response));
+  return http[method](`*/${route.replace(/^\//, "")}`, () =>
+    HttpResponse.json(response)
+  );
 };
 
 beforeAll(() => server.listen());
