@@ -40,6 +40,7 @@ const User = {
 
 const Test = {
   allUSers: () => requests.get("/user/auth/"),
+  allUSersPost: () => requests.post("/user/auth/", {}),
 };
 
 export const api = {

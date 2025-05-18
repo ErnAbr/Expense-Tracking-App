@@ -38,7 +38,11 @@ const schema = yup.object({
     ),
 });
 
-export const RegisterPage = () => {
+export const RegisterPage = ({
+  onSuccess,
+}: {
+  onSuccess?: (data: any) => void;
+}) => {
   const { handleSubmit, reset, control } = useForm<FormValues>({
     resolver: yupResolver(schema),
   });
@@ -53,7 +57,7 @@ export const RegisterPage = () => {
 
     try {
       const response = await api.User.register(payload);
-      console.log(response);
+      onSuccess?.(response);
       reset();
     } catch (error) {
       if (axios.isAxiosError(error)) {

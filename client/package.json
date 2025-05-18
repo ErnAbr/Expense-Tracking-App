@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "test": "vitest",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:debug": "vitest --inspect-brk --run --no-file-parallelism"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -20,6 +21,7 @@
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
+    "msw": "^2.8.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.55.0",

@@ -18,7 +18,7 @@ export const SpendingPage = () => {
   }, []);
 
   const localDate = new Date(users[2]?.birthDate);
-  const formattedDate = localDate.toLocaleDateString("en-GB");
+  const formattedDate = localDate.toLocaleDateString("lt-LT");
   console.log(formattedDate);
 
   return <h1>This Is Spending Page</h1>;
