@@ -10,3 +10,7 @@ export interface RegisterData {
   country: string;
   birthDate: string;
 }
+
+export interface UserValidationServerResposne {
+  email: string;
+}

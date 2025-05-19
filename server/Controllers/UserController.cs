@@ -1,5 +1,8 @@
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
@@ -82,6 +85,19 @@ namespace Server.Controllers
             });
             
              return Ok("Login successful");
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult GetCurrentUser()
+        {
+            if (HttpContext.User.Identity is ClaimsIdentity identity && identity.IsAuthenticated)
+            {
+                var email = identity.FindFirst(ClaimTypes.Email)?.Value;
+                return Ok(new { email });
+            }
+
+            return Unauthorized("Not authenticated");
         }
 
         [HttpGet]

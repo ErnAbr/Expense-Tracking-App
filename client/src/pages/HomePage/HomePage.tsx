@@ -6,6 +6,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormInputText } from "../../components/FormComponents/FormInputText/FormInputText";
 import { api } from "../../api/api";
 import axios from "axios";
+import { useAppContext } from "../../context/appContext";
+import { useStore } from "zustand";
 
 type FormValues = {
   email: string;
@@ -18,6 +20,8 @@ const schema = yup.object({
 });
 
 export const HomePage = () => {
+  const { setUser } = useStore(useAppContext);
+
   const { handleSubmit, reset, control } = useForm<FormValues>({
     resolver: yupResolver(schema),
     defaultValues: { email: "", password: "" },
@@ -26,6 +30,16 @@ export const HomePage = () => {
   const handleFormSubmit = async (data: FormValues) => {
     try {
       const response = await api.User.login(data);
+      const userResponse = await api.User.getCurrentUser();
+      setUser(userResponse);
+
+      //TASKS:
+      //1 Add Toasts for server responses
+      //2 Add a logout options which clears the cookies and user
+      //3 Change navigation depending if user is logged in or no
+      //4 add a check when page is refreshed route /me gets called to see if the jwt is still valid if no logout user
+      //5 see why some buttons don't change with dark theme and write some tests
+
       console.log(response);
       reset();
     } catch (error) {

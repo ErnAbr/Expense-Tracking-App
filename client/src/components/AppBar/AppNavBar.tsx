@@ -27,10 +27,12 @@ const login = [
 ];
 
 export const AppNavBar = () => {
-  const { setDarkMode, darkMode } = useStore(useAppContext);
+  const { setDarkMode, darkMode, user } = useStore(useAppContext);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
+
+  console.log("user is", user?.email);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);

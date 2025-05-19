@@ -53,7 +53,8 @@ test("checks form values and submits the form", async () => {
     handlers("post", "/user/auth/register", "Registration Successful")
   );
 
-  const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+  const consoleSpy = vi.spyOn(console, "log");
+
   render(<RegisterPage />);
   await fillRegistrationForm();
 

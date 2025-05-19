@@ -61,7 +61,9 @@ namespace Server.Helpers
             {
                 Subject = new ClaimsIdentity(claims),
                 SigningCredentials = credentials,
-                Expires = DateTime.UtcNow.AddDays(1)
+                Expires = DateTime.UtcNow.AddDays(1),
+                Issuer = "AppSettings:Issuer",
+                Audience = "AppSettings:Audience"
             };
 
             SecurityToken token = tokenHandler.CreateToken(descriptor);
