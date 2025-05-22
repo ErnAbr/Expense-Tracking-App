@@ -10,6 +10,9 @@ import { FormRadioInput } from "../../components/FormComponents/FormRadioInput/F
 import countryList from "react-select-country-list";
 import axios from "axios";
 import { api } from "../../api/api";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../../navigation/routes/routes";
 
 type FormValues = {
   email: string;
@@ -43,6 +46,8 @@ export const RegisterPage = () => {
     resolver: yupResolver(schema),
   });
 
+  const navigate = useNavigate();
+
   const handleFormSubmit = async (data: FormValues) => {
     const { repPassword, birthDate, ...rest } = data;
 
@@ -53,14 +58,13 @@ export const RegisterPage = () => {
 
     try {
       const response = await api.User.register(payload);
-      console.log(response);
-
+      toast.success(response);
+      navigate(routes.HOME);
       reset();
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log("err:", error.response?.data);
+        toast.error(error.response?.data);
       }
-      reset();
     }
   };
 

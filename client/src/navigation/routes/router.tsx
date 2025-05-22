@@ -14,7 +14,7 @@ const router = createBrowserRouter([
     children: [
       { path: routes.HOME, element: <HomePage /> },
       { path: routes.REGISTER, element: <RegisterPage /> },
-      { path: routes.SPENDINGS, element: <SpendingPage /> },
+      { path: routes.SPENDING, element: <SpendingPage /> },
       { path: routes.BUDGET, element: <BudgetPage /> },
       { path: routes.DATA, element: <DataPage /> },
     ],

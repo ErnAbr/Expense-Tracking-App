@@ -56,14 +56,20 @@ namespace Server.Helpers
                     throw new InvalidOperationException("TokenKey not configured in appsettings.")));
 
             SigningCredentials credentials = new SigningCredentials(tokenKey, SecurityAlgorithms.HmacSha512Signature);
+            
+            string issuer = "AppSettings:Issuer" 
+                ?? throw new InvalidOperationException("Issuer not configured in appsettings.");
+
+            string audience = "AppSettings:Audience"
+                ?? throw new InvalidOperationException("Audience not configured in appsettings.");
 
             SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(claims),
                 SigningCredentials = credentials,
-                Expires = DateTime.UtcNow.AddDays(1),
-                Issuer = "AppSettings:Issuer",
-                Audience = "AppSettings:Audience"
+                Issuer = issuer,
+                Audience = audience,
+                Expires = DateTime.UtcNow.AddDays(1)
             };
 
             SecurityToken token = tokenHandler.CreateToken(descriptor);

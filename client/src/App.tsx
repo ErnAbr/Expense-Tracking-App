@@ -4,6 +4,7 @@ import { Routes } from "./navigation/routes/router";
 import { ThemeProvider } from "@emotion/react";
 import { useStore } from "zustand";
 import { useAppContext } from "./context/appContext";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const { darkMode } = useStore(useAppContext);
@@ -21,6 +22,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Routes />
+      <ToastContainer closeOnClick position="bottom-right" theme="colored" />
     </ThemeProvider>
   );
 }

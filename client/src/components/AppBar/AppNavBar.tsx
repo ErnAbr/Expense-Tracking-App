@@ -10,14 +10,14 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../../navigation/routes/routes";
 import { FormControlLabel, Switch } from "@mui/material";
 import { useStore } from "zustand";
 import { useAppContext } from "../../context/appContext";
 
 const pages = [
-  { name: "Spending", path: routes.SPENDINGS },
+  { name: "Spending", path: routes.SPENDING },
   { name: "Budget", path: routes.BUDGET },
   { name: "Data", path: routes.DATA },
 ];
@@ -27,12 +27,11 @@ const login = [
 ];
 
 export const AppNavBar = () => {
-  const { setDarkMode, darkMode, user } = useStore(useAppContext);
+  const { setDarkMode, darkMode, user, logout } = useStore(useAppContext);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
-
-  console.log("user is", user?.email);
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -42,11 +41,13 @@ export const AppNavBar = () => {
     setAnchorElNav(null);
   };
 
+  const navLinks = user ? pages : login;
+
   return (
     <AppBar color="primary" position="static">
       <Container maxWidth="xl">
         <Toolbar>
-          {/* this part is responsible for burger on smaller screens */}
+          {/* SMALL SCREEN BURGER MENU */}
           <Box className={styles.burgerBox}>
             <IconButton
               size="large"
@@ -65,55 +66,73 @@ export const AppNavBar = () => {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
             >
-              {pages.map((page) => (
-                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                  <Link
-                    className={styles.smallScreenDropdownLinkstyles}
-                    to={page.path}
+              <>
+                {navLinks.map((page) => (
+                  <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                    <Link
+                      className={styles.smallScreenDropdownLinkstyles}
+                      to={page.path}
+                    >
+                      <Typography>{page.name}</Typography>
+                    </Link>
+                  </MenuItem>
+                ))}
+                {user && (
+                  <MenuItem
+                    onClick={() => {
+                      logout();
+                      handleCloseNavMenu();
+                      navigate(routes.HOME);
+                    }}
                   >
-                    <Typography>{page.name}</Typography>
-                  </Link>
-                </MenuItem>
-              ))}
+                    <Typography>Logout</Typography>
+                  </MenuItem>
+                )}
+              </>
             </Menu>
-            <Box className={styles.smallScreenAuthMenu}>
-              {login.map((page) => (
-                <MenuItem
-                  sx={{ padding: 0 }}
-                  key={page.name}
-                  onClick={handleCloseNavMenu}
-                >
-                  <Link className={styles.smallScreenLinkStyles} to={page.path}>
-                    <Typography>{page.name}</Typography>
-                  </Link>
-                </MenuItem>
-              ))}
-            </Box>
           </Box>
-          {/* this one gives links to larger screens */}
+
+          {/* LARGE SCREEN NAVIGATION */}
           <Box className={styles.largerScreenBox}>
             <Box className={styles.largeScreenLogoBox}>
               <AdbIcon sx={{ mr: 1 }} fontSize="large" />
             </Box>
-            {pages.map((page) => (
-              <Link
-                className={styles.largeScreenLinkStyles}
-                to={page.path}
-                key={page.name}
-                onClick={handleCloseNavMenu}
-              >
-                {page.name}
-              </Link>
-            ))}
+            <>
+              {navLinks.map((page) => (
+                <Link
+                  className={styles.largeScreenLinkStyles}
+                  to={page.path}
+                  key={page.name}
+                  onClick={handleCloseNavMenu}
+                >
+                  {page.name}
+                </Link>
+              ))}
+              {user && (
+                <button
+                  onClick={() => {
+                    logout();
+                    navigate(routes.HOME);
+                  }}
+                  className={styles.largeScreenLinkStyles}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  Logout
+                </button>
+              )}
+            </>
           </Box>
+
+          {/* DARK MODE TOGGLE */}
           <FormControlLabel
             control={<Switch onChange={setDarkMode} checked={darkMode} />}
             label={darkMode ? "Dark Mode" : "Light Mode"}
             labelPlacement="end"
-            sx={{
-              ml: 2,
-              whiteSpace: "nowrap",
-            }}
+            sx={{ ml: 2, whiteSpace: "nowrap" }}
           />
         </Toolbar>
       </Container>

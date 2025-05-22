@@ -87,17 +87,24 @@ namespace Server.Controllers
              return Ok("Login successful");
         }
 
+        [HttpPost("Logout")]
+        public IActionResult LogoutUser()
+        {
+            Response.Cookies.Delete("jwt");
+            return Ok("Logged out Successfully");
+        }
+
         [Authorize]
         [HttpGet("me")]
         public IActionResult GetCurrentUser()
         {
             if (HttpContext.User.Identity is ClaimsIdentity identity && identity.IsAuthenticated)
             {
-                var email = identity.FindFirst(ClaimTypes.Email)?.Value;
+                string? email = identity.FindFirst(ClaimTypes.Email)?.Value;
                 return Ok(new { email });
             }
 
-            return Unauthorized("Not authenticated");
+            return Unauthorized("Invalid Token");
         }
 
         [HttpGet]

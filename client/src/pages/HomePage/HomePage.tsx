@@ -8,6 +8,9 @@ import { api } from "../../api/api";
 import axios from "axios";
 import { useAppContext } from "../../context/appContext";
 import { useStore } from "zustand";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../../navigation/routes/routes";
 
 type FormValues = {
   email: string;
@@ -27,6 +30,8 @@ export const HomePage = () => {
     defaultValues: { email: "", password: "" },
   });
 
+  const navigate = useNavigate();
+
   const handleFormSubmit = async (data: FormValues) => {
     try {
       const response = await api.User.login(data);
@@ -34,19 +39,16 @@ export const HomePage = () => {
       setUser(userResponse);
 
       //TASKS:
-      //1 Add Toasts for server responses
-      //2 Add a logout options which clears the cookies and user
-      //3 Change navigation depending if user is logged in or no
-      //4 add a check when page is refreshed route /me gets called to see if the jwt is still valid if no logout user
-      //5 see why some buttons don't change with dark theme and write some tests
+      //1 protected routes on the client so you can't manually enter url
+      //2 add a check when page is refreshed route /me gets called to see if the jwt is still valid if no logout user
 
-      console.log(response);
+      toast.success(response);
+      navigate(routes.SPENDING);
       reset();
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log("err:", error.response?.data);
+        toast.error(error.response?.data);
       }
-      reset();
     }
   };
 

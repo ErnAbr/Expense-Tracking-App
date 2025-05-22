@@ -41,12 +41,18 @@ SymmetricSecurityKey tokenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes
     (builder.Configuration.GetSection("AppSettings:TokenKey").Value ??
          throw new InvalidOperationException("TokenKey not configured in appsettings.")));
 
+string issuer = "AppSettings:Issuer" 
+    ?? throw new InvalidOperationException("Issuer not configured in appsettings.");
+
+string audience = "AppSettings:Audience"
+    ?? throw new InvalidOperationException("Audience not configured in appsettings.");
+
 TokenValidationParameters tokenValidationParameters = new TokenValidationParameters()
 {
     IssuerSigningKey = tokenKey,
     ValidateIssuerSigningKey = true,
-    ValidIssuer = "AppSettings:Issuer",
-    ValidAudience = "AppSettings:Audience",
+    ValidIssuer = issuer,
+    ValidAudience = audience,
 };
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -58,7 +64,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             OnMessageReceived = context =>
             {
-                var token = context.Request.Cookies["jwt"];
+                string? token = context.Request.Cookies["jwt"];
                 if (!string.IsNullOrEmpty(token))
                 {
                     context.Token = token;

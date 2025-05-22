@@ -37,10 +37,12 @@ const requests = {
 };
 
 const User = {
-  login: (body: LoginData) => requests.post<string>("/user/auth/login", body),
   register: (body: RegisterData) =>
     requests.post<string>("/user/auth/register", body),
-  getCurrentUser: () => requests.get<UserValidationServerResposne>("/user/auth/me"),
+  login: (body: LoginData) => requests.post<string>("/user/auth/login", body),
+  logout: () => requests.post<string>("/user/auth/logout", {}),
+  getCurrentUser: () =>
+    requests.get<UserValidationServerResposne>("/user/auth/me"),
 };
 
 const Test = {
