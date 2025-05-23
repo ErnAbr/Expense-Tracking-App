@@ -66,8 +66,8 @@ export const AppNavBar = () => {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
             >
-              <>
-                {navLinks.map((page) => (
+              {[
+                ...navLinks.map((page) => (
                   <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                     <Link
                       className={styles.smallScreenDropdownLinkstyles}
@@ -76,9 +76,10 @@ export const AppNavBar = () => {
                       <Typography>{page.name}</Typography>
                     </Link>
                   </MenuItem>
-                ))}
-                {user && (
+                )),
+                user && (
                   <MenuItem
+                    key="logout"
                     onClick={() => {
                       logout();
                       handleCloseNavMenu();
@@ -87,8 +88,8 @@ export const AppNavBar = () => {
                   >
                     <Typography>Logout</Typography>
                   </MenuItem>
-                )}
-              </>
+                ),
+              ]}
             </Menu>
           </Box>
 
@@ -114,12 +115,7 @@ export const AppNavBar = () => {
                     logout();
                     navigate(routes.HOME);
                   }}
-                  className={styles.largeScreenLinkStyles}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
+                  className={`${styles.largeScreenLinkStyles} ${styles.logoutButton}`}
                 >
                   Logout
                 </button>

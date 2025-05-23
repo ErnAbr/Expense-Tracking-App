@@ -40,7 +40,6 @@ export const HomePage = () => {
 
       //TASKS:
       //1 protected routes on the client so you can't manually enter url
-      //2 add a check when page is refreshed route /me gets called to see if the jwt is still valid if no logout user
 
       toast.success(response);
       navigate(routes.SPENDING);
