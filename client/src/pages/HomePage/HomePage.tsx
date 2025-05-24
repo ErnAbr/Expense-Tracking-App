@@ -37,10 +37,6 @@ export const HomePage = () => {
       const response = await api.User.login(data);
       const userResponse = await api.User.getCurrentUser();
       setUser(userResponse);
-
-      //TASKS:
-      //1 protected routes on the client so you can't manually enter url
-
       toast.success(response);
       navigate(routes.SPENDING);
       reset();
