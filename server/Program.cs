@@ -1,16 +1,21 @@
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Server.Data;
 using Server.Helpers;
-using Server.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });builder.Services.AddEndpointsApiExplorer();
+    
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<AuthHelper>();
@@ -76,43 +81,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
-// test data seed - start
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    var authHelper = scope.ServiceProvider.GetRequiredService<AuthHelper>();
-
-    byte[] salt1 = new byte[128 / 8];
-    RandomNumberGenerator.Fill(salt1);
-
-    var user = new User
-    {
-        Email = "test@example.com",
-        PasswordSalt = salt1,
-        PasswordHash = authHelper.CreatePasswordHash("password123", salt1),
-        Gender = "Male",
-        Country = "USA",
-        BirthDate = new DateTime(2000, 1, 1)
-    };
-
-    byte[] salt2 = new byte[128 / 8];
-    RandomNumberGenerator.Fill(salt2);
-
-    var user2 = new User
-    {
-        Email = "test2@example.com",
-        PasswordSalt = salt2,
-        PasswordHash = authHelper.CreatePasswordHash("password123", salt2),
-        Gender = "Female",
-        Country = "RU",
-        BirthDate = new DateTime(2000, 1, 1)
-    };
-
-    context.Users.AddRange(user, user2);
-    context.SaveChanges();
-}
-// test data seed - end
-
 if (app.Environment.IsDevelopment())
 {
     app.UseCors("DevCors");
@@ -129,6 +97,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var authHelper = scope.ServiceProvider.GetRequiredService<AuthHelper>();
+    DbInitializer.Initialize(context, authHelper);
+}
 
 app.Run();
 

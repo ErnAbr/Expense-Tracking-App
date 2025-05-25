@@ -19,7 +19,7 @@ namespace Server.Controllers
         private readonly AppDbContext _context;
         private readonly AuthHelper _authHelper;
         private readonly IMapper _mapper;
-    
+
         public UserController(AppDbContext context, AuthHelper authHelper)
         {
             _context = context;
@@ -42,7 +42,7 @@ namespace Server.Controllers
             }
 
             byte[] passwordSalt = new byte[128 / 8];
-            using (RandomNumberGenerator rng = RandomNumberGenerator.Create()) 
+            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
             {
                 rng.GetNonZeroBytes(passwordSalt);
             }
@@ -50,6 +50,13 @@ namespace Server.Controllers
             User userToAdd = _mapper.Map<User>(registerUser);
             userToAdd.PasswordHash = _authHelper.CreatePasswordHash(registerUser.Password, passwordSalt);
             userToAdd.PasswordSalt = passwordSalt;
+
+            List<Category> globalCategories = await _context.Categories
+                .Include(c => c.Subcategories)
+                .Where(c => c.UserId == null)
+                .ToListAsync();
+
+            userToAdd.Categories = [.. globalCategories.Select(CategoryHelper.CloneCategory)];
 
             _context.Users.Add(userToAdd);
             if (await _context.SaveChangesAsync() > 0)
@@ -83,8 +90,8 @@ namespace Server.Controllers
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTimeOffset.UtcNow.AddDays(1)
             });
-            
-             return Ok("Login successful");
+
+            return Ok("Login successful");
         }
 
         [HttpPost("Logout")]
@@ -110,9 +117,12 @@ namespace Server.Controllers
         [HttpGet]
         public IEnumerable<User> GetAllUsers()
         {
-            return _context.Users.ToList();
-        }
+        var user = _context.Users.Where(u => u.Id == 1)
+            .Include(u => u.Categories)
+                .ThenInclude(c => c.Subcategories)
+                    .ToList();
 
+            return user;
+        }
     }
 }
-
