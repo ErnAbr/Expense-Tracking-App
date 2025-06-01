@@ -4,6 +4,7 @@ import {
   RegisterData,
   UserValidationServerResposne,
 } from "../interfaces/userAuth";
+import { CategoryObject } from "../interfaces/category";
 
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
@@ -45,6 +46,11 @@ const User = {
     requests.get<UserValidationServerResposne>("/user/auth/me"),
 };
 
+const Category = {
+  getAllUserCategories: () =>
+    requests.get<CategoryObject[]>("/category/getAllCategories"),
+};
+
 const Test = {
   allUSers: () => requests.get("/user/auth/"),
   allUSersPost: () => requests.post("/user/auth/", {}),
@@ -52,5 +58,6 @@ const Test = {
 
 export const api = {
   User,
+  Category,
   Test,
 };

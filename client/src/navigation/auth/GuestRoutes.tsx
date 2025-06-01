@@ -8,7 +8,7 @@ export const GuestRoutes = () => {
   const location = useLocation();
 
   if (user) {
-    return <Navigate to={routes.BUDGET} replace state={{ from: location }} />;
+    return <Navigate to={routes.SPENDING} replace state={{ from: location }} />;
   }
 
   return <Outlet />;

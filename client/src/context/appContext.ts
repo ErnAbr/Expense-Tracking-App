@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { api } from "../api/api";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { CategoryObject } from "../interfaces/category";
 
 interface User {
   email: string;
@@ -13,6 +14,8 @@ interface AppContext {
   logout: () => void;
   darkMode: boolean;
   setDarkMode: () => void;
+  categories: CategoryObject[] | null;
+  setCategories: (categories: CategoryObject[]) => void;
 }
 
 export const useAppContext = create<AppContext>((set) => ({
@@ -35,4 +38,6 @@ export const useAppContext = create<AppContext>((set) => ({
       localStorage.setItem("darkMode", JSON.stringify(!state.darkMode));
       return { darkMode: !state.darkMode };
     }),
+  categories: null,
+  setCategories: (categories) => set({ categories }),
 }));

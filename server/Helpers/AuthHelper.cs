@@ -46,7 +46,7 @@ namespace Server.Helpers
             Claim[] claims =
             [
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.DateOfBirth, user.BirthDate.ToString("yyyy-MM-dd"))
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             ];
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();

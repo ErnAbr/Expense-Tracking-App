@@ -8,5 +8,7 @@ namespace Server.Models
 
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
+
+        public ICollection<Expense> Expenses { get; set; } = [];
     }
 }

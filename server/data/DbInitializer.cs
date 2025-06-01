@@ -94,7 +94,7 @@ namespace Server.Data
                     PasswordSalt = salt1,
                     PasswordHash = authHelper.CreatePasswordHash("password123", salt1),
                     Gender = "Male",
-                    Country = "USA",
+                    Country = "LT",
                     BirthDate = new DateTime(2000, 1, 1),
                     Categories = [.. globalCategories.Select(CategoryHelper.CloneCategory)]
                 };
@@ -108,7 +108,7 @@ namespace Server.Data
                     PasswordSalt = salt2,
                     PasswordHash = authHelper.CreatePasswordHash("password123", salt2),
                     Gender = "Female",
-                    Country = "RU",
+                    Country = "PL",
                     BirthDate = new DateTime(2000, 1, 1),
                     Categories = [.. globalCategories.Select(CategoryHelper.CloneCategory)]
                 };

@@ -1,25 +1,45 @@
-import { useEffect, useState } from "react";
-import { api } from "../../api/api";
+import { useStore } from "zustand";
+import { queryCategories } from "../../api/queryCategories";
+import { useAppContext } from "../../context/appContext";
+import { useEffect } from "react";
+import { LoadingComponent } from "../../components/LoadingComponent/LoadingComponent";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../../navigation/routes/routes";
+
+// 1 MOVE DATA QUERING TO APPINIT COMPONENT AND SAVE IT TO GLOBALSTATE
 
 export const SpendingPage = () => {
-  const [users, setUsers] = useState<any>([]);
+  const navigate = useNavigate();
+  const {
+    categories: storedCategories,
+    setCategories,
+    logout,
+  } = useStore(useAppContext);
+
+  const {
+    data: queriedCategories,
+    error,
+    isPending: loadingCategories,
+  } = queryCategories();
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await api.Test.allUSers();
-        setUsers(response);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    if (!storedCategories && queriedCategories) {
+      setCategories(queriedCategories);
+    }
+  }, [storedCategories, queriedCategories]);
 
-    fetchUsers();
-  }, []);
+  useEffect(() => {
+    if (error) {
+      logout();
+      navigate(routes.HOME);
+    }
+  }, [error, logout, navigate]);
 
-  const localDate = new Date(users[1]?.birthDate);
-  const formattedDate = localDate.toLocaleDateString("en-GB");
-  console.log(formattedDate);
+  console.log(queriedCategories);
+
+  if (loadingCategories) {
+    return <LoadingComponent loadingMessage={"loading User Data..."} />;
+  }
 
   return <h1>This Is Spending Page</h1>;
 };
