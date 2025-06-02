@@ -1,45 +1,22 @@
+// pages/SpendingPage.tsx
 import { useStore } from "zustand";
-import { queryCategories } from "../../api/queryCategories";
 import { useAppContext } from "../../context/appContext";
-import { useEffect } from "react";
-import { LoadingComponent } from "../../components/LoadingComponent/LoadingComponent";
-import { useNavigate } from "react-router-dom";
-import { routes } from "../../navigation/routes/routes";
-
-// 1 MOVE DATA QUERING TO APPINIT COMPONENT AND SAVE IT TO GLOBALSTATE
+import { Box } from "@mui/material";
+import { CategoryCard } from "../../components/Cards/CategoryCard/CategoryCard";
+import Grid from "@mui/material/Grid";
 
 export const SpendingPage = () => {
-  const navigate = useNavigate();
-  const {
-    categories: storedCategories,
-    setCategories,
-    logout,
-  } = useStore(useAppContext);
+  const { categories: storedCategories } = useStore(useAppContext);
 
-  const {
-    data: queriedCategories,
-    error,
-    isPending: loadingCategories,
-  } = queryCategories();
-
-  useEffect(() => {
-    if (!storedCategories && queriedCategories) {
-      setCategories(queriedCategories);
-    }
-  }, [storedCategories, queriedCategories]);
-
-  useEffect(() => {
-    if (error) {
-      logout();
-      navigate(routes.HOME);
-    }
-  }, [error, logout, navigate]);
-
-  console.log(queriedCategories);
-
-  if (loadingCategories) {
-    return <LoadingComponent loadingMessage={"loading User Data..."} />;
-  }
-
-  return <h1>This Is Spending Page</h1>;
+  return (
+    <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
+      <Grid container spacing={2}>
+        {storedCategories?.map((category) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={category.id}>
+            <CategoryCard name={category.name} iconName={category.iconName} />
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
+  );
 };

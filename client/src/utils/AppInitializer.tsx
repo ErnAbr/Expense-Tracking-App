@@ -1,11 +1,9 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useStore } from "zustand";
 import { useAppContext } from "../context/appContext";
-import axios from "axios";
 import { api } from "../api/api";
-import { useNavigate } from "react-router-dom";
-import { routes } from "../navigation/routes/routes";
 import { LoadingComponent } from "../components/LoadingComponent/LoadingComponent";
+import { queryCategories } from "../api/categories.query";
 
 interface AppInitializerProps {
   children: ReactNode;
@@ -13,20 +11,27 @@ interface AppInitializerProps {
 
 export const AppInitializer = ({ children }: AppInitializerProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { setUser } = useStore(useAppContext);
-  const navigate = useNavigate();
+  const {
+    user,
+    setUser,
+    categories: storedCategories,
+    setCategories,
+  } = useStore(useAppContext);
+
+  const { data: queriedCategories, isPending: loadingCategories } =
+    queryCategories(!!user);
+
+  useEffect(() => {
+    if (!storedCategories && queriedCategories) {
+      setCategories(queriedCategories);
+    }
+  }, [storedCategories, queriedCategories]);
 
   useEffect(() => {
     const initializeApp = async () => {
       try {
         const response = await api.User.getCurrentUser();
         setUser(response);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          if (error.response?.status === 401) {
-            navigate(routes.HOME);
-          }
-        }
       } finally {
         setIsLoading(false);
       }
@@ -34,7 +39,7 @@ export const AppInitializer = ({ children }: AppInitializerProps) => {
     initializeApp();
   }, []);
 
-  if (isLoading) {
+  if (isLoading || (user && loadingCategories)) {
     return <LoadingComponent loadingMessage={"initiating App..."} />;
   }
 

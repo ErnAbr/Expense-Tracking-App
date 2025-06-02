@@ -6,24 +6,26 @@ import {
 } from "../interfaces/userAuth";
 import { CategoryObject } from "../interfaces/category";
 
+import { toast } from "react-toastify";
+
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
 
-// axios.interceptors.response.use(
-//   (response) => response,
-//   (error: AxiosError) => {
-//     if (error.response) {
-//       switch (error.response.status) {
-//         case 401:
-//           console.log(error.response.data);
-//           break;
-//         default:
-//           break;
-//       }
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+axios.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError) => {
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          toast.error("please log in");
+          break;
+        default:
+          break;
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 const responseBody = <T>(response: AxiosResponse<T>) => {
   return response.data;
