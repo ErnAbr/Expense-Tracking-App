@@ -5,27 +5,34 @@ import {
   UserValidationServerResposne,
 } from "../interfaces/userAuth";
 import { CategoryObject } from "../interfaces/category";
-
-import { toast } from "react-toastify";
+// import { useNavigate } from "react-router-dom";
+// import { routes } from "../navigation/routes/routes";
+// import { useStore } from "zustand";
+// import { useAppContext } from "../context/appContext";
 
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
 
-axios.interceptors.response.use(
-  (response) => response,
-  (error: AxiosError) => {
-    if (error.response) {
-      switch (error.response.status) {
-        case 401:
-          toast.error("please log in");
-          break;
-        default:
-          break;
-      }
-    }
-    return Promise.reject(error);
-  }
-);
+// axios.interceptors.response.use(
+//   (response) => response,
+//   (error: AxiosError) => {
+//     if (error.response) {
+//       switch (error.response.status) {
+//         case 401:
+//           () => {
+//             const navigate = useNavigate();
+//             const { setUser } = useStore(useAppContext);
+//             setUser(null);
+//             navigate(routes.HOME);
+//           };
+//           break;
+//         default:
+//           break;
+//       }
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 const responseBody = <T>(response: AxiosResponse<T>) => {
   return response.data;

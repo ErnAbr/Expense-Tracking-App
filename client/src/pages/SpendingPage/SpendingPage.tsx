@@ -8,12 +8,18 @@ import Grid from "@mui/material/Grid";
 export const SpendingPage = () => {
   const { categories: storedCategories } = useStore(useAppContext);
 
+  // ADD AN EMPTY CARD LIKE A BUTTON FOR ADDING MORE CATEGORIES
+
   return (
     <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         {storedCategories?.map((category) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={category.id}>
-            <CategoryCard name={category.name} iconName={category.iconName} />
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            <CategoryCard
+              name={category.name}
+              iconName={category.iconName}
+              key={category.id}
+            />
           </Grid>
         ))}
       </Grid>

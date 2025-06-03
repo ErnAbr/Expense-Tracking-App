@@ -13,8 +13,6 @@ interface CategoryCardProps {
   iconName: string;
 }
 
-// 1. FIX THE GRID SO IT IS RESPONSIVE
-
 export const CategoryCard = ({ name, iconName }: CategoryCardProps) => {
   const Icon = MdIcons[iconName as keyof typeof MdIcons] ?? MdIcons.MdCategory;
 

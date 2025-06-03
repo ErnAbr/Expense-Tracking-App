@@ -11,6 +11,7 @@ interface AppInitializerProps {
 
 export const AppInitializer = ({ children }: AppInitializerProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const {
     user,
     setUser,
