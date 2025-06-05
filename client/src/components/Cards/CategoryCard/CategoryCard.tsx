@@ -1,20 +1,37 @@
 import styles from "./categoryCard.module.scss";
 import * as MdIcons from "react-icons/md";
+import * as CiIcons from "react-icons/ci";
+import * as FaIcons from "react-icons/fa";
 import {
   Card,
   CardContent,
   CardActions,
   Typography,
   Button,
+  Box,
 } from "@mui/material";
 
 interface CategoryCardProps {
-  name: string;
+  name?: string;
   iconName: string;
 }
 
+const getIconComponent = (iconName: string) => {
+  const prefix = iconName.slice(0, 2);
+  switch (prefix) {
+    case "Md":
+      return MdIcons[iconName as keyof typeof MdIcons];
+    case "Ci":
+      return CiIcons[iconName as keyof typeof CiIcons];
+    case "Fa":
+      return FaIcons[iconName as keyof typeof FaIcons];
+    default:
+      return MdIcons.MdCategory;
+  }
+};
+
 export const CategoryCard = ({ name, iconName }: CategoryCardProps) => {
-  const Icon = MdIcons[iconName as keyof typeof MdIcons] ?? MdIcons.MdCategory;
+  const Icon = getIconComponent(iconName);
 
   return (
     <Card
@@ -24,20 +41,34 @@ export const CategoryCard = ({ name, iconName }: CategoryCardProps) => {
         maxWidth: "100%",
         display: "flex",
         flexDirection: "column",
+        justifyContent: "center",
+        cursor: !name ? "pointer" : "default",
       }}
     >
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
-          <Icon style={{ marginRight: 8, verticalAlign: "middle" }} />
-          {name}
-        </Typography>
-        <Typography sx={{ color: "text.secondary", fontSize: 14 }} gutterBottom>
-          Total Spent: will be added later
-        </Typography>
+      <CardContent className={`${!name ? styles.iconAdd : ""}`}>
+        {name ? (
+          <>
+            <Typography variant="h6" gutterBottom>
+              <Icon style={{ marginRight: 8, verticalAlign: "middle" }} />
+              {name}
+            </Typography>
+            <Typography
+              sx={{ color: "text.secondary", fontSize: 14 }}
+              gutterBottom
+            >
+              Total Spent: will be added later
+            </Typography>
+          </>
+        ) : (
+          <Icon style={{ fontSize: 64 }} />
+        )}
       </CardContent>
-      <CardActions>
-        <Button size="small">Add Expense</Button>
-      </CardActions>
+
+      {name && (
+        <CardActions>
+          <Button size="small">Add Expense</Button>
+        </CardActions>
+      )}
     </Card>
   );
 };

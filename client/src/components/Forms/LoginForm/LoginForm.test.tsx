@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import { HomePage } from "./HomePage";
+import { HomePage } from "../../../pages/HomePage/HomePage";
 import userEvent from "@testing-library/user-event";
-import { handlers, server } from "../../test/server";
+import { handlers, server } from "../../../test/server";
 
 test("renders email and password inputs", () => {
   render(<HomePage />);

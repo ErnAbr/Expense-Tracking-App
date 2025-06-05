@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { server, handlers } from "../../test/server";
-import { RegisterPage } from "./RegisterPage";
+import { server, handlers } from "../../../test/server";
+import { RegisterPage } from "../../../pages/RegisterPage/RegisterPage";
 
 const fillRegistrationForm = async ({
   email = "ern5@ern.lt",
