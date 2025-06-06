@@ -6,6 +6,7 @@ import { CategoryCard } from "../../components/Cards/CategoryCard/CategoryCard";
 import Grid from "@mui/material/Grid";
 import { useState } from "react";
 import { BasicModal } from "../../components/Modal/BasicModal";
+import { CategoryAccordion } from "../../components/Accordion/CategoryAccordion";
 
 export const SpendingPage = () => {
   const { categories: storedCategories } = useStore(useAppContext);
@@ -39,7 +40,7 @@ export const SpendingPage = () => {
         open={openModal}
         onClose={handleClose}
       >
-        <p>Form or inputs for new category here</p>
+        <CategoryAccordion />
       </BasicModal>
     </Box>
   );

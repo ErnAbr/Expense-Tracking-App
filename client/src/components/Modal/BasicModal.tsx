@@ -29,9 +29,9 @@ export const BasicModal = ({ title, children, open, onClose }: ModalProps) => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {title}
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <Box id="modal-modal-description" sx={{ mt: 2 }}>
             {children}
-          </Typography>
+          </Box>
         </Box>
       </Modal>
     </div>
