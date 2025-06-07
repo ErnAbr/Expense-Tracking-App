@@ -24,6 +24,7 @@ export const BasicModal = ({ title, children, open, onClose }: ModalProps) => {
             boxShadow: 24,
             p: 4,
             borderRadius: 2,
+            outline: "none",
           }}
         >
           <Typography id="modal-modal-title" variant="h6" component="h2">

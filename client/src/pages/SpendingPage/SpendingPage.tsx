@@ -7,16 +7,32 @@ import Grid from "@mui/material/Grid";
 import { useState } from "react";
 import { BasicModal } from "../../components/Modal/BasicModal";
 import { CategoryAccordion } from "../../components/Accordion/CategoryAccordion";
+import { CategoryForm } from "../../components/Forms/CategoryForm/CategoryForm";
+import { CategoryMutationTypes } from "../../interfaces/categoryMutationType";
 
 export const SpendingPage = () => {
   const { categories: storedCategories } = useStore(useAppContext);
   const [openModal, setOpenModal] = useState(false);
+  const [modalView, setModalView] = useState<"list" | "edit">("list");
+  const [editTarget, setEditTarget] = useState<{
+    id: number;
+    type: "cat" | "sub";
+  } | null>(null);
+
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
 
-  //1. create a form so that you can add category and subcategory. when you open modal you get a list of your current cats and subs which you can delete or rename also ability to add new cats with subs
+  const deleteCategory = ({ e, id, type }: CategoryMutationTypes) => {
+    e.stopPropagation();
+    console.log(id);
+    console.log(type);
+  };
 
-  //2. make a model that when you press a category it shows subcategories, with expenses to each subcategory and ability to add an expense
+  const editCategory = ({ e, id, type }: CategoryMutationTypes) => {
+    e.stopPropagation();
+    setEditTarget({ id, type });
+    setModalView("edit");
+  };
 
   return (
     <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
@@ -40,7 +56,18 @@ export const SpendingPage = () => {
         open={openModal}
         onClose={handleClose}
       >
-        <CategoryAccordion />
+        {modalView === "list" ? (
+          <CategoryAccordion
+            editCategory={editCategory}
+            deleteCategory={deleteCategory}
+          />
+        ) : (
+          <CategoryForm
+            setModalView={setModalView}
+            editTarget={editTarget}
+            deleteCategory={deleteCategory}
+          />
+        )}
       </BasicModal>
     </Box>
   );
