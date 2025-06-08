@@ -8,7 +8,6 @@ import {
   CardActions,
   Typography,
   Button,
-  Box,
 } from "@mui/material";
 
 interface CategoryCardProps {

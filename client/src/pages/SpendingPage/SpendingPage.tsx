@@ -10,10 +10,12 @@ import { CategoryAccordion } from "../../components/Accordion/CategoryAccordion"
 import { CategoryForm } from "../../components/Forms/CategoryForm/CategoryForm";
 import { CategoryMutationTypes } from "../../interfaces/categoryMutationType";
 
+// TASK: make IconPicker Component
+
 export const SpendingPage = () => {
   const { categories: storedCategories } = useStore(useAppContext);
   const [openModal, setOpenModal] = useState(false);
-  const [modalView, setModalView] = useState<"list" | "edit">("list");
+  const [modalView, setModalView] = useState<"list" | "edit" | "icons">("list");
   const [editTarget, setEditTarget] = useState<{
     id: number;
     type: "cat" | "sub";

@@ -16,6 +16,8 @@ interface AppContext {
   setDarkMode: () => void;
   categories: CategoryObject[] | null;
   setCategories: (categories: CategoryObject[]) => void;
+  icons: string[];
+  setIcons: (icons: string[]) => void;
 }
 
 export const useAppContext = create<AppContext>((set) => ({
@@ -40,4 +42,6 @@ export const useAppContext = create<AppContext>((set) => ({
     }),
   categories: null,
   setCategories: (categories) => set({ categories }),
+  icons: [],
+  setIcons: (icons) => set({ icons }),
 }));

@@ -4,6 +4,7 @@ import { useAppContext } from "../context/appContext";
 import { api } from "../api/api";
 import { LoadingComponent } from "../components/LoadingComponent/LoadingComponent";
 import { queryCategories } from "../api/categories.query";
+import iconNames from "../components/IconPicker/fa-icons.json";
 
 interface AppInitializerProps {
   children: ReactNode;
