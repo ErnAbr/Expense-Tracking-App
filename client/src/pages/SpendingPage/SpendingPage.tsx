@@ -7,15 +7,18 @@ import Grid from "@mui/material/Grid";
 import { useState } from "react";
 import { BasicModal } from "../../components/Modal/BasicModal";
 import { CategoryAccordion } from "../../components/Accordion/CategoryAccordion";
-import { CategoryForm } from "../../components/Forms/CategoryForm/CategoryForm";
+import { EditCategoryForm } from "../../components/Forms/CategoryForm/EditCategoryForm";
 import { CategoryMutationTypes } from "../../interfaces/categoryMutationType";
+import { AddCategoryForm } from "../../components/Forms/CategoryForm/AddCategoryForm";
 
-// TASK: make IconPicker Component
+// TASK: create a form for adding categories and subcategories
 
 export const SpendingPage = () => {
   const { categories: storedCategories } = useStore(useAppContext);
   const [openModal, setOpenModal] = useState(false);
-  const [modalView, setModalView] = useState<"list" | "edit" | "icons">("list");
+  const [modalView, setModalView] = useState<"list" | "edit" | "add" | "icons">(
+    "list"
+  );
   const [editTarget, setEditTarget] = useState<{
     id: number;
     type: "cat" | "sub";
@@ -36,15 +39,15 @@ export const SpendingPage = () => {
     setModalView("edit");
   };
 
+  const addCategory = () => {
+    setModalView("add");
+  };
+
   return (
     <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
       <Grid container spacing={1}>
         {storedCategories?.map((category) => (
-          <Grid
-            onClick={() => console.log(category.id)}
-            size={{ xs: 12, sm: 6, md: 4 }}
-            key={category.id}
-          >
+          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={category.id}>
             <CategoryCard name={category.name} iconName={category.iconName} />
           </Grid>
         ))}
@@ -54,22 +57,25 @@ export const SpendingPage = () => {
       </Grid>
 
       <BasicModal
-        title="Edit Your Categories"
+        title={modalView === "add" ? "Add Category" : "Edit Your Categories"}
         open={openModal}
         onClose={handleClose}
       >
-        {modalView === "list" ? (
+        {modalView === "list" && (
           <CategoryAccordion
             editCategory={editCategory}
             deleteCategory={deleteCategory}
+            addCategory={addCategory}
           />
-        ) : (
-          <CategoryForm
+        )}
+        {modalView === "edit" && (
+          <EditCategoryForm
             setModalView={setModalView}
             editTarget={editTarget}
             deleteCategory={deleteCategory}
           />
         )}
+        {modalView === "add" && <AddCategoryForm setModalView={setModalView} />}
       </BasicModal>
     </Box>
   );

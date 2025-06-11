@@ -25,7 +25,7 @@ const schema = yup.object({
 });
 
 interface CategoryFormProps {
-  setModalView: (view: "list" | "edit") => void;
+  setModalView: (view: "list") => void;
   editTarget: {
     id: number;
     type: "cat" | "sub";
@@ -33,7 +33,7 @@ interface CategoryFormProps {
   deleteCategory: ({ e, id, type }: CategoryMutationTypes) => void;
 }
 
-export const CategoryForm = ({
+export const EditCategoryForm = ({
   setModalView,
   editTarget,
   deleteCategory,
@@ -98,7 +98,7 @@ export const CategoryForm = ({
           <FormInputText
             name="name"
             control={control}
-            label="Subcategory Name"
+            label={type === "cat" ? "Category Name" : "Subcategory Name"}
             type="text"
           />
         </Box>
