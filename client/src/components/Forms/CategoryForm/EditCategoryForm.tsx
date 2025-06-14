@@ -60,7 +60,9 @@ export const EditCategoryForm = ({
           .find((sub) => sub.id === editTarget.id)
       : null;
 
-  const [icon, setIcon] = useState(subcategoryToEdit?.iconName || "FaBeer");
+  const [icon, setIcon] = useState(
+    subcategoryToEdit?.iconName ?? categoryToEdit?.iconName ?? "FaBeer"
+  );
   const { handleSubmit, control, setValue } = useForm<FormValues>({
     resolver: yupResolver(schema),
     defaultValues: {

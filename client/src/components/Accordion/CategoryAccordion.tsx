@@ -39,7 +39,7 @@ export const CategoryAccordion = ({
         sx={{
           overflowY: "auto",
           maxHeight: "50vh",
-          width: "auto",
+          // width: "auto",
           pr: 0.1,
         }}
       >
