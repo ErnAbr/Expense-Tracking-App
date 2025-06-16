@@ -19,7 +19,7 @@ export const BasicModal = ({ title, children, open, onClose }: ModalProps) => {
             top: "45%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: "auto",
+            width: { md: "auto", lg: "40vw" },
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,

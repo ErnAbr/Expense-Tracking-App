@@ -11,8 +11,6 @@ import { EditCategoryForm } from "../../components/Forms/CategoryForm/EditCatego
 import { CategoryMutationTypes } from "../../interfaces/categoryMutationType";
 import { AddCategoryForm } from "../../components/Forms/CategoryForm/AddCategoryForm";
 
-// TASK: create a form for adding categories and subcategories
-
 export const SpendingPage = () => {
   const { categories: storedCategories } = useStore(useAppContext);
   const [openModal, setOpenModal] = useState(false);

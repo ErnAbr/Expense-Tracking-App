@@ -4,8 +4,8 @@ import {
   Control,
   FieldErrors,
   useFieldArray,
+  UseFormClearErrors,
   UseFormSetValue,
-  UseFormTrigger,
 } from "react-hook-form";
 import { FormInputText } from "../../FormComponents/FormInputText/FormInputText";
 import { IconPicker } from "../../IconPicker/IconPicker";
@@ -18,20 +18,20 @@ interface SubcategoryFormProps {
   control: Control<AddCategoryFormValues>;
   setValue: UseFormSetValue<AddCategoryFormValues>;
   error?: FieldErrors<AddCategoryFormValues>;
-  trigger: UseFormTrigger<AddCategoryFormValues>;
+  clearErrors: UseFormClearErrors<AddCategoryFormValues>;
 }
-// change add and remove buttons so that they don't appear together with every input
-// refactor repeated icon picking into separate component IconPickerToggle which is used inside three components
 
 export const AddSubcategoryToCatgoryForm = ({
   control,
   setValue,
+  clearErrors,
   error,
-  trigger,
 }: SubcategoryFormProps) => {
-  const [subIcon, setSubIcon] = useState("FaRegQuestionCircle");
-  const [showIconPicker, setShowIconPicker] = useState(false);
-  //   const [subIndex, setSubIndex] = useState(0);
+  const [subIcons, setSubIcons] = useState<Record<number, string>>({});
+  const [iconPickerOpen, setIconPickerOpen] = useState<Record<number, boolean>>(
+    {}
+  );
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "subcategory",
@@ -41,49 +41,65 @@ export const AddSubcategoryToCatgoryForm = ({
     return (FaIcons as any)[iconName] || null;
   };
 
-  const IconPreview = getIconComponent(subIcon);
-
   return (
-    <React.Fragment>
-      {fields.map((field, index) => (
-        <React.Fragment key={field.id}>
-          <Box className={styles.formFieldWrapper}>
-            <FormInputText
-              name={`subcategory.${index}.subcategoryName`}
-              control={control}
-              label="Subcategory Name"
-              type="text"
-            />
-          </Box>
-          <Box display="flex" alignItems="center" gap={1}>
-            {IconPreview && <IconPreview size={24} />}
-            <Button
-              onClick={() => setShowIconPicker((prev) => !prev)}
-              type="button"
-            >
-              {showIconPicker ? "Close Icon Picker" : "Choose Icon"}
-            </Button>
-          </Box>
+    <>
+      {fields.map((field, index) => {
+        const iconName = subIcons[index] || field.subcategoryIconName;
+        const IconPreview = getIconComponent(iconName);
 
-          {showIconPicker && (
-            <IconPicker
-              setSelectedIcon={(subIconName) => {
-                setSubIcon(subIconName);
-                setShowIconPicker(false);
-                setValue(
-                  `subcategory.${index}.subcategoryIconName`,
-                  subIconName
-                );
-              }}
-            />
-          )}
-        </React.Fragment>
-      ))}
+        return (
+          <React.Fragment key={field.id}>
+            <Box className={styles.formFieldWrapper}>
+              <FormInputText
+                name={`subcategory.${index}.subcategoryName`}
+                control={control}
+                label="Subcategory Name"
+                type="text"
+              />
+            </Box>
+
+            <Box display="flex" alignItems="center" gap={1}>
+              {IconPreview && <IconPreview size={24} />}
+              <Button
+                onClick={() =>
+                  setIconPickerOpen((prev) => ({
+                    ...prev,
+                    [index]: !prev[index],
+                  }))
+                }
+              >
+                {iconPickerOpen[index] ? "Close Icon Picker" : "Choose Icon"}
+              </Button>
+            </Box>
+
+            {iconPickerOpen[index] && (
+              <IconPicker
+                setSelectedIcon={(iconName) => {
+                  setSubIcons((prev) => ({
+                    ...prev,
+                    [index]: iconName,
+                  }));
+                  setValue(
+                    `subcategory.${index}.subcategoryIconName`,
+                    iconName
+                  );
+                  setIconPickerOpen((prev) => ({
+                    ...prev,
+                    [index]: false,
+                  }));
+                }}
+              />
+            )}
+          </React.Fragment>
+        );
+      })}
+
       {error?.root?.message && (
         <Box sx={{ color: "red", mt: 1, textAlign: "center" }}>
           {error.root.message}
         </Box>
       )}
+
       <Box display="flex" justifyContent="space-around" mt={2}>
         <Button
           color="success"
@@ -92,8 +108,10 @@ export const AddSubcategoryToCatgoryForm = ({
               subcategoryName: "",
               subcategoryIconName: "FaRegQuestionCircle",
             });
-            await trigger("subcategory");
+            clearErrors("subcategory");
+            clearErrors("category");
           }}
+          className={styles.buttonWidth}
         >
           Add
         </Button>
@@ -102,12 +120,14 @@ export const AddSubcategoryToCatgoryForm = ({
           disabled={fields.length === 0}
           onClick={async () => {
             remove(fields.length - 1);
-            await trigger("subcategory");
+            clearErrors("subcategory");
+            clearErrors("category");
           }}
+          className={styles.buttonWidth}
         >
           Delete
         </Button>
       </Box>
-    </React.Fragment>
+    </>
   );
 };

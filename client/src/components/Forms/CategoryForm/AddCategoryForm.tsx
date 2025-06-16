@@ -10,6 +10,8 @@ import { IconPicker } from "../../IconPicker/IconPicker";
 import { AddSubcategoryToCatgoryForm } from "./AddSubcategoryToCatgoryForm";
 import { toast } from "react-toastify";
 
+// Refactor icon picker logic into a separate component
+
 export type AddCategoryFormValues = {
   category: string;
   iconName: string;
@@ -46,7 +48,7 @@ export const AddCategoryForm = ({ setModalView }: CategoryFormProps) => {
     handleSubmit,
     control,
     setValue,
-    trigger,
+    clearErrors,
     formState: { errors },
   } = useForm<AddCategoryFormValues>({
     resolver: yupResolver(schema),
@@ -117,16 +119,21 @@ export const AddCategoryForm = ({ setModalView }: CategoryFormProps) => {
           control={control}
           setValue={setValue}
           error={errors.subcategory}
-          trigger={trigger}
+          clearErrors={clearErrors}
         />
         <Box display="flex" justifyContent="space-around" mt={2}>
-          <Button variant="contained" type="submit">
+          <Button
+            variant="contained"
+            type="submit"
+            className={styles.buttonWidth}
+          >
             Save
           </Button>
           <Button
             variant="contained"
             color="error"
             onClick={() => setModalView("list")}
+            className={styles.buttonWidth}
           >
             BACK
           </Button>

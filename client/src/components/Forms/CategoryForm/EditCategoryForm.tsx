@@ -124,14 +124,19 @@ export const EditCategoryForm = ({
             }}
           />
         )}
-        <Box display="flex" justifyContent="space-around" mt={2}>
-          <Button variant="contained" type="submit">
+        <Box display="flex" justifyContent="space-around" mt={2} gap={5}>
+          <Button
+            variant="contained"
+            type="submit"
+            className={styles.buttonWidth}
+          >
             Save
           </Button>
           <Button
             variant="contained"
             color="error"
             onClick={(e) => deleteCategory({ e, id, type })}
+            className={styles.buttonWidth}
           >
             Delete
           </Button>
