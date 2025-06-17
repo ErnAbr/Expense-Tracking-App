@@ -4,13 +4,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { FormInputText } from "../../FormComponents/FormInputText/FormInputText";
-import { useState } from "react";
-import * as FaIcons from "react-icons/fa";
-import { IconPicker } from "../../IconPicker/IconPicker";
 import { AddSubcategoryToCatgoryForm } from "./AddSubcategoryToCatgoryForm";
 import { toast } from "react-toastify";
-
-// Refactor icon picker logic into a separate component
+import { IconPickerToggler } from "../../IconPicker/IconPickerToggler";
 
 export type AddCategoryFormValues = {
   category: string;
@@ -41,9 +37,6 @@ const schema = yup.object({
 });
 
 export const AddCategoryForm = ({ setModalView }: CategoryFormProps) => {
-  const [showIconPicker, setShowIconPicker] = useState(false);
-  const [icon, setIcon] = useState("FaRegQuestionCircle");
-
   const {
     handleSubmit,
     control,
@@ -63,12 +56,6 @@ export const AddCategoryForm = ({ setModalView }: CategoryFormProps) => {
       ],
     },
   });
-
-  const getIconComponent = (iconName: string) => {
-    return (FaIcons as any)[iconName] || null;
-  };
-
-  const IconPreview = getIconComponent(icon);
 
   const handleFormSubmit = (data: AddCategoryFormValues) => {
     console.log(data);
@@ -95,26 +82,10 @@ export const AddCategoryForm = ({ setModalView }: CategoryFormProps) => {
             type="text"
           />
         </Box>
-
-        <Box display="flex" alignItems="center" gap={1}>
-          {IconPreview && <IconPreview size={24} />}
-          <Button
-            onClick={() => setShowIconPicker((prev) => !prev)}
-            type="button"
-          >
-            {showIconPicker ? "Close Icon Picker" : "Choose Icon"}
-          </Button>
-        </Box>
-
-        {showIconPicker && (
-          <IconPicker
-            setSelectedIcon={(iconName) => {
-              setIcon(iconName);
-              setValue("iconName", iconName);
-              setShowIconPicker(false);
-            }}
-          />
-        )}
+        <IconPickerToggler<AddCategoryFormValues>
+          setValue={setValue}
+          name="iconName"
+        />
         <AddSubcategoryToCatgoryForm
           control={control}
           setValue={setValue}

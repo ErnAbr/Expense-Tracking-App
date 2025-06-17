@@ -5,14 +5,10 @@ import { useStore } from "zustand";
 import { CategoryMutationTypes } from "../../../interfaces/categoryMutationType";
 import { useForm } from "react-hook-form";
 import { FormInputText } from "../../FormComponents/FormInputText/FormInputText";
-import { useState } from "react";
-import * as FaIcons from "react-icons/fa";
-import * as MdIcons from "react-icons/md";
-import * as CiIcons from "react-icons/ci";
-import { IconPicker } from "../../IconPicker/IconPicker";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { IconPickerToggler } from "../../IconPicker/IconPickerToggler";
 
 type FormValues = {
   name: string;
@@ -39,7 +35,6 @@ export const EditCategoryForm = ({
   deleteCategory,
 }: CategoryFormProps) => {
   const { categories: storedCategories } = useStore(useAppContext);
-  const [showIconPicker, setShowIconPicker] = useState(false);
 
   if (!editTarget) {
     return (
@@ -60,9 +55,6 @@ export const EditCategoryForm = ({
           .find((sub) => sub.id === editTarget.id)
       : null;
 
-  const [icon, setIcon] = useState(
-    subcategoryToEdit?.iconName ?? categoryToEdit?.iconName ?? "FaBeer"
-  );
   const { handleSubmit, control, setValue } = useForm<FormValues>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -72,19 +64,8 @@ export const EditCategoryForm = ({
     },
   });
 
-  const getIconComponent = (iconName: string) => {
-    return (
-      (FaIcons as any)[iconName] ||
-      (MdIcons as any)[iconName] ||
-      (CiIcons as any)[iconName] ||
-      null
-    );
-  };
-
-  const IconPreview = getIconComponent(icon);
-
   const handleFormSubmit = (data: FormValues) => {
-    const payload = { id, data };
+    const payload = { id, type, data };
     console.log(payload);
     toast.success(type === "cat" ? "Category Updated" : "SubCategory Updated");
   };
@@ -105,25 +86,13 @@ export const EditCategoryForm = ({
           />
         </Box>
 
-        <Box display="flex" alignItems="center" gap={1}>
-          {IconPreview && <IconPreview size={24} />}
-          <Button
-            onClick={() => setShowIconPicker((prev) => !prev)}
-            type="button"
-          >
-            {showIconPicker ? "Close Icon Picker" : "Change Icon"}
-          </Button>
-        </Box>
-
-        {showIconPicker && (
-          <IconPicker
-            setSelectedIcon={(iconName) => {
-              setIcon(iconName);
-              setValue("iconName", iconName);
-              setShowIconPicker(false);
-            }}
-          />
-        )}
+        <IconPickerToggler<FormValues>
+          setValue={setValue}
+          initialIcon={
+            subcategoryToEdit?.iconName ?? categoryToEdit?.iconName ?? "FaBeer"
+          }
+          name="iconName"
+        />
         <Box display="flex" justifyContent="space-around" mt={2} gap={5}>
           <Button
             variant="contained"

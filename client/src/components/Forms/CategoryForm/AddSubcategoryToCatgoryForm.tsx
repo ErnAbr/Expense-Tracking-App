@@ -8,11 +8,9 @@ import {
   UseFormSetValue,
 } from "react-hook-form";
 import { FormInputText } from "../../FormComponents/FormInputText/FormInputText";
-import { IconPicker } from "../../IconPicker/IconPicker";
-import * as FaIcons from "react-icons/fa";
-import { useState } from "react";
 import { AddCategoryFormValues } from "./AddCategoryForm";
 import React from "react";
+import { IconPickerToggler } from "../../IconPicker/IconPickerToggler";
 
 interface SubcategoryFormProps {
   control: Control<AddCategoryFormValues>;
@@ -27,26 +25,14 @@ export const AddSubcategoryToCatgoryForm = ({
   clearErrors,
   error,
 }: SubcategoryFormProps) => {
-  const [subIcons, setSubIcons] = useState<Record<number, string>>({});
-  const [iconPickerOpen, setIconPickerOpen] = useState<Record<number, boolean>>(
-    {}
-  );
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: "subcategory",
   });
 
-  const getIconComponent = (iconName: string) => {
-    return (FaIcons as any)[iconName] || null;
-  };
-
   return (
     <>
       {fields.map((field, index) => {
-        const iconName = subIcons[index] || field.subcategoryIconName;
-        const IconPreview = getIconComponent(iconName);
-
         return (
           <React.Fragment key={field.id}>
             <Box className={styles.formFieldWrapper}>
@@ -58,38 +44,11 @@ export const AddSubcategoryToCatgoryForm = ({
               />
             </Box>
 
-            <Box display="flex" alignItems="center" gap={1}>
-              {IconPreview && <IconPreview size={24} />}
-              <Button
-                onClick={() =>
-                  setIconPickerOpen((prev) => ({
-                    ...prev,
-                    [index]: !prev[index],
-                  }))
-                }
-              >
-                {iconPickerOpen[index] ? "Close Icon Picker" : "Choose Icon"}
-              </Button>
-            </Box>
-
-            {iconPickerOpen[index] && (
-              <IconPicker
-                setSelectedIcon={(iconName) => {
-                  setSubIcons((prev) => ({
-                    ...prev,
-                    [index]: iconName,
-                  }));
-                  setValue(
-                    `subcategory.${index}.subcategoryIconName`,
-                    iconName
-                  );
-                  setIconPickerOpen((prev) => ({
-                    ...prev,
-                    [index]: false,
-                  }));
-                }}
-              />
-            )}
+            <IconPickerToggler
+              setValue={setValue}
+              name={`subcategory.${index}.subcategoryIconName`}
+              initialIcon={field.subcategoryIconName}
+            />
           </React.Fragment>
         );
       })}
