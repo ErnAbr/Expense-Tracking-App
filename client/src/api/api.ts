@@ -4,7 +4,7 @@ import {
   RegisterData,
   UserValidationServerResposne,
 } from "../interfaces/userAuth";
-import { CategoryObject } from "../interfaces/category";
+import { CategoryDeleteData, CategoryObject } from "../interfaces/category";
 // import { useNavigate } from "react-router-dom";
 // import { routes } from "../navigation/routes/routes";
 // import { useStore } from "zustand";
@@ -44,6 +44,8 @@ const requests = {
     axios.post<T>(url, body).then(responseBody),
   put: <T>(url: string, body: object) =>
     axios.put<T>(url, body).then(responseBody),
+  delete: <T>(url: string, body: object) =>
+    axios.delete<T>(url, { data: body }).then(responseBody),
 };
 
 const User = {
@@ -58,6 +60,8 @@ const User = {
 const Category = {
   getAllUserCategories: () =>
     requests.get<CategoryObject[]>("/category/getAllCategories"),
+  deleteUserCatOrSub: (body: CategoryDeleteData) =>
+    requests.delete<string>("/category/DeleteCatOrSub", body),
 };
 
 const Test = {

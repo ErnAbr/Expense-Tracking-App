@@ -90,9 +90,9 @@ namespace Server.Data
 
                 var user1 = new User
                 {
-                    Email = "test@example.com",
+                    Email = "ern@ern",
                     PasswordSalt = salt1,
-                    PasswordHash = authHelper.CreatePasswordHash("password123", salt1),
+                    PasswordHash = authHelper.CreatePasswordHash("1", salt1),
                     Gender = "Male",
                     Country = "LT",
                     BirthDate = new DateTime(2000, 1, 1),

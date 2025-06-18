@@ -1,6 +1,3 @@
-// pages/SpendingPage.tsx
-import { useStore } from "zustand";
-import { useAppContext } from "../../context/appContext";
 import { Box } from "@mui/material";
 import { CategoryCard } from "../../components/Cards/CategoryCard/CategoryCard";
 import Grid from "@mui/material/Grid";
@@ -10,9 +7,16 @@ import { CategoryAccordion } from "../../components/Accordion/CategoryAccordion"
 import { EditCategoryForm } from "../../components/Forms/CategoryForm/EditCategoryForm";
 import { CategoryMutationTypes } from "../../interfaces/categoryMutationType";
 import { AddCategoryForm } from "../../components/Forms/CategoryForm/AddCategoryForm";
+import { api } from "../../api/api";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { queryCategories } from "../../api/categories.query";
+import { useQueryClient } from "@tanstack/react-query";
+
+//fix the grid
 
 export const SpendingPage = () => {
-  const { categories: storedCategories } = useStore(useAppContext);
+  const { data: storedCategories } = queryCategories();
   const [openModal, setOpenModal] = useState(false);
   const [modalView, setModalView] = useState<"list" | "edit" | "add" | "icons">(
     "list"
@@ -22,13 +26,23 @@ export const SpendingPage = () => {
     type: "cat" | "sub";
   } | null>(null);
 
+  const queryClient = useQueryClient();
+
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
 
-  const deleteCategory = ({ e, id, type }: CategoryMutationTypes) => {
+  const deleteCategory = async ({ e, id, type }: CategoryMutationTypes) => {
     e.stopPropagation();
-    console.log(id);
-    console.log(type);
+    const payload = { id, type };
+    try {
+      const response = await api.Category.deleteUserCatOrSub(payload);
+      toast.success(response);
+      queryClient.invalidateQueries({ queryKey: ["category"] });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data);
+      }
+    }
   };
 
   const editCategory = ({ e, id, type }: CategoryMutationTypes) => {
@@ -41,15 +55,22 @@ export const SpendingPage = () => {
     setModalView("add");
   };
 
+  const grindItemCount =
+    storedCategories?.length === 0
+      ? 12
+      : storedCategories?.length === 1
+      ? 6
+      : 4;
+
   return (
     <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
       <Grid container spacing={1}>
         {storedCategories?.map((category) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={category.id}>
+          <Grid size={{ xs: 12, sm: 6, md: grindItemCount }} key={category.id}>
             <CategoryCard name={category.name} iconName={category.iconName} />
           </Grid>
         ))}
-        <Grid onClick={handleOpen} size={{ xs: 12, sm: 6, md: 4 }}>
+        <Grid onClick={handleOpen} size={{ xs: 12, sm: 6, md: grindItemCount }}>
           <CategoryCard iconName="CiCirclePlus" />
         </Grid>
       </Grid>

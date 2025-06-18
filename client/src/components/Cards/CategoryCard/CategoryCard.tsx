@@ -36,7 +36,9 @@ export const CategoryCard = ({ name, iconName }: CategoryCardProps) => {
     <Card
       className={styles.categoryCard}
       sx={{
+        minHeight: "15vh",
         height: "100%",
+        minWidth: "25vw",
         maxWidth: "100%",
         display: "flex",
         flexDirection: "column",

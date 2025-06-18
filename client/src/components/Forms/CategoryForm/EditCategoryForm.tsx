@@ -1,7 +1,5 @@
 import styles from "./categoryForm.module.scss";
 import { Box, Button, Paper } from "@mui/material";
-import { useAppContext } from "../../../context/appContext";
-import { useStore } from "zustand";
 import { CategoryMutationTypes } from "../../../interfaces/categoryMutationType";
 import { useForm } from "react-hook-form";
 import { FormInputText } from "../../FormComponents/FormInputText/FormInputText";
@@ -9,6 +7,7 @@ import { toast } from "react-toastify";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IconPickerToggler } from "../../IconPicker/IconPickerToggler";
+import { queryCategories } from "../../../api/categories.query";
 
 type FormValues = {
   name: string;
@@ -34,7 +33,7 @@ export const EditCategoryForm = ({
   editTarget,
   deleteCategory,
 }: CategoryFormProps) => {
-  const { categories: storedCategories } = useStore(useAppContext);
+    const { data: storedCategories } = queryCategories();
 
   if (!editTarget) {
     return (

@@ -4,7 +4,6 @@ import { useAppContext } from "../context/appContext";
 import { api } from "../api/api";
 import { LoadingComponent } from "../components/LoadingComponent/LoadingComponent";
 import { queryCategories } from "../api/categories.query";
-import iconNames from "../components/IconPicker/fa-icons.json";
 
 interface AppInitializerProps {
   children: ReactNode;
@@ -13,21 +12,9 @@ interface AppInitializerProps {
 export const AppInitializer = ({ children }: AppInitializerProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const {
-    user,
-    setUser,
-    categories: storedCategories,
-    setCategories,
-  } = useStore(useAppContext);
+  const { user, setUser } = useStore(useAppContext);
 
-  const { data: queriedCategories, isPending: loadingCategories } =
-    queryCategories(!!user);
-
-  useEffect(() => {
-    if (!storedCategories && queriedCategories) {
-      setCategories(queriedCategories);
-    }
-  }, [storedCategories, queriedCategories]);
+  const { isPending: loadingCategories } = queryCategories(!!user);
 
   useEffect(() => {
     const initializeApp = async () => {

@@ -1,4 +1,3 @@
-import { useStore } from "zustand";
 import {
   Accordion,
   AccordionSummary,
@@ -13,8 +12,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useAppContext } from "../../context/appContext";
 import { CategoryMutationTypes } from "../../interfaces/categoryMutationType";
+import { queryCategories } from "../../api/categories.query";
 
 interface CategoryAccordionProps {
   editCategory: ({ e, id, type }: CategoryMutationTypes) => void;
@@ -27,7 +26,7 @@ export const CategoryAccordion = ({
   deleteCategory,
   addCategory,
 }: CategoryAccordionProps) => {
-  const { categories: storedCategories } = useStore(useAppContext);
+  const { data: storedCategories } = queryCategories();
 
   return (
     <Box

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
+using Server.Dtos;
 using Server.Models;
 
 namespace Server.Controllers
@@ -35,6 +36,35 @@ namespace Server.Controllers
                         .Where(c => c.UserId == int.Parse(userId))
                         .Include(c => c.Subcategories)
                         .ToList();
+        }
+
+        [Authorize]
+        [HttpDelete("DeleteCatOrSub")]
+        public IActionResult DeleteUserCatOrSub([FromBody] DeteleCategoryDto dto)
+        {
+            if (dto.Type == "cat")
+            {
+                Category? categoryToDelete = _context.Categories.Find(dto.Id);
+                if (categoryToDelete == null)
+                    return NotFound("Category not found");
+
+                _context.Categories.Remove(categoryToDelete);
+            }
+            else if (dto.Type == "sub")
+            {
+                Subcategory? subcategoryToDelete = _context.Subcategories.Find(dto.Id);
+                if (subcategoryToDelete == null)
+                    return NotFound("Subcategory not found");
+
+                _context.Subcategories.Remove(subcategoryToDelete);
+            }
+            else
+            {
+                return BadRequest("Invalid type");
+            }
+
+            _context.SaveChanges();
+            return Ok("Deleted successfully");
         }
     }
 }

@@ -20,3 +20,8 @@ export interface Expense {
   date: string;
   userId: number;
 }
+
+export interface CategoryDeleteData {
+  id: number;
+  type: string;
+}
