@@ -13,8 +13,6 @@ import { toast } from "react-toastify";
 import { queryCategories } from "../../api/categories.query";
 import { useQueryClient } from "@tanstack/react-query";
 
-//fix the grid
-
 export const SpendingPage = () => {
   const { data: storedCategories } = queryCategories();
   const [openModal, setOpenModal] = useState(false);
@@ -55,22 +53,32 @@ export const SpendingPage = () => {
     setModalView("add");
   };
 
-  const grindItemCount =
-    storedCategories?.length === 0
-      ? 12
-      : storedCategories?.length === 1
-      ? 6
-      : 4;
+  const getGridSizeByBreakpoint = (count: number) => ({
+    xs: 12,
+    sm: count === 0 ? 12 : count === 1 ? 12 : 6,
+    md: count === 0 ? 12 : count === 1 ? 6 : 4,
+  });
+
+  const gridSize = getGridSizeByBreakpoint(storedCategories?.length || 0);
 
   return (
     <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
-      <Grid container spacing={1}>
+      <Grid
+        container
+        spacing={1}
+        sx={{
+          width:
+            storedCategories?.length === 0
+              ? { xs: "70%", md: "40%", xl: "25%" }
+              : undefined,
+        }}
+      >
         {storedCategories?.map((category) => (
-          <Grid size={{ xs: 12, sm: 6, md: grindItemCount }} key={category.id}>
+          <Grid size={gridSize} key={category.id}>
             <CategoryCard name={category.name} iconName={category.iconName} />
           </Grid>
         ))}
-        <Grid onClick={handleOpen} size={{ xs: 12, sm: 6, md: grindItemCount }}>
+        <Grid onClick={handleOpen} size={gridSize}>
           <CategoryCard iconName="CiCirclePlus" />
         </Grid>
       </Grid>
