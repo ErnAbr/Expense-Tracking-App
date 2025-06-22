@@ -21,13 +21,22 @@ export interface Expense {
   userId: number;
 }
 
+export interface CategoryAddData {
+  category: string;
+  iconName: string;
+  subcategory: {
+    subcategoryName: string;
+    subcategoryIconName: string;
+  }[];
+}
+
 export interface CategoryPutData {
   id: number;
   type: string;
   data: {
     name: string;
     iconName: string;
-  }
+  };
 }
 
 export interface CategoryDeleteData {

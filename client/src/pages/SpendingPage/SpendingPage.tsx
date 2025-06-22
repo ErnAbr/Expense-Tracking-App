@@ -21,6 +21,9 @@ export const SpendingPage = () => {
   const [modalView, setModalView] = useState<"list" | "edit" | "add" | "icons">(
     "list"
   );
+
+  console.log("object", storedCategories);
+
   const [editTarget, setEditTarget] = useState<{
     id: number;
     type: "cat" | "sub";
@@ -39,6 +42,7 @@ export const SpendingPage = () => {
       const response = await api.Category.deleteUserCatOrSub(payload);
       toast.success(response);
       queryClient.invalidateQueries({ queryKey: ["category"] });
+      setModalView("list");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data);

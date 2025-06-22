@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,11 @@ namespace Server.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly AppDbContext _context;
-        public CategoryController(AppDbContext context)
+        private readonly IMapper _mapper;
+        public CategoryController(AppDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [Authorize]
@@ -34,8 +37,29 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpPut("UpdateUserCategories")]
-        public IActionResult UpdateUserCategories(EditCategoryDto dto)
+        [HttpPost("AddUserCategory")]
+        public IActionResult AddUserCategory(AddCategoryDto addCategoryDto)
+        {
+            ActionResult<int> userIdResult = GetUserIdFromClaims();
+            if (userIdResult.Result != null) return userIdResult.Result;
+
+            Category categoryToAdd = _mapper.Map<Category>(addCategoryDto);
+            categoryToAdd.Subcategories = _mapper.Map<List<Subcategory>>(addCategoryDto.Subcategory);
+            categoryToAdd.UserId = userIdResult.Value;
+
+            _context.Categories.Add(categoryToAdd);
+
+            if (_context.SaveChanges() > 0)
+            {
+                return Ok("Category Successfully Added");
+            }
+
+            return StatusCode(500, "Failed to add category due to server error.");
+        }
+
+        [Authorize]
+        [HttpPut("UpdateUserCategory")]
+        public IActionResult UpdateUserCategory(EditCategoryDto dto)
         {
             ActionResult<int> userIdResult = GetUserIdFromClaims();
             if (userIdResult.Result != null) return userIdResult.Result;
@@ -80,8 +104,8 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpDelete("DeleteCatOrSub")]
-        public IActionResult DeleteUserCatOrSub(DeteleCategoryDto dto)
+        [HttpDelete("DeleteUserCategory")]
+        public IActionResult DeleteUserCategory(DeleteCategoryDto dto)
         {
             ActionResult<int> userIdResult = GetUserIdFromClaims();
             if (userIdResult.Result != null) return userIdResult.Result;

@@ -74,6 +74,7 @@ export const EditCategoryForm = ({
       const response = await api.Category.updateUserCatOrSub(payload);
       toast.success(response);
       queryClient.invalidateQueries({ queryKey: ["category"] });
+      setModalView("list");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data);

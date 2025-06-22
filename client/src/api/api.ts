@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import {
   LoginData,
   RegisterData,
@@ -9,34 +9,10 @@ import {
   CategoryObject,
   CategoryPutData,
 } from "../interfaces/category";
-// import { useNavigate } from "react-router-dom";
-// import { routes } from "../navigation/routes/routes";
-// import { useStore } from "zustand";
-// import { useAppContext } from "../context/appContext";
+import { CategoryAddData } from "../components/Forms/CategoryForm/AddCategoryForm";
 
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
-
-// axios.interceptors.response.use(
-//   (response) => response,
-//   (error: AxiosError) => {
-//     if (error.response) {
-//       switch (error.response.status) {
-//         case 401:
-//           () => {
-//             const navigate = useNavigate();
-//             const { setUser } = useStore(useAppContext);
-//             setUser(null);
-//             navigate(routes.HOME);
-//           };
-//           break;
-//         default:
-//           break;
-//       }
-//     }
-//     return Promise.reject(error);
-//   }
-// );
 
 const responseBody = <T>(response: AxiosResponse<T>) => {
   return response.data;
@@ -64,10 +40,12 @@ const User = {
 const Category = {
   getAllUserCategories: () =>
     requests.get<CategoryObject[]>("/category/getAllCategories"),
+  AddUserCatOrSub: (body: CategoryAddData) =>
+    requests.post<string>("/category/AddUserCategory", body),
   updateUserCatOrSub: (body: CategoryPutData) =>
-    requests.put<string>("/category/UpdateUserCategories", body),
+    requests.put<string>("/category/UpdateUserCategory", body),
   deleteUserCatOrSub: (body: CategoryDeleteData) =>
-    requests.delete<string>("/category/DeleteCatOrSub", body),
+    requests.delete<string>("/category/DeleteUserCategory", body),
 };
 
 const Test = {

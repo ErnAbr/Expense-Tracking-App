@@ -19,16 +19,11 @@ namespace Server.Controllers
         private readonly AuthHelper _authHelper;
         private readonly IMapper _mapper;
 
-        public UserController(AppDbContext context, AuthHelper authHelper)
+        public UserController(AppDbContext context, AuthHelper authHelper, IMapper mapper)
         {
             _context = context;
-
             _authHelper = authHelper;
-
-            _mapper = new Mapper(new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<RegisterUserDto, User>();
-            }));
+            _mapper = mapper;
         }
 
         [HttpPost("Register")]

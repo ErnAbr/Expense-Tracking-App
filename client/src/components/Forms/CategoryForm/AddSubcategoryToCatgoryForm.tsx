@@ -8,15 +8,15 @@ import {
   UseFormSetValue,
 } from "react-hook-form";
 import { FormInputText } from "../../FormComponents/FormInputText/FormInputText";
-import { AddCategoryFormValues } from "./AddCategoryForm";
+import { CategoryAddData } from "./AddCategoryForm";
 import React from "react";
 import { IconPickerToggler } from "../../IconPicker/IconPickerToggler";
 
 interface SubcategoryFormProps {
-  control: Control<AddCategoryFormValues>;
-  setValue: UseFormSetValue<AddCategoryFormValues>;
-  error?: FieldErrors<AddCategoryFormValues>;
-  clearErrors: UseFormClearErrors<AddCategoryFormValues>;
+  control: Control<CategoryAddData>;
+  setValue: UseFormSetValue<CategoryAddData>;
+  error?: FieldErrors<CategoryAddData>;
+  clearErrors: UseFormClearErrors<CategoryAddData>;
 }
 
 export const AddSubcategoryToCatgoryForm = ({
@@ -37,7 +37,7 @@ export const AddSubcategoryToCatgoryForm = ({
           <React.Fragment key={field.id}>
             <Box className={styles.formFieldWrapper}>
               <FormInputText
-                name={`subcategory.${index}.subcategoryName`}
+                name={`subcategory.${index}.name`}
                 control={control}
                 label="Subcategory Name"
                 type="text"
@@ -46,8 +46,8 @@ export const AddSubcategoryToCatgoryForm = ({
 
             <IconPickerToggler
               setValue={setValue}
-              name={`subcategory.${index}.subcategoryIconName`}
-              initialIcon={field.subcategoryIconName}
+              name={`subcategory.${index}.iconName`}
+              initialIcon={field.iconName}
             />
           </React.Fragment>
         );
@@ -64,11 +64,11 @@ export const AddSubcategoryToCatgoryForm = ({
           color="success"
           onClick={async () => {
             append({
-              subcategoryName: "",
-              subcategoryIconName: "FaRegQuestionCircle",
+              name: "",
+              iconName: "FaRegQuestionCircle",
             });
             clearErrors("subcategory");
-            clearErrors("category");
+            clearErrors("name");
           }}
           className={styles.buttonWidth}
         >
@@ -80,7 +80,7 @@ export const AddSubcategoryToCatgoryForm = ({
           onClick={async () => {
             remove(fields.length - 1);
             clearErrors("subcategory");
-            clearErrors("category");
+            clearErrors("name");
           }}
           className={styles.buttonWidth}
         >

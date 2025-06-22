@@ -7,13 +7,16 @@ import { FormInputText } from "../../FormComponents/FormInputText/FormInputText"
 import { AddSubcategoryToCatgoryForm } from "./AddSubcategoryToCatgoryForm";
 import { toast } from "react-toastify";
 import { IconPickerToggler } from "../../IconPicker/IconPickerToggler";
+import axios from "axios";
+import { api } from "../../../api/api";
+import { useQueryClient } from "@tanstack/react-query";
 
-export type AddCategoryFormValues = {
-  category: string;
+export type CategoryAddData = {
+  name: string;
   iconName: string;
   subcategory: {
-    subcategoryName: string;
-    subcategoryIconName: string;
+    name: string;
+    iconName: string;
   }[];
 };
 
@@ -22,14 +25,14 @@ interface CategoryFormProps {
 }
 
 const schema = yup.object({
-  category: yup.string().required(),
+  name: yup.string().required(),
   iconName: yup.string().required(),
   subcategory: yup
     .array()
     .of(
       yup.object({
-        subcategoryName: yup.string().required(),
-        subcategoryIconName: yup.string().required(),
+        name: yup.string().required(),
+        iconName: yup.string().required(),
       })
     )
     .min(1, "At least one subcategory is required")
@@ -37,29 +40,37 @@ const schema = yup.object({
 });
 
 export const AddCategoryForm = ({ setModalView }: CategoryFormProps) => {
+  const queryClient = useQueryClient();
   const {
     handleSubmit,
     control,
     setValue,
     clearErrors,
     formState: { errors },
-  } = useForm<AddCategoryFormValues>({
+  } = useForm<CategoryAddData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      category: "",
+      name: "",
       iconName: "FaRegQuestionCircle",
       subcategory: [
         {
-          subcategoryName: "",
-          subcategoryIconName: "FaRegQuestionCircle",
+          name: "",
+          iconName: "FaRegQuestionCircle",
         },
       ],
     },
   });
 
-  const handleFormSubmit = (data: AddCategoryFormValues) => {
-    console.log(data);
-    toast.success("Category Added");
+  const handleFormSubmit = async (data: CategoryAddData) => {
+    try {
+      const response = await api.Category.AddUserCatOrSub(data);
+      toast.success(response);
+      queryClient.invalidateQueries({ queryKey: ["category"] });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data);
+      }
+    }
   };
 
   return (
@@ -76,13 +87,13 @@ export const AddCategoryForm = ({ setModalView }: CategoryFormProps) => {
       >
         <Box className={styles.formFieldWrapper} sx={{ marginTop: "1.5vh" }}>
           <FormInputText
-            name="category"
+            name="name"
             control={control}
             label="Category Name"
             type="text"
           />
         </Box>
-        <IconPickerToggler<AddCategoryFormValues>
+        <IconPickerToggler<CategoryAddData>
           setValue={setValue}
           name="iconName"
         />
