@@ -8,6 +8,10 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IconPickerToggler } from "../../IconPicker/IconPickerToggler";
 import { queryCategories } from "../../../api/categories.query";
+import { api } from "../../../api/api";
+import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
+import { CategoryPutData } from "../../../interfaces/category";
 
 type FormValues = {
   name: string;
@@ -33,7 +37,8 @@ export const EditCategoryForm = ({
   editTarget,
   deleteCategory,
 }: CategoryFormProps) => {
-    const { data: storedCategories } = queryCategories();
+  const queryClient = useQueryClient();
+  const { data: storedCategories } = queryCategories();
 
   if (!editTarget) {
     return (
@@ -63,10 +68,17 @@ export const EditCategoryForm = ({
     },
   });
 
-  const handleFormSubmit = (data: FormValues) => {
-    const payload = { id, type, data };
-    console.log(payload);
-    toast.success(type === "cat" ? "Category Updated" : "SubCategory Updated");
+  const handleFormSubmit = async (data: FormValues) => {
+    const payload: CategoryPutData = { id, type, data };
+    try {
+      const response = await api.Category.updateUserCatOrSub(payload);
+      toast.success(response);
+      queryClient.invalidateQueries({ queryKey: ["category"] });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data);
+      }
+    }
   };
 
   return (

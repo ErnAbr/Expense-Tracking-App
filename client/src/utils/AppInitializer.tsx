@@ -4,6 +4,7 @@ import { useAppContext } from "../context/appContext";
 import { api } from "../api/api";
 import { LoadingComponent } from "../components/LoadingComponent/LoadingComponent";
 import { queryCategories } from "../api/categories.query";
+import axios from "axios";
 
 interface AppInitializerProps {
   children: ReactNode;
@@ -21,6 +22,12 @@ export const AppInitializer = ({ children }: AppInitializerProps) => {
       try {
         const response = await api.User.getCurrentUser();
         setUser(response);
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          setUser(null); 
+        } else {
+          console.error("Unexpected error during user fetch", error);
+        }
       } finally {
         setIsLoading(false);
       }

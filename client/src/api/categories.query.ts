@@ -12,6 +12,6 @@ export const queryCategories = (enabled: boolean = true) => {
     queryFn: fetchCategories,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
-    enabled
+    enabled,
   });
 };

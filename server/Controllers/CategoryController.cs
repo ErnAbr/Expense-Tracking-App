@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,48 +22,116 @@ namespace Server.Controllers
         [HttpGet("GetAllCategories")]
         public ActionResult<IEnumerable<Category>> UserCategories()
         {
-            string? userId = HttpContext.User.Claims
-                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            ActionResult<int> userIdResult = GetUserIdFromClaims();
+            if (userIdResult.Result != null) return userIdResult.Result;
 
-
-            if (userId == null)
-            {
-                return Unauthorized("Invalid Token");
-            }
+            int userId = userIdResult.Value;
 
             return _context.Categories
-                        .Where(c => c.UserId == int.Parse(userId))
+                        .Where(c => c.UserId == userId)
                         .Include(c => c.Subcategories)
                         .ToList();
         }
 
         [Authorize]
-        [HttpDelete("DeleteCatOrSub")]
-        public IActionResult DeleteUserCatOrSub([FromBody] DeteleCategoryDto dto)
+        [HttpPut("UpdateUserCategories")]
+        public IActionResult UpdateUserCategories(EditCategoryDto dto)
         {
-            if (dto.Type == "cat")
-            {
-                Category? categoryToDelete = _context.Categories.Find(dto.Id);
-                if (categoryToDelete == null)
-                    return NotFound("Category not found");
+            ActionResult<int> userIdResult = GetUserIdFromClaims();
+            if (userIdResult.Result != null) return userIdResult.Result;
+            
+            int userId = userIdResult.Value;
 
-                _context.Categories.Remove(categoryToDelete);
-            }
-            else if (dto.Type == "sub")
+            switch (dto.Type)
             {
-                Subcategory? subcategoryToDelete = _context.Subcategories.Find(dto.Id);
-                if (subcategoryToDelete == null)
-                    return NotFound("Subcategory not found");
+                case "cat":
+                    var category = _context.Categories.SingleOrDefault(c => c.Id == dto.Id);
+                    if (category == null)
+                        return NotFound("Category not found");
 
-                _context.Subcategories.Remove(subcategoryToDelete);
+                    if (category.UserId != userId)
+                        return Forbid("You do not own this category");
+
+                    category.Name = dto.Data.Name;
+                    category.IconName = dto.Data.IconName;
+                    break;
+
+                case "sub":
+                    var subcategory = _context.Subcategories
+                        .Include(s => s.Category)
+                        .SingleOrDefault(s => s.Id == dto.Id);
+
+                    if (subcategory == null)
+                        return NotFound("Subcategory not found");
+
+                    if (subcategory.Category.UserId != userId)
+                        return Forbid("You do not own this subcategory");
+
+                    subcategory.Name = dto.Data.Name;
+                    subcategory.IconName = dto.Data.IconName;
+                    break;
+
+                default:
+                    return BadRequest("Invalid type");
             }
-            else
+
+            _context.SaveChanges();
+            return Ok("Update successful");
+        }
+
+        [Authorize]
+        [HttpDelete("DeleteCatOrSub")]
+        public IActionResult DeleteUserCatOrSub(DeteleCategoryDto dto)
+        {
+            ActionResult<int> userIdResult = GetUserIdFromClaims();
+            if (userIdResult.Result != null) return userIdResult.Result;
+            
+            int userId = userIdResult.Value;
+
+            switch (dto.Type)
             {
-                return BadRequest("Invalid type");
+                case "cat":
+                    var category = _context.Categories.Find(dto.Id);
+                    if (category == null)
+                        return NotFound("Category not found");
+
+                    if (category.UserId != userId)
+                        return Forbid("You do not own this category");
+
+                    _context.Categories.Remove(category);
+                    break;
+
+                case "sub":
+                    var subcategory = _context.Subcategories
+                        .Include(s => s.Category)
+                        .SingleOrDefault(s => s.Id == dto.Id);
+
+                    if (subcategory == null)
+                        return NotFound("Subcategory not found");
+
+                    if (subcategory.Category.UserId != userId)
+                        return Forbid("You do not own this subcategory");
+
+                    _context.Subcategories.Remove(subcategory);
+                    break;
+
+                default:
+                    return BadRequest("Invalid type");
             }
 
             _context.SaveChanges();
             return Ok("Deleted successfully");
+        }
+
+        private ActionResult<int> GetUserIdFromClaims()
+        {
+            string? userId = HttpContext.User.Claims
+                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("Invalid Token");
+
+            return int.Parse(userId);
         }
     }
 }

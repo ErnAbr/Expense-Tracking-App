@@ -12,8 +12,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { queryCategories } from "../../api/categories.query";
 import { useQueryClient } from "@tanstack/react-query";
+import { CategoryDeleteData } from "../../interfaces/category";
 
 export const SpendingPage = () => {
+  const queryClient = useQueryClient();
   const { data: storedCategories } = queryCategories();
   const [openModal, setOpenModal] = useState(false);
   const [modalView, setModalView] = useState<"list" | "edit" | "add" | "icons">(
@@ -24,14 +26,15 @@ export const SpendingPage = () => {
     type: "cat" | "sub";
   } | null>(null);
 
-  const queryClient = useQueryClient();
-
   const handleOpen = () => setOpenModal(true);
-  const handleClose = () => setOpenModal(false);
+  const handleClose = () => {
+    setOpenModal(false);
+    setModalView("list");
+  };
 
   const deleteCategory = async ({ e, id, type }: CategoryMutationTypes) => {
     e.stopPropagation();
-    const payload = { id, type };
+    const payload: CategoryDeleteData = { id, type };
     try {
       const response = await api.Category.deleteUserCatOrSub(payload);
       toast.success(response);

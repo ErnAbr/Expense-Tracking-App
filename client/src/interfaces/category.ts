@@ -21,6 +21,15 @@ export interface Expense {
   userId: number;
 }
 
+export interface CategoryPutData {
+  id: number;
+  type: string;
+  data: {
+    name: string;
+    iconName: string;
+  }
+}
+
 export interface CategoryDeleteData {
   id: number;
   type: string;

@@ -4,7 +4,11 @@ import {
   RegisterData,
   UserValidationServerResposne,
 } from "../interfaces/userAuth";
-import { CategoryDeleteData, CategoryObject } from "../interfaces/category";
+import {
+  CategoryDeleteData,
+  CategoryObject,
+  CategoryPutData,
+} from "../interfaces/category";
 // import { useNavigate } from "react-router-dom";
 // import { routes } from "../navigation/routes/routes";
 // import { useStore } from "zustand";
@@ -60,6 +64,8 @@ const User = {
 const Category = {
   getAllUserCategories: () =>
     requests.get<CategoryObject[]>("/category/getAllCategories"),
+  updateUserCatOrSub: (body: CategoryPutData) =>
+    requests.put<string>("/category/UpdateUserCategories", body),
   deleteUserCatOrSub: (body: CategoryDeleteData) =>
     requests.delete<string>("/category/DeleteCatOrSub", body),
 };
