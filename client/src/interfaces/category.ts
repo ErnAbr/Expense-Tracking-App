@@ -43,3 +43,8 @@ export interface CategoryDeleteData {
   id: number;
   type: string;
 }
+
+export interface EditTarget {
+  id: number;
+  type: "cat" | "sub";
+}

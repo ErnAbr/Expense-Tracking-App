@@ -12,14 +12,9 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { queryCategories } from "../../api/categories.query";
 import { useQueryClient } from "@tanstack/react-query";
-import { CategoryDeleteData } from "../../interfaces/category";
+import { CategoryDeleteData, EditTarget } from "../../interfaces/category";
 import { AddExpenseForm } from "../../components/Forms/ExpenseForm/AddExpenseForm";
 import { SelectedCategoryProps } from "../../interfaces/expense";
-
-interface EditTarget {
-  id: number;
-  type: "cat" | "sub";
-}
 
 type ModalView =
   | "listCategories"

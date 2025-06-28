@@ -26,7 +26,7 @@ export const FormDatePicker = <T extends FieldValues>({
               textField: {
                 error: !!error,
                 size: "small",
-                helperText: error?.message,
+                // helperText: error?.message,
               },
             }}
           />

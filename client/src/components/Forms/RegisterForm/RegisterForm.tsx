@@ -11,7 +11,7 @@ import { FormAutocompleteInput } from "../../FormComponents/FormAutocompleteInpu
 import { FormDatePicker } from "../../FormComponents/FormDatePicker/FormDatePicker";
 import { FormInputText } from "../../FormComponents/FormInputText/FormInputText";
 import { FormRadioInput } from "../../FormComponents/FormRadioInput/FormRadioInput";
-import styles from "./registerForm.module.scss"
+import styles from "./registerForm.module.scss";
 import * as yup from "yup";
 
 type FormValues = {

@@ -11,7 +11,7 @@ import { queryCategories } from "../../../api/categories.query";
 import { api } from "../../../api/api";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
-import { CategoryPutData } from "../../../interfaces/category";
+import { CategoryPutData, EditTarget } from "../../../interfaces/category";
 
 type FormValues = {
   name: string;
@@ -25,10 +25,7 @@ const schema = yup.object({
 
 interface CategoryFormProps {
   setModalView: (view: "listCategories") => void;
-  editTarget: {
-    id: number;
-    type: "cat" | "sub";
-  } | null;
+  editTarget: EditTarget | null;
   deleteCategory: ({ e, id, type }: CategoryMutationTypes) => void;
 }
 

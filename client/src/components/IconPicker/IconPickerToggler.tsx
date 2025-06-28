@@ -1,10 +1,8 @@
 import { Box, Button } from "@mui/material";
 import { IconPicker } from "./IconPicker";
 import { useState } from "react";
-import * as FaIcons from "react-icons/fa";
-import * as MdIcons from "react-icons/md";
-import * as CiIcons from "react-icons/ci";
 import { FieldValues, Path, PathValue, UseFormSetValue } from "react-hook-form";
+import { getIconComponent } from "../../utils/getIconComponent";
 
 interface IconPickerTogglerProps<T extends FieldValues> {
   setValue: UseFormSetValue<T>;
@@ -20,14 +18,6 @@ export const IconPickerToggler = <T extends FieldValues>({
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [icon, setIcon] = useState(initialIcon);
 
-  const getIconComponent = (iconName: string) => {
-    return (
-      (FaIcons as any)[iconName] ||
-      (MdIcons as any)[iconName] ||
-      (CiIcons as any)[iconName] ||
-      null
-    );
-  };
 
   const IconPreview = getIconComponent(icon);
   return (

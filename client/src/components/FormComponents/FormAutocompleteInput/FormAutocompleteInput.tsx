@@ -19,9 +19,9 @@ export const FormAutocompleteInput = <T extends FieldValues>({
             options={options}
             getOptionLabel={(option) => option.label}
             className={styles.inputStyle}
-            value={options.find((opt) => opt.label === value) || null}
+            value={options.find((opt) => opt.value === value) || null} 
             onChange={(_, selectedOption) =>
-              onChange(selectedOption?.label || "")
+              onChange(selectedOption?.value ?? null)
             }
             renderInput={(params) => (
               <TextField
