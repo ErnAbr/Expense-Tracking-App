@@ -24,7 +24,7 @@ const schema = yup.object({
 });
 
 interface CategoryFormProps {
-  setModalView: (view: "list") => void;
+  setModalView: (view: "listCategories") => void;
   editTarget: {
     id: number;
     type: "cat" | "sub";
@@ -43,7 +43,7 @@ export const EditCategoryForm = ({
   if (!editTarget) {
     return (
       <Box>
-        <Button onClick={() => setModalView("list")}>Back</Button>
+        <Button onClick={() => setModalView("listCategories")}>Back</Button>
       </Box>
     );
   }
@@ -74,7 +74,7 @@ export const EditCategoryForm = ({
       const response = await api.Category.updateUserCatOrSub(payload);
       toast.success(response);
       queryClient.invalidateQueries({ queryKey: ["category"] });
-      setModalView("list");
+      setModalView("listCategories");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data);
@@ -126,7 +126,7 @@ export const EditCategoryForm = ({
       <Button
         variant="contained"
         color="secondary"
-        onClick={() => setModalView("list")}
+        onClick={() => setModalView("listCategories")}
       >
         Back
       </Button>

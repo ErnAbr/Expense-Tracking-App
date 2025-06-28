@@ -13,6 +13,7 @@ import {
 interface CategoryCardProps {
   name?: string;
   iconName: string;
+  onClick?: () => void;
 }
 
 const getIconComponent = (iconName: string) => {
@@ -29,7 +30,11 @@ const getIconComponent = (iconName: string) => {
   }
 };
 
-export const CategoryCard = ({ name, iconName }: CategoryCardProps) => {
+export const CategoryCard = ({
+  name,
+  iconName,
+  onClick,
+}: CategoryCardProps) => {
   const Icon = getIconComponent(iconName);
 
   return (
@@ -67,7 +72,12 @@ export const CategoryCard = ({ name, iconName }: CategoryCardProps) => {
 
       {name && (
         <CardActions>
-          <Button size="small">Add Expense</Button>
+          <Button size="small" onClick={onClick}>
+            Add Expense
+          </Button>
+          <Button size="small" color="error">
+            Check Expenses
+          </Button>
         </CardActions>
       )}
     </Card>

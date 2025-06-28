@@ -21,7 +21,7 @@ export type CategoryAddData = {
 };
 
 interface CategoryFormProps {
-  setModalView: (view: "list") => void;
+  setModalView: (view: "listCategories") => void;
 }
 
 const schema = yup.object({
@@ -114,7 +114,7 @@ export const AddCategoryForm = ({ setModalView }: CategoryFormProps) => {
           <Button
             variant="contained"
             color="error"
-            onClick={() => setModalView("list")}
+            onClick={() => setModalView("listCategories")}
             className={styles.buttonWidth}
           >
             BACK
