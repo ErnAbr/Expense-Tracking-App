@@ -8,3 +8,9 @@ export interface AddExpenseFormProps {
   category: SelectedCategoryProps;
   setOpenModal: (open: boolean) => void;
 }
+
+export type ExpenseAddData = {
+  subcategoryId: number;
+  amountDate: string;
+  amount: number;
+};

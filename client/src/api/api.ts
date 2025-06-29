@@ -10,6 +10,8 @@ import {
   CategoryPutData,
 } from "../interfaces/category";
 import { CategoryAddData } from "../components/Forms/CategoryForm/AddCategoryForm";
+import { ExpenseAddData } from "../interfaces/expense";
+
 
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
@@ -48,6 +50,11 @@ const Category = {
     requests.delete<string>("/category/DeleteUserCategory", body),
 };
 
+const Expense = {
+  AddUserExpense: (body: ExpenseAddData) =>
+    requests.post<string>("/Expense/AddUserExpense", body),
+};
+
 const Test = {
   allUSers: () => requests.get("/user/auth/"),
   allUSersPost: () => requests.post("/user/auth/", {}),
@@ -56,5 +63,6 @@ const Test = {
 export const api = {
   User,
   Category,
+  Expense,
   Test,
 };

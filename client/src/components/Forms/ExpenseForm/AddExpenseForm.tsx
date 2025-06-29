@@ -9,6 +9,10 @@ import { getIconComponent } from "../../../utils/getIconComponent";
 import { FormAutocompleteInput } from "../../FormComponents/FormAutocompleteInput/FormAutocompleteInput";
 import { FormDatePicker } from "../../FormComponents/FormDatePicker/FormDatePicker";
 import { FormInputText } from "../../FormComponents/FormInputText/FormInputText";
+import { useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { api } from "../../../api/api";
 
 type FormValues = {
   subcategoryId: number;
@@ -26,6 +30,7 @@ export const AddExpenseForm = ({
   category,
   setOpenModal,
 }: AddExpenseFormProps) => {
+  const queryClient = useQueryClient();
   const { data: storedCategories } = queryCategories();
   const { id, name, iconName } = category;
   const Icon = getIconComponent(iconName);
@@ -44,7 +49,15 @@ export const AddExpenseForm = ({
       ...rest,
       amountDate: amountDate.toISOString(),
     };
-    console.log(payload);
+    try {
+      const response = await api.Expense.AddUserExpense(payload);
+      toast.success(response);
+      queryClient.invalidateQueries({ queryKey: ["category"] });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data);
+      }
+    }
   };
 
   return (
@@ -55,7 +68,12 @@ export const AddExpenseForm = ({
         onSubmit={handleSubmit(handleFormSubmit)}
         className={styles.expenseFormStyles}
       >
-        <Typography variant="h6" gutterBottom mb={2}>
+        <Typography
+          variant="h6"
+          gutterBottom
+          mb={2}
+          sx={{ alignSelf: "flex-start" }}
+        >
           <Icon style={{ marginRight: 8, verticalAlign: "middle" }} />
           {name}
         </Typography>
@@ -88,7 +106,7 @@ export const AddExpenseForm = ({
           </Button>
           <Button
             variant="contained"
-            color="secondary"
+            color="error"
             onClick={() => setOpenModal(false)}
           >
             Back

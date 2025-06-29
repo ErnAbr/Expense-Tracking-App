@@ -20,4 +20,12 @@ namespace Server.MappingProfiles
             CreateMap<AddSubcategoryDto, Subcategory>();
         }
     }
+
+    public class ExpenseMappingProfile : Profile
+    {
+        public ExpenseMappingProfile()
+        {
+            CreateMap<AddExpenseDto, Expense>();
+        }
+    }
 }

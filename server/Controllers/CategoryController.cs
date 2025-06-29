@@ -11,15 +11,10 @@ namespace Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CategoryController : ControllerBase
+    public class CategoryController(AppDbContext context, IMapper mapper) : BaseController
     {
-        private readonly AppDbContext _context;
-        private readonly IMapper _mapper;
-        public CategoryController(AppDbContext context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-        }
+        private readonly AppDbContext _context = context;
+        private readonly IMapper _mapper = mapper;
 
         [Authorize]
         [HttpGet("GetAllCategories")]
@@ -33,6 +28,7 @@ namespace Server.Controllers
             return _context.Categories
                         .Where(c => c.UserId == userId)
                         .Include(c => c.Subcategories)
+                            .ThenInclude(s => s.Expenses)
                         .ToList();
         }
 
@@ -41,7 +37,8 @@ namespace Server.Controllers
         public IActionResult AddUserCategory(AddCategoryDto addCategoryDto)
         {
             ActionResult<int> userIdResult = GetUserIdFromClaims();
-            if (userIdResult.Result != null) return userIdResult.Result;
+                if (userIdResult.Result != null)
+                    return userIdResult.Result;
 
             Category categoryToAdd = _mapper.Map<Category>(addCategoryDto);
             categoryToAdd.Subcategories = _mapper.Map<List<Subcategory>>(addCategoryDto.Subcategory);
@@ -69,7 +66,7 @@ namespace Server.Controllers
             switch (dto.Type)
             {
                 case "cat":
-                    var category = _context.Categories.SingleOrDefault(c => c.Id == dto.Id);
+                    Category? category = _context.Categories.SingleOrDefault(c => c.Id == dto.Id);
                     if (category == null)
                         return NotFound("Category not found");
 
@@ -81,7 +78,7 @@ namespace Server.Controllers
                     break;
 
                 case "sub":
-                    var subcategory = _context.Subcategories
+                    Subcategory? subcategory = _context.Subcategories
                         .Include(s => s.Category)
                         .SingleOrDefault(s => s.Id == dto.Id);
 
@@ -145,17 +142,6 @@ namespace Server.Controllers
 
             _context.SaveChanges();
             return Ok("Deleted successfully");
-        }
-
-        private ActionResult<int> GetUserIdFromClaims()
-        {
-            string? userId = HttpContext.User.Claims
-                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            if (userId == null)
-                return Unauthorized("Invalid Token");
-
-            return int.Parse(userId);
         }
     }
 }

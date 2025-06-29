@@ -13,18 +13,11 @@ namespace Server.Controllers
 {
     [ApiController]
     [Route("[controller]/auth/")]
-    public class UserController : ControllerBase
+    public class UserController(AppDbContext context, AuthHelper authHelper, IMapper mapper) : ControllerBase
     {
-        private readonly AppDbContext _context;
-        private readonly AuthHelper _authHelper;
-        private readonly IMapper _mapper;
-
-        public UserController(AppDbContext context, AuthHelper authHelper, IMapper mapper)
-        {
-            _context = context;
-            _authHelper = authHelper;
-            _mapper = mapper;
-        }
+        private readonly AppDbContext _context = context;
+        private readonly AuthHelper _authHelper = authHelper;
+        private readonly IMapper _mapper = mapper;
 
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterUser(RegisterUserDto registerUser)
