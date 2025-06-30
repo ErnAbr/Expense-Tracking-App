@@ -39,7 +39,7 @@ export const AddExpenseForm = ({
     (cat) => cat.id === id
   )?.subcategories;
 
-  const { handleSubmit, control } = useForm<FormValues>({
+  const { handleSubmit, control, reset } = useForm<FormValues>({
     resolver: yupResolver(schema),
   });
 
@@ -53,6 +53,7 @@ export const AddExpenseForm = ({
       const response = await api.Expense.AddUserExpense(payload);
       toast.success(response);
       queryClient.invalidateQueries({ queryKey: ["category"] });
+      reset();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data);

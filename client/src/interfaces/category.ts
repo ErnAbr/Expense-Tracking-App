@@ -17,7 +17,7 @@ export interface Subcategory {
 export interface Expense {
   id: number;
   amount: number;
-  date: string;
+  amountDate: string;
   userId: number;
 }
 

@@ -12,6 +12,7 @@ import {
 interface CategoryCardProps {
   name?: string;
   iconName: string;
+  expenseAmount?: number;
   onClick?: () => void;
 }
 
@@ -19,6 +20,7 @@ export const CategoryCard = ({
   name,
   iconName,
   onClick,
+  expenseAmount,
 }: CategoryCardProps) => {
   const Icon = getIconComponent(iconName);
 
@@ -47,7 +49,7 @@ export const CategoryCard = ({
               sx={{ color: "text.secondary", fontSize: 14 }}
               gutterBottom
             >
-              Total Spent: will be added later
+              Total Spent: {expenseAmount}€
             </Typography>
           </>
         ) : (

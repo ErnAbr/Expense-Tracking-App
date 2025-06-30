@@ -12,9 +12,13 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { queryCategories } from "../../api/categories.query";
 import { useQueryClient } from "@tanstack/react-query";
-import { CategoryDeleteData, EditTarget } from "../../interfaces/category";
+import {
+  CategoryDeleteData,
+  EditTarget,
+} from "../../interfaces/category";
 import { AddExpenseForm } from "../../components/Forms/ExpenseForm/AddExpenseForm";
 import { SelectedCategoryProps } from "../../interfaces/expense";
+import { getTotalCurrentMonthExpensesForCategory } from "../../utils/dateFilterFunction";
 
 type ModalView =
   | "listCategories"
@@ -36,6 +40,8 @@ const getGridSizeByBreakpoint = (count: number) => ({
   sm: count === 0 ? 12 : count === 1 ? 12 : 6,
   md: count === 0 ? 12 : count === 1 ? 6 : 4,
 });
+
+// make a new query for getting filtered expenses by date, first of by current month
 
 export const SpendingPage = () => {
   const queryClient = useQueryClient();
@@ -98,21 +104,25 @@ export const SpendingPage = () => {
               : undefined,
         }}
       >
-        {storedCategories?.map((category) => (
-          <Grid size={gridSize} key={category.id}>
-            <CategoryCard
-              name={category.name}
-              iconName={category.iconName}
-              onClick={() =>
-                addExpense({
-                  id: category.id,
-                  name: category.name,
-                  iconName: category.iconName,
-                })
-              }
-            />
-          </Grid>
-        ))}
+        {storedCategories?.map((category) => {
+          const expenseAmount = getTotalCurrentMonthExpensesForCategory(category);
+          return (
+            <Grid size={gridSize} key={category.id}>
+              <CategoryCard
+                name={category.name}
+                iconName={category.iconName}
+                expenseAmount={expenseAmount}
+                onClick={() =>
+                  addExpense({
+                    id: category.id,
+                    name: category.name,
+                    iconName: category.iconName,
+                  })
+                }
+              />
+            </Grid>
+          );
+        })}
         <Grid onClick={handleOpen} size={gridSize}>
           <CategoryCard iconName="CiCirclePlus" />
         </Grid>

@@ -21,14 +21,14 @@ namespace Server.Controllers
         public ActionResult<IEnumerable<Category>> UserCategories()
         {
             ActionResult<int> userIdResult = GetUserIdFromClaims();
-            if (userIdResult.Result != null) return userIdResult.Result;
+                if (userIdResult.Result != null)
+                    return userIdResult.Result;
 
             int userId = userIdResult.Value;
 
             return _context.Categories
                         .Where(c => c.UserId == userId)
                         .Include(c => c.Subcategories)
-                            .ThenInclude(s => s.Expenses)
                         .ToList();
         }
 

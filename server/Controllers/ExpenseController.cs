@@ -46,5 +46,26 @@ namespace Server.Controllers
 
             return StatusCode(500, "Failed to add expense due to server error.");
         }
+
+        [Authorize]
+        [HttpGet("GetMonthlyExpense")]
+        public ActionResult<IEnumerable<MontlyExpenseResponseDto>> GetExpensesByMonth(int year, int month)
+        {
+            ActionResult<int> userIdResult = GetUserIdFromClaims();
+            if (userIdResult.Result != null)
+                return userIdResult.Result;
+
+            List<Expense> expenses = _context.Expenses
+                .Where(e => e.UserId == userIdResult.Value &&
+                            e.AmountDate.ToLocalTime().Year == year &&
+                            e.AmountDate.ToLocalTime().Month == month)
+                .Include(e => e.Subcategory)
+                .ToList();
+
+
+            List<MontlyExpenseResponseDto> expenseDtos = _mapper.Map<List<MontlyExpenseResponseDto>>(expenses);
+
+            return Ok(expenseDtos);
+        }
     }
 }

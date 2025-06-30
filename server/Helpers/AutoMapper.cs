@@ -26,6 +26,7 @@ namespace Server.MappingProfiles
         public ExpenseMappingProfile()
         {
             CreateMap<AddExpenseDto, Expense>();
+            CreateMap<Expense, MontlyExpenseResponseDto>();
         }
     }
 }
