@@ -60,11 +60,12 @@ namespace Server.Controllers
                             e.AmountDate.ToLocalTime().Year == year &&
                             e.AmountDate.ToLocalTime().Month == month)
                 .Include(e => e.Subcategory)
+                    .ThenInclude(c => c.Category)
                 .ToList();
 
 
             List<MontlyExpenseResponseDto> expenseDtos = _mapper.Map<List<MontlyExpenseResponseDto>>(expenses);
-
+            
             return Ok(expenseDtos);
         }
     }

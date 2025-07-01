@@ -12,13 +12,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { queryCategories } from "../../api/categories.query";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  CategoryDeleteData,
-  EditTarget,
-} from "../../interfaces/category";
+import { CategoryDeleteData, EditTarget } from "../../interfaces/category";
 import { AddExpenseForm } from "../../components/Forms/ExpenseForm/AddExpenseForm";
 import { SelectedCategoryProps } from "../../interfaces/expense";
-import { getTotalCurrentMonthExpensesForCategory } from "../../utils/dateFilterFunction";
+import { getMonthlyCategoryTotal } from "../../utils/dateFilterFunction";
+import { useMonthlyExpenses } from "../../api/expenses.query";
 
 type ModalView =
   | "listCategories"
@@ -41,10 +39,11 @@ const getGridSizeByBreakpoint = (count: number) => ({
   md: count === 0 ? 12 : count === 1 ? 6 : 4,
 });
 
-// make a new query for getting filtered expenses by date, first of by current month
+// make check expenses page and pass setFilterExpenseMonth prop
 
 export const SpendingPage = () => {
   const queryClient = useQueryClient();
+  const currentDate = new Date();
   const { data: storedCategories } = queryCategories();
 
   const [openModal, setOpenModal] = useState(false);
@@ -52,6 +51,15 @@ export const SpendingPage = () => {
   const [editTarget, setEditTarget] = useState<EditTarget | null>(null);
   const [selectedCategory, setSelectedCategory] =
     useState<SelectedCategoryProps | null>(null);
+  const [filterExpenseMonth, setFilterExpenseMonth] = useState({
+    year: currentDate.getFullYear(),
+    month: currentDate.getMonth() + 1,
+  });
+
+  const { data: monthlyExpenses, isLoading } = useMonthlyExpenses(
+    filterExpenseMonth.year,
+    filterExpenseMonth.month
+  );
 
   const gridSize = getGridSizeByBreakpoint(storedCategories?.length || 0);
 
@@ -105,13 +113,17 @@ export const SpendingPage = () => {
         }}
       >
         {storedCategories?.map((category) => {
-          const expenseAmount = getTotalCurrentMonthExpensesForCategory(category);
+          const expenseAmount = monthlyExpenses
+            ? getMonthlyCategoryTotal(category, monthlyExpenses)
+            : 0;
+
           return (
             <Grid size={gridSize} key={category.id}>
               <CategoryCard
                 name={category.name}
                 iconName={category.iconName}
                 expenseAmount={expenseAmount}
+                isLoadingExpenses={isLoading}
                 onClick={() =>
                   addExpense({
                     id: category.id,

@@ -7,6 +7,7 @@ import {
   CardActions,
   Typography,
   Button,
+  CircularProgress,
 } from "@mui/material";
 
 interface CategoryCardProps {
@@ -14,6 +15,7 @@ interface CategoryCardProps {
   iconName: string;
   expenseAmount?: number;
   onClick?: () => void;
+  isLoadingExpenses?: boolean;
 }
 
 export const CategoryCard = ({
@@ -21,6 +23,7 @@ export const CategoryCard = ({
   iconName,
   onClick,
   expenseAmount,
+  isLoadingExpenses,
 }: CategoryCardProps) => {
   const Icon = getIconComponent(iconName);
 
@@ -45,12 +48,16 @@ export const CategoryCard = ({
               <Icon style={{ marginRight: 8, verticalAlign: "middle" }} />
               {name}
             </Typography>
-            <Typography
-              sx={{ color: "text.secondary", fontSize: 14 }}
-              gutterBottom
-            >
-              Total Spent: {expenseAmount}€
-            </Typography>
+            {isLoadingExpenses ? (
+              <CircularProgress size={20} />
+            ) : (
+              <Typography
+                sx={{ color: "text.secondary", fontSize: 14 }}
+                gutterBottom
+              >
+                Total Spent: {expenseAmount}€
+              </Typography>
+            )}
           </>
         ) : (
           <Icon style={{ fontSize: 64 }} />

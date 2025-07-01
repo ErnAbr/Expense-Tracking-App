@@ -14,3 +14,10 @@ export type ExpenseAddData = {
   amountDate: string;
   amount: number;
 };
+
+export interface MontlyExpenseResponseDto {
+    amountDate: string;
+    amount: number;
+    categoryId: number;
+    subcategoryId: number;
+}

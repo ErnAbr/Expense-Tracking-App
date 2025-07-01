@@ -1,26 +1,13 @@
 import { CategoryObject } from "../interfaces/category";
+import { MontlyExpenseResponseDto } from "../interfaces/expense";
 
-export const getTotalCurrentMonthExpensesForCategory = (
-  category: CategoryObject
-) => {
-  const now = new Date();
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
+export const getMonthlyCategoryTotal = (
+  category: CategoryObject,
+  expenses: MontlyExpenseResponseDto[]
+): number => {
+  const subcategoryIds = category.subcategories.map((sub) => sub.id);
 
-  return category.subcategories.reduce((total, sub) => {
-    const currentMonthExpenses = sub.expenses.filter((exp) => {
-      const expDate = new Date(exp.amountDate);
-      return (
-        expDate.getMonth() === currentMonth &&
-        expDate.getFullYear() === currentYear
-      );
-    });
-
-    const subTotal = currentMonthExpenses.reduce(
-      (sum, exp) => sum + exp.amount,
-      0
-    );
-
-    return total + subTotal;
-  }, 0);
+  return expenses
+    .filter((exp) => subcategoryIds.includes(exp.subcategoryId))
+    .reduce((total, exp) => total + exp.amount, 0);
 };

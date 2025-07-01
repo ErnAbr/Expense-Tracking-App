@@ -10,8 +10,7 @@ import {
   CategoryPutData,
 } from "../interfaces/category";
 import { CategoryAddData } from "../components/Forms/CategoryForm/AddCategoryForm";
-import { ExpenseAddData } from "../interfaces/expense";
-
+import { ExpenseAddData, MontlyExpenseResponseDto } from "../interfaces/expense";
 
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
@@ -53,6 +52,10 @@ const Category = {
 const Expense = {
   AddUserExpense: (body: ExpenseAddData) =>
     requests.post<string>("/Expense/AddUserExpense", body),
+  GetMontlyUserExpense: (year: number, month: number) =>
+    requests.get<MontlyExpenseResponseDto[]>(
+      `/expense/GetMonthlyExpense?year=${year}&month=${month}`
+    ),
 };
 
 const Test = {

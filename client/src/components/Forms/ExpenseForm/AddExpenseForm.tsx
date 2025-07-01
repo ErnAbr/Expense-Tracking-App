@@ -52,7 +52,7 @@ export const AddExpenseForm = ({
     try {
       const response = await api.Expense.AddUserExpense(payload);
       toast.success(response);
-      queryClient.invalidateQueries({ queryKey: ["category"] });
+      queryClient.invalidateQueries({ queryKey: ["expense"] });
       reset();
     } catch (error) {
       if (axios.isAxiosError(error)) {

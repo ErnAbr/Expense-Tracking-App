@@ -4,6 +4,7 @@ namespace Server.Dtos
     {
         public DateTime AmountDate { get; set; }
         public decimal Amount { get; set; }
+        public int CategoryId { get; set; }
         public int SubcategoryId { get; set; }
     }
 }
