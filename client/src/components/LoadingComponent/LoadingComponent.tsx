@@ -9,7 +9,7 @@ export const LoadingComponent = ({ loadingMessage }: LoadingComponentProps) => {
   return (
     <Box className={styles.loadingContainer}>
       <CircularProgress color="secondary" size={200} />
-      <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 20, lg: 24 } }} mt={1}>
+      <Typography variant="h4" mt={1}>
         {loadingMessage}
       </Typography>
     </Box>

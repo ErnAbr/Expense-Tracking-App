@@ -5,6 +5,7 @@ import { api } from "../api/api";
 import { LoadingComponent } from "../components/LoadingComponent/LoadingComponent";
 import { queryCategories } from "../api/categories.query";
 import axios from "axios";
+import { Box } from "@mui/material";
 
 interface AppInitializerProps {
   children: ReactNode;
@@ -24,7 +25,7 @@ export const AppInitializer = ({ children }: AppInitializerProps) => {
         setUser(response);
       } catch (error) {
         if (axios.isAxiosError(error) && error.response?.status === 401) {
-          setUser(null); 
+          setUser(null);
         } else {
           console.error("Unexpected error during user fetch", error);
         }
@@ -36,7 +37,11 @@ export const AppInitializer = ({ children }: AppInitializerProps) => {
   }, []);
 
   if (isLoading || (user && loadingCategories)) {
-    return <LoadingComponent loadingMessage={"initiating App..."} />;
+    return (
+      <Box sx={{ pt: 10 }}>
+        <LoadingComponent loadingMessage={"initiating App..."} />;
+      </Box>
+    );
   }
 
   return <>{children}</>;

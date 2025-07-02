@@ -46,6 +46,7 @@ export const AddCategoryForm = ({ setModalView }: CategoryFormProps) => {
     control,
     setValue,
     clearErrors,
+    reset,
     formState: { errors },
   } = useForm<CategoryAddData>({
     resolver: yupResolver(schema),
@@ -66,6 +67,7 @@ export const AddCategoryForm = ({ setModalView }: CategoryFormProps) => {
       const response = await api.Category.AddUserCatOrSub(data);
       toast.success(response);
       queryClient.invalidateQueries({ queryKey: ["category"] });
+      reset();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data);

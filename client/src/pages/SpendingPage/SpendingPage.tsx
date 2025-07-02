@@ -5,33 +5,15 @@ import { useState } from "react";
 import { BasicModal } from "../../components/Modal/BasicModal";
 import { CategoryAccordion } from "../../components/Accordion/CategoryAccordion";
 import { EditCategoryForm } from "../../components/Forms/CategoryForm/EditCategoryForm";
-import { CategoryMutationTypes } from "../../interfaces/categoryMutationType";
 import { AddCategoryForm } from "../../components/Forms/CategoryForm/AddCategoryForm";
-import { api } from "../../api/api";
-import axios from "axios";
-import { toast } from "react-toastify";
 import { queryCategories } from "../../api/categories.query";
-import { useQueryClient } from "@tanstack/react-query";
-import { CategoryDeleteData, EditTarget } from "../../interfaces/category";
 import { AddExpenseForm } from "../../components/Forms/ExpenseForm/AddExpenseForm";
 import { SelectedCategoryProps } from "../../interfaces/expense";
 import { getMonthlyCategoryTotal } from "../../utils/dateFilterFunction";
 import { useMonthlyExpenses } from "../../api/expenses.query";
-
-type ModalView =
-  | "listCategories"
-  | "editCategory"
-  | "addCategory"
-  | "icons"
-  | "addExpense";
-
-const modalTitleMap: Record<ModalView, string> = {
-  addCategory: "Add Category",
-  addExpense: "Add Expense",
-  listCategories: "Edit Your Categories",
-  editCategory: "Edit Your Categories",
-  icons: "Edit Your Categories",
-};
+import { modalTitleMap, useModalView } from "../../hooks/useModalView";
+import { useCategoryMutations } from "../../hooks/useCategoryMutations";
+import { EditTarget } from "../../interfaces/category";
 
 const getGridSizeByBreakpoint = (count: number) => ({
   xs: 12,
@@ -39,15 +21,12 @@ const getGridSizeByBreakpoint = (count: number) => ({
   md: count === 0 ? 12 : count === 1 ? 6 : 4,
 });
 
+// refactor some logic from this component into custom hooks
 // make check expenses page and pass setFilterExpenseMonth prop
 
 export const SpendingPage = () => {
-  const queryClient = useQueryClient();
   const currentDate = new Date();
   const { data: storedCategories } = queryCategories();
-
-  const [openModal, setOpenModal] = useState(false);
-  const [modalView, setModalView] = useState<ModalView>("listCategories");
   const [editTarget, setEditTarget] = useState<EditTarget | null>(null);
   const [selectedCategory, setSelectedCategory] =
     useState<SelectedCategoryProps | null>(null);
@@ -63,41 +42,23 @@ export const SpendingPage = () => {
 
   const gridSize = getGridSizeByBreakpoint(storedCategories?.length || 0);
 
-  const handleOpen = () => setOpenModal(true);
-  const handleClose = () => {
-    setOpenModal(false);
-    setModalView("listCategories");
-  };
+  const {
+    openModal,
+    modalView,
+    setModalView,
+    handleOpenModal,
+    handleCloseModal,
+  } = useModalView();
 
-  const deleteCategory = async ({ e, id, type }: CategoryMutationTypes) => {
-    e.stopPropagation();
-    const payload: CategoryDeleteData = { id, type };
-    try {
-      const response = await api.Category.deleteUserCatOrSub(payload);
-      toast.success(response);
-      queryClient.invalidateQueries({ queryKey: ["category"] });
-      setModalView("listCategories");
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data);
-      }
-    }
-  };
-
-  const editCategory = ({ e, id, type }: CategoryMutationTypes) => {
-    e.stopPropagation();
-    setEditTarget({ id, type });
-    setModalView("editCategory");
-  };
-
-  const addCategory = () => {
-    setModalView("addCategory");
-  };
+const { deleteCategory, editCategory, addCategory } = useCategoryMutations(
+  setEditTarget,
+  handleOpenModal,
+);
 
   const addExpense = (category: SelectedCategoryProps | null) => {
     setSelectedCategory(category);
     setModalView("addExpense");
-    setOpenModal(true);
+    handleOpenModal();
   };
 
   return (
@@ -135,7 +96,7 @@ export const SpendingPage = () => {
             </Grid>
           );
         })}
-        <Grid onClick={handleOpen} size={gridSize}>
+        <Grid onClick={() => handleOpenModal("listCategories")} size={gridSize}>
           <CategoryCard iconName="CiCirclePlus" />
         </Grid>
       </Grid>
@@ -143,7 +104,7 @@ export const SpendingPage = () => {
       <BasicModal
         title={modalTitleMap[modalView]}
         open={openModal}
-        onClose={handleClose}
+        onClose={handleCloseModal}
       >
         {modalView === "listCategories" && (
           <CategoryAccordion
@@ -165,7 +126,8 @@ export const SpendingPage = () => {
         {modalView === "addExpense" && selectedCategory && (
           <AddExpenseForm
             category={selectedCategory}
-            setOpenModal={setOpenModal}
+            setOpenModal={() => handleOpenModal("addExpense")}
+            handleCloseModal={handleCloseModal}
           />
         )}
       </BasicModal>

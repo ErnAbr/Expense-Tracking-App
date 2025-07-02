@@ -7,6 +7,7 @@ export interface SelectedCategoryProps {
 export interface AddExpenseFormProps {
   category: SelectedCategoryProps;
   setOpenModal: (open: boolean) => void;
+  handleCloseModal: () => void;
 }
 
 export type ExpenseAddData = {
@@ -16,8 +17,8 @@ export type ExpenseAddData = {
 };
 
 export interface MontlyExpenseResponseDto {
-    amountDate: string;
-    amount: number;
-    categoryId: number;
-    subcategoryId: number;
+  amountDate: string;
+  amount: number;
+  categoryId: number;
+  subcategoryId: number;
 }

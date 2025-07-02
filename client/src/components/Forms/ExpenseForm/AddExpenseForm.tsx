@@ -28,7 +28,7 @@ const schema = yup.object({
 
 export const AddExpenseForm = ({
   category,
-  setOpenModal,
+  handleCloseModal,
 }: AddExpenseFormProps) => {
   const queryClient = useQueryClient();
   const { data: storedCategories } = queryCategories();
@@ -108,7 +108,7 @@ export const AddExpenseForm = ({
           <Button
             variant="contained"
             color="error"
-            onClick={() => setOpenModal(false)}
+            onClick={handleCloseModal}
           >
             Back
           </Button>
