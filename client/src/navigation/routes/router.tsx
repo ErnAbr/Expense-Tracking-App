@@ -8,6 +8,7 @@ import { BudgetPage } from "../../pages/BudgetPage/BudgetPage";
 import { DataPage } from "../../pages/DataPage/DataPage";
 import { ProtectedRoutes } from "../auth/ProtectedRoutes";
 import { GuestRoutes } from "../auth/GuestRoutes";
+import { CategoryExpensePage } from "../../pages/CategoryExpensePage/CategoryExpensePage";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
         element: <ProtectedRoutes />,
         children: [
           { path: routes.SPENDING, element: <SpendingPage /> },
+          {
+            path: `${routes.CATEGORY_SPENDING_PAGE}/:categoryId`,
+            element: <CategoryExpensePage />,
+          },
           { path: routes.BUDGET, element: <BudgetPage /> },
           { path: routes.DATA, element: <DataPage /> },
         ],

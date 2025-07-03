@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+import { routes } from "../../../navigation/routes/routes";
 import { getIconComponent } from "../../../utils/getIconComponent";
 import styles from "./categoryCard.module.scss";
 
@@ -13,6 +15,7 @@ import {
 interface CategoryCardProps {
   name?: string;
   iconName: string;
+  categoryId?: number;
   expenseAmount?: number;
   onClick?: () => void;
   isLoadingExpenses?: boolean;
@@ -21,10 +24,12 @@ interface CategoryCardProps {
 export const CategoryCard = ({
   name,
   iconName,
+  categoryId,
   onClick,
   expenseAmount,
   isLoadingExpenses,
 }: CategoryCardProps) => {
+  const navigate = useNavigate();
   const Icon = getIconComponent(iconName);
 
   return (
@@ -69,7 +74,13 @@ export const CategoryCard = ({
           <Button size="small" onClick={onClick}>
             Add Expense
           </Button>
-          <Button size="small" color="error">
+          <Button
+            onClick={() =>
+              navigate(`${routes.CATEGORY_SPENDING_PAGE}/${categoryId}`)
+            }
+            size="small"
+            color="error"
+          >
             Check Expenses
           </Button>
         </CardActions>
