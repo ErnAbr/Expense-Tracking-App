@@ -11,15 +11,15 @@ import { ModalContent } from "../../components/Modal/ModalContent";
 import { CategoryCardGrid } from "../../components/Grid/CategoryCardGrid";
 
 export const SpendingPage = () => {
-  const currentDate = new Date();
   const { data: storedCategories } = queryCategories();
   const [editTarget, setEditTarget] = useState<EditTarget | null>(null);
   const [selectedCategory, setSelectedCategory] =
     useState<SelectedCategoryProps | null>(null);
-  const [filterExpenseMonth, setFilterExpenseMonth] = useState({
-    year: currentDate.getFullYear(),
-    month: currentDate.getMonth() + 1,
-  });
+
+  const filterExpenseMonth = {
+    year: new Date().getFullYear(),
+    month: new Date().getMonth() + 1,
+  };
 
   const { data: monthlyExpenses, isLoading } = useMonthlyExpenses(
     filterExpenseMonth.year,

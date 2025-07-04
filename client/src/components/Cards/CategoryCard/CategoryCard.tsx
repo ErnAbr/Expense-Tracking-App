@@ -33,19 +33,7 @@ export const CategoryCard = ({
   const Icon = getIconComponent(iconName);
 
   return (
-    <Card
-      className={styles.categoryCard}
-      sx={{
-        minHeight: "15vh",
-        height: "100%",
-        minWidth: "25vw",
-        maxWidth: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        cursor: !name ? "pointer" : "default",
-      }}
-    >
+    <Card className={styles.categoryCard}>
       <CardContent className={`${!name ? styles.iconAdd : ""}`}>
         {name ? (
           <>
