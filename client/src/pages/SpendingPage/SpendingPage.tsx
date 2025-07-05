@@ -16,14 +16,9 @@ export const SpendingPage = () => {
   const [selectedCategory, setSelectedCategory] =
     useState<SelectedCategoryProps | null>(null);
 
-  const filterExpenseMonth = {
-    year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1,
-  };
-
   const { data: monthlyExpenses, isLoading } = useMonthlyExpenses(
-    filterExpenseMonth.year,
-    filterExpenseMonth.month
+    new Date().getFullYear(),
+    new Date().getMonth() + 1
   );
 
   const {

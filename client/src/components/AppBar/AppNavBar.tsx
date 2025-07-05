@@ -44,7 +44,7 @@ export const AppNavBar = () => {
   const navLinks = user ? pages : login;
 
   return (
-    <AppBar color="primary" position="static">
+    <AppBar color="info" position="static">
       <Container maxWidth="xl">
         <Toolbar>
           {/* SMALL SCREEN BURGER MENU */}

@@ -19,7 +19,7 @@ type FormValues = {
 };
 
 const schema = yup.object({
-  name: yup.string().required(),
+  name: yup.string().required().max(18),
   iconName: yup.string().required(),
 });
 

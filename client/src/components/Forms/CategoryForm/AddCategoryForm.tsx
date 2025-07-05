@@ -25,13 +25,16 @@ interface CategoryFormProps {
 }
 
 const schema = yup.object({
-  name: yup.string().required(),
+  name: yup.string().required().max(18),
   iconName: yup.string().required(),
   subcategory: yup
     .array()
     .of(
       yup.object({
-        name: yup.string().required(),
+        name: yup
+          .string()
+          .required()
+          .max(18),
         iconName: yup.string().required(),
       })
     )
