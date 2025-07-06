@@ -4,9 +4,12 @@ import { useEffect, useState } from "react";
 import { useMonthlyExpenses } from "../../api/expenses.query";
 import { queryCategories } from "../../api/categories.query";
 import { toast } from "react-toastify";
+import { FullWidhtTab } from "../../components/Tabs/FullWidthTab";
+import { Box, Button, Typography } from "@mui/material";
 
 // make not found page
-// start working on displaying monthly subcategory data using tabs from material ui
+// make information in your Tabs prettier
+// add an ability to add subcategories to existing category
 
 export const CategoryExpensePage = () => {
   const [filterExpenseMonth, setFilterExpenseMonth] = useState({
@@ -28,7 +31,7 @@ export const CategoryExpensePage = () => {
     (cat) => cat.id === Number(categoryId)
   );
 
-  const categoryExpense = monthlyExpenses?.find(
+  const categoryExpense = monthlyExpenses?.filter(
     (exp) => exp.categoryId === Number(categoryId)
   );
 
@@ -39,11 +42,24 @@ export const CategoryExpensePage = () => {
   }, [storedCategories, expenseCategoryData]);
 
   return (
-    <div>
-      <h2>Hello This Is CategoryExpensePage</h2>
-      <button onClick={() => navigate(routes.SPENDING)}>
+    <Box display="flex" flexDirection="column">
+      <Typography
+        variant="h6"
+        alignSelf="center"
+        p={2}
+      >{`Your ${expenseCategoryData?.name} Expenses`}</Typography>
+      <FullWidhtTab
+        expenseCategoryData={expenseCategoryData}
+        categoryExpense={categoryExpense}
+      />
+      <Button
+        variant="contained"
+        color="error"
+        onClick={() => navigate(routes.SPENDING)}
+        sx={{ alignSelf: "center" }}
+      >
         go back to spending page
-      </button>
-    </div>
+      </Button>
+    </Box>
   );
 };
