@@ -9,31 +9,20 @@ export const FormAutocompleteInput = <T extends FieldValues>({
   label,
   options,
 }: SelectFormProps<T>) => {
-  const optionsWithUniqueKeys = options.map((opt, index) => ({
-    ...opt,
-    _uniqueKey: `${opt.value}-${index}`,
-  }));
-
   return (
     <Controller
       name={name}
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <Autocomplete
-          options={optionsWithUniqueKeys}
+          options={options}
           getOptionLabel={(option) => option.label}
+          getOptionKey={(option) => option.value}
           className={styles.inputStyle}
-          value={
-            optionsWithUniqueKeys.find((opt) => opt.value === value) || null
-          }
+          value={options.find((opt) => opt.value === value) || null}
           onChange={(_, selectedOption) =>
             onChange(selectedOption?.value ?? null)
           }
-          renderOption={(props, option) => (
-            <li {...props} key={option._uniqueKey}>
-              {option.label}
-            </li>
-          )}
           renderInput={(params) => (
             <TextField {...params} label={label} error={!!error} size="small" />
           )}
