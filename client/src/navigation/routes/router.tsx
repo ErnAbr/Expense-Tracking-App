@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { MainLayout } from "../layout/MainLayout";
 import { routes } from "./routes";
 import { HomePage } from "../../pages/HomePage/HomePage";
@@ -9,6 +13,7 @@ import { DataPage } from "../../pages/DataPage/DataPage";
 import { ProtectedRoutes } from "../auth/ProtectedRoutes";
 import { GuestRoutes } from "../auth/GuestRoutes";
 import { CategoryExpensePage } from "../../pages/CategoryExpensePage/CategoryExpensePage";
+import { NotFoundPage } from "../../pages/NotFoundPage/NotFoundPage";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +39,8 @@ const router = createBrowserRouter([
           { path: routes.DATA, element: <DataPage /> },
         ],
       },
+      { path: routes.NOT_FOUND, element: <NotFoundPage /> },
+      { path: "*", element: <Navigate replace to={routes.NOT_FOUND} /> },
     ],
   },
 ]);

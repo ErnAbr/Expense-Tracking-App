@@ -19,12 +19,14 @@ interface CategoryAccordionProps {
   editCategory: ({ e, id, type }: CategoryMutationTypes) => void;
   deleteCategory: ({ e, id, type }: CategoryMutationTypes) => void;
   addCategory: () => void;
+  addSubcategoryToExistingCategory: (category: { id: number; name: string }) => void;
 }
 
 export const CategoryAccordion = ({
   editCategory,
   deleteCategory,
   addCategory,
+  addSubcategoryToExistingCategory,
 }: CategoryAccordionProps) => {
   const { data: storedCategories } = queryCategories();
 
@@ -89,6 +91,16 @@ export const CategoryAccordion = ({
                   </Box>
                 </Box>
               ))}
+              <Box display="flex" justifyContent="center" mt={1}>
+                <Button
+                  onClick={() => addSubcategoryToExistingCategory({ id: cat.id, name: cat.name })}
+                  color="secondary"
+                  variant="outlined"
+                  startIcon={<AddIcon />}
+                >
+                  Add Subcategory
+                </Button>
+              </Box>
             </AccordionDetails>
           </Accordion>
         ))}

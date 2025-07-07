@@ -7,9 +7,8 @@ import { toast } from "react-toastify";
 import { FullWidhtTab } from "../../components/Tabs/FullWidthTab";
 import { Box, Button, Typography } from "@mui/material";
 
-// make not found page
+// create addSubcategoryToExistingCategory form and call to api to update the data
 // make information in your Tabs prettier
-// add an ability to add subcategories to existing category
 // add table to tabs where data can be represented and filtered
 
 export const CategoryExpensePage = () => {

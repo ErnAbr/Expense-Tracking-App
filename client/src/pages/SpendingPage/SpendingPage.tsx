@@ -29,10 +29,12 @@ export const SpendingPage = () => {
     handleCloseModal,
   } = useModalView();
 
-  const { deleteCategory, editCategory, addCategory } = useCategoryMutations(
-    setEditTarget,
-    handleOpenModal
-  );
+  const {
+    deleteCategory,
+    editCategory,
+    addCategory,
+    addSubcategoryToExistingCategory,
+  } = useCategoryMutations(setEditTarget, handleOpenModal);
 
   const addExpense = (category: SelectedCategoryProps | null) => {
     setSelectedCategory(category);
@@ -59,11 +61,13 @@ export const SpendingPage = () => {
           editCategory={editCategory}
           deleteCategory={deleteCategory}
           addCategory={addCategory}
+          addSubcategoryToExistingCategory={addSubcategoryToExistingCategory}
           setModalView={setModalView}
           editTarget={editTarget}
           selectedCategory={selectedCategory}
           handleOpenModal={handleOpenModal}
           handleCloseModal={handleCloseModal}
+          storedCategories={storedCategories}
         />
       </BasicModal>
     </Box>

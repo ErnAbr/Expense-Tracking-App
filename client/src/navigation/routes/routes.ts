@@ -5,4 +5,5 @@ export const routes = {
   CATEGORY_SPENDING_PAGE: "/category-spending",
   BUDGET: "/budget",
   DATA: "/data",
+  NOT_FOUND: "/not-found"
 };

@@ -38,5 +38,15 @@ export const useCategoryMutations = (
     handleOpenModal("addCategory");
   };
 
-  return { deleteCategory, editCategory, addCategory };
+  const addSubcategoryToExistingCategory = (category: { id: number; name: string }) => {
+    setEditTarget({ id: category.id, type: "cat" });
+    handleOpenModal("addSubcategoryToExistingCateogry");
+  };
+
+  return {
+    deleteCategory,
+    editCategory,
+    addCategory,
+    addSubcategoryToExistingCategory,
+  };
 };

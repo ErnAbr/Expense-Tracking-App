@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { EditTarget } from "../../interfaces/category";
+import { CategoryObject, EditTarget } from "../../interfaces/category";
 import { CategoryMutationTypes } from "../../interfaces/categoryMutationType";
 import { SelectedCategoryProps } from "../../interfaces/expense";
 import { CategoryAccordion } from "../Accordion/CategoryAccordion";
@@ -7,17 +7,23 @@ import { AddCategoryForm } from "../Forms/CategoryForm/AddCategoryForm";
 import { EditCategoryForm } from "../Forms/CategoryForm/EditCategoryForm";
 import { AddExpenseForm } from "../Forms/ExpenseForm/AddExpenseForm";
 import { ModalView } from "../../hooks/useModalView";
+import { AddSubcategoryToExistingCateogry } from "../Forms/CategoryForm/addSubcategoryToExistingCateogry";
 
 interface ModalContentProps {
   modalView: string;
   editCategory: ({ e, id, type }: CategoryMutationTypes) => void;
   deleteCategory: ({ e, id, type }: CategoryMutationTypes) => void;
   addCategory: () => void;
+  addSubcategoryToExistingCategory: (category: {
+    id: number;
+    name: string;
+  }) => void;
   setModalView: Dispatch<SetStateAction<ModalView>>;
   editTarget: EditTarget | null;
   selectedCategory: SelectedCategoryProps | null;
   handleOpenModal: (newView?: ModalView) => void;
   handleCloseModal: () => void;
+  storedCategories: CategoryObject[] | undefined;
 }
 
 export const ModalContent = ({
@@ -30,6 +36,8 @@ export const ModalContent = ({
   selectedCategory,
   handleOpenModal,
   handleCloseModal,
+  addSubcategoryToExistingCategory,
+  storedCategories,
 }: ModalContentProps) => {
   switch (modalView) {
     case "listCategories":
@@ -38,6 +46,7 @@ export const ModalContent = ({
           editCategory={editCategory}
           deleteCategory={deleteCategory}
           addCategory={addCategory}
+          addSubcategoryToExistingCategory={addSubcategoryToExistingCategory}
         />
       );
 
@@ -60,6 +69,15 @@ export const ModalContent = ({
           setOpenModal={() => handleOpenModal("addExpense")}
           handleCloseModal={handleCloseModal}
         />
+      ) : null;
+
+    case "addSubcategoryToExistingCateogry":
+      const fullCategory = storedCategories?.find(
+        (cat) => cat.id === editTarget?.id
+      );
+
+      return fullCategory ? (
+        <AddSubcategoryToExistingCateogry category={fullCategory} />
       ) : null;
 
     default:

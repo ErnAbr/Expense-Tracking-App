@@ -5,10 +5,12 @@ export type ModalView =
   | "editCategory"
   | "addCategory"
   | "icons"
-  | "addExpense";
+  | "addExpense"
+  | "addSubcategoryToExistingCateogry";
 
 export const modalTitleMap: Record<ModalView, string> = {
   addCategory: "Add Category",
+  addSubcategoryToExistingCateogry: "Add Subcategory",
   addExpense: "Add Expense",
   listCategories: "Edit Your Categories",
   editCategory: "Edit Your Categories",
@@ -28,5 +30,11 @@ export const useModalView = (initialView: ModalView = "listCategories") => {
     setOpen(false);
   };
 
-  return { openModal, modalView, setModalView, handleOpenModal, handleCloseModal };
-}
+  return {
+    openModal,
+    modalView,
+    setModalView,
+    handleOpenModal,
+    handleCloseModal,
+  };
+};
