@@ -4,7 +4,7 @@ import { BasicModal } from "../../components/Modal/BasicModal";
 import { queryCategories } from "../../api/categories.query";
 import { SelectedCategoryProps } from "../../interfaces/expense";
 import { useMonthlyExpenses } from "../../api/expenses.query";
-import { modalTitleMap, useModalView } from "../../hooks/useModalView";
+import { MODAL_VIEWS, modalTitleMap, useModalView } from "../../hooks/useModalView";
 import { useCategoryMutations } from "../../hooks/useCategoryMutations";
 import { EditTarget } from "../../interfaces/category";
 import { ModalContent } from "../../components/Modal/ModalContent";
@@ -27,7 +27,7 @@ export const SpendingPage = () => {
     setModalView,
     handleOpenModal,
     handleCloseModal,
-  } = useModalView();
+  } = useModalView(MODAL_VIEWS.LIST_CATEGORIES);
 
   const {
     deleteCategory,
@@ -38,7 +38,7 @@ export const SpendingPage = () => {
 
   const addExpense = (category: SelectedCategoryProps | null) => {
     setSelectedCategory(category);
-    setModalView("addExpense");
+    setModalView(MODAL_VIEWS.ADD_EXPENSE);
     handleOpenModal();
   };
 

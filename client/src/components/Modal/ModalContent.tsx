@@ -6,8 +6,9 @@ import { CategoryAccordion } from "../Accordion/CategoryAccordion";
 import { AddCategoryForm } from "../Forms/CategoryForm/AddCategoryForm";
 import { EditCategoryForm } from "../Forms/CategoryForm/EditCategoryForm";
 import { AddExpenseForm } from "../Forms/ExpenseForm/AddExpenseForm";
-import { ModalView } from "../../hooks/useModalView";
-import { AddSubcategoryToExistingCateogry } from "../Forms/CategoryForm/addSubcategoryToExistingCateogry";
+import { MODAL_VIEWS, ModalView } from "../../hooks/useModalView";
+import { AddSubcategoryToExistingCategory } from "../Forms/CategoryForm/addSubcategoryToExistingCateogry";
+
 
 interface ModalContentProps {
   modalView: string;
@@ -40,7 +41,7 @@ export const ModalContent = ({
   storedCategories,
 }: ModalContentProps) => {
   switch (modalView) {
-    case "listCategories":
+    case MODAL_VIEWS.LIST_CATEGORIES:
       return (
         <CategoryAccordion
           editCategory={editCategory}
@@ -50,7 +51,7 @@ export const ModalContent = ({
         />
       );
 
-    case "editCategory":
+    case MODAL_VIEWS.EDIT_CATEGORY:
       return (
         <EditCategoryForm
           setModalView={setModalView}
@@ -59,25 +60,25 @@ export const ModalContent = ({
         />
       );
 
-    case "addCategory":
+    case MODAL_VIEWS.ADD_CATEGORY:
       return <AddCategoryForm setModalView={setModalView} />;
 
-    case "addExpense":
+    case MODAL_VIEWS.ADD_EXPENSE:
       return selectedCategory ? (
         <AddExpenseForm
           category={selectedCategory}
-          setOpenModal={() => handleOpenModal("addExpense")}
+          setOpenModal={() => handleOpenModal(MODAL_VIEWS.ADD_EXPENSE)}
           handleCloseModal={handleCloseModal}
         />
       ) : null;
 
-    case "addSubcategoryToExistingCateogry":
+    case MODAL_VIEWS.ADD_SUBCATEGORY:
       const fullCategory = storedCategories?.find(
         (cat) => cat.id === editTarget?.id
       );
 
       return fullCategory ? (
-        <AddSubcategoryToExistingCateogry category={fullCategory} />
+        <AddSubcategoryToExistingCategory category={fullCategory} setModalView={setModalView} />
       ) : null;
 
     default:

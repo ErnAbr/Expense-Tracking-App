@@ -12,6 +12,8 @@ import { api } from "../../../api/api";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 import { CategoryPutData, EditTarget } from "../../../interfaces/category";
+import { MODAL_VIEWS } from "../../../hooks/useModalView";
+import { CATEGORY_QUERY_KEY } from "../../../api/queryKeys";
 
 type FormValues = {
   name: string;
@@ -24,7 +26,7 @@ const schema = yup.object({
 });
 
 interface CategoryFormProps {
-  setModalView: (view: "listCategories") => void;
+  setModalView: (view: typeof MODAL_VIEWS.LIST_CATEGORIES) => void;
   editTarget: EditTarget | null;
   deleteCategory: ({ e, id, type }: CategoryMutationTypes) => void;
 }
@@ -40,7 +42,7 @@ export const EditCategoryForm = ({
   if (!editTarget) {
     return (
       <Box>
-        <Button onClick={() => setModalView("listCategories")}>Back</Button>
+        <Button onClick={() => setModalView(MODAL_VIEWS.LIST_CATEGORIES)}>Back</Button>
       </Box>
     );
   }
@@ -70,8 +72,8 @@ export const EditCategoryForm = ({
     try {
       const response = await api.Category.updateUserCatOrSub(payload);
       toast.success(response);
-      queryClient.invalidateQueries({ queryKey: ["category"] });
-      setModalView("listCategories");
+      queryClient.invalidateQueries({ queryKey: [CATEGORY_QUERY_KEY] });
+      setModalView(MODAL_VIEWS.LIST_CATEGORIES);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data);
@@ -123,7 +125,7 @@ export const EditCategoryForm = ({
       <Button
         variant="contained"
         color="secondary"
-        onClick={() => setModalView("listCategories")}
+        onClick={() => setModalView(MODAL_VIEWS.LIST_CATEGORIES)}
       >
         Back
       </Button>

@@ -6,7 +6,7 @@ import {
   MontlyExpenseResponseDto,
   SelectedCategoryProps,
 } from "../../interfaces/expense";
-import { ModalView } from "../../hooks/useModalView";
+import { MODAL_VIEWS, ModalView } from "../../hooks/useModalView";
 
 interface CategoryCardGridProps {
   storedCategories: CategoryObject[] | undefined;
@@ -66,7 +66,7 @@ export const CategoryCardGrid = ({
           </Grid>
         );
       })}
-      <Grid onClick={() => handleOpenModal("listCategories")} size={gridSize}>
+      <Grid onClick={() => handleOpenModal(MODAL_VIEWS.LIST_CATEGORIES)} size={gridSize}>
         <CategoryCard iconName="CiCirclePlus" />
       </Grid>
     </Grid>

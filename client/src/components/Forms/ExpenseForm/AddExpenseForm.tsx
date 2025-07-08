@@ -13,6 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { api } from "../../../api/api";
+import { EXPENSE_QUERY_KEY } from "../../../api/queryKeys";
 
 type FormValues = {
   subcategoryId: number;
@@ -52,7 +53,7 @@ export const AddExpenseForm = ({
     try {
       const response = await api.Expense.AddUserExpense(payload);
       toast.success(response);
-      queryClient.invalidateQueries({ queryKey: ["expense"] });
+      queryClient.invalidateQueries({ queryKey: [EXPENSE_QUERY_KEY] });
       reset();
     } catch (error) {
       if (axios.isAxiosError(error)) {

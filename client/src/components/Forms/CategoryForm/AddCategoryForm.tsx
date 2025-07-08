@@ -10,6 +10,8 @@ import { IconPickerToggler } from "../../IconPicker/IconPickerToggler";
 import axios from "axios";
 import { api } from "../../../api/api";
 import { useQueryClient } from "@tanstack/react-query";
+import { MODAL_VIEWS } from "../../../hooks/useModalView";
+import { CATEGORY_QUERY_KEY } from "../../../api/queryKeys";
 
 export type CategoryAddData = {
   name: string;
@@ -21,7 +23,7 @@ export type CategoryAddData = {
 };
 
 interface CategoryFormProps {
-  setModalView: (view: "listCategories") => void;
+  setModalView: (view: typeof MODAL_VIEWS.LIST_CATEGORIES) => void;
 }
 
 const schema = yup.object({
@@ -31,10 +33,7 @@ const schema = yup.object({
     .array()
     .of(
       yup.object({
-        name: yup
-          .string()
-          .required()
-          .max(18),
+        name: yup.string().required().max(18),
         iconName: yup.string().required(),
       })
     )
@@ -69,7 +68,7 @@ export const AddCategoryForm = ({ setModalView }: CategoryFormProps) => {
     try {
       const response = await api.Category.AddUserCatOrSub(data);
       toast.success(response);
-      queryClient.invalidateQueries({ queryKey: ["category"] });
+      queryClient.invalidateQueries({ queryKey: [CATEGORY_QUERY_KEY] });
       reset();
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -119,7 +118,7 @@ export const AddCategoryForm = ({ setModalView }: CategoryFormProps) => {
           <Button
             variant="contained"
             color="error"
-            onClick={() => setModalView("listCategories")}
+            onClick={() => setModalView(MODAL_VIEWS.LIST_CATEGORIES)}
             className={styles.buttonWidth}
           >
             BACK

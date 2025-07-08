@@ -1,23 +1,26 @@
 import { useState } from "react";
 
-export type ModalView =
-  | "listCategories"
-  | "editCategory"
-  | "addCategory"
-  | "icons"
-  | "addExpense"
-  | "addSubcategoryToExistingCateogry";
+export const MODAL_VIEWS = {
+  ADD_CATEGORY: "addCategory",
+  ADD_SUBCATEGORY: "addSubcategoryToExistingCategory",
+  ADD_EXPENSE: "addExpense",
+  LIST_CATEGORIES: "listCategories",
+  EDIT_CATEGORY: "editCategory",
+  ICONS: "icons",
+} as const;
+
+export type ModalView = (typeof MODAL_VIEWS)[keyof typeof MODAL_VIEWS];
 
 export const modalTitleMap: Record<ModalView, string> = {
-  addCategory: "Add Category",
-  addSubcategoryToExistingCateogry: "Add Subcategory",
-  addExpense: "Add Expense",
-  listCategories: "Edit Your Categories",
-  editCategory: "Edit Your Categories",
-  icons: "Edit Your Categories",
+  [MODAL_VIEWS.ADD_CATEGORY]: "Add Category",
+  [MODAL_VIEWS.ADD_SUBCATEGORY]: "Add Subcategory",
+  [MODAL_VIEWS.ADD_EXPENSE]: "Add Expense",
+  [MODAL_VIEWS.LIST_CATEGORIES]: "Edit Your Categories",
+  [MODAL_VIEWS.EDIT_CATEGORY]: "Edit Your Categories",
+  [MODAL_VIEWS.ICONS]: "Edit Your Categories",
 };
 
-export const useModalView = (initialView: ModalView = "listCategories") => {
+export const useModalView = (initialView: typeof MODAL_VIEWS.LIST_CATEGORIES) => {
   const [openModal, setOpen] = useState(false);
   const [modalView, setModalView] = useState<ModalView>(initialView);
 
@@ -26,7 +29,7 @@ export const useModalView = (initialView: ModalView = "listCategories") => {
     setOpen(true);
   };
   const handleCloseModal = () => {
-    setModalView("listCategories");
+    setModalView(MODAL_VIEWS.LIST_CATEGORIES);
     setOpen(false);
   };
 
