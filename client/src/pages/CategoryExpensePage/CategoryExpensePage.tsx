@@ -7,7 +7,8 @@ import { toast } from "react-toastify";
 import { FullWidhtTab } from "../../components/Tabs/FullWidthTab";
 import { Box, Button, Typography } from "@mui/material";
 
-// finish addSubcategoryToExistingCategory form and call to api to update the data
+// make an API to accept subcategoryAdd
+// make a modal that asks whether you sure you want to delete cat or sub
 // make information in your Tabs prettier
 // add table to tabs where data can be represented and filtered
 

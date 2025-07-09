@@ -7,6 +7,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { MODAL_VIEWS } from "../../../hooks/useModalView";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import React from "react";
 
 type SubcategoryAddData = {
   subcategory: {
@@ -51,12 +52,17 @@ export const AddSubcategoryToExistingCategory = ({
   });
 
   const { fields, append, remove } = useFieldArray({
-      control,
-      name: "subcategory",
-    });
+    control,
+    name: "subcategory",
+  });
 
   const handleFormSubmit = async (data: SubcategoryAddData) => {
-    console.log(data);
+    const payload = {
+      categoryId: category?.id,
+      ...data,
+    };
+
+    console.log(payload);
   };
 
   return (
@@ -71,18 +77,60 @@ export const AddSubcategoryToExistingCategory = ({
           pr: 0.5,
         }}
       >
-        <Box className={styles.formFieldWrapper} sx={{ marginTop: "1.5vh" }}>
-          <FormInputText
-            name="subcategory.0.name"
-            control={control}
-            label="Category Name"
-            type="text"
-          />
+        {fields.map((field, index) => {
+          return (
+            <React.Fragment key={field.id}>
+              <Box
+                key={field.id}
+                className={styles.formFieldWrapper}
+                sx={{ marginTop: "1.5vh" }}
+              >
+                <FormInputText
+                  name={`subcategory.${index}.name`}
+                  control={control}
+                  label="Subcategory Name"
+                  type="text"
+                />
+              </Box>
+              <IconPickerToggler<SubcategoryAddData>
+                setValue={setValue}
+                name={`subcategory.${index}.iconName`}
+                initialIcon={field.iconName}
+              />
+            </React.Fragment>
+          );
+        })}
+        {errors?.subcategory?.root?.message && (
+          <Box sx={{ color: "red", mt: 1, textAlign: "center" }}>
+            {errors.subcategory.root.message}
+          </Box>
+        )}
+        <Box display="flex" justifyContent="space-around" mt={2}>
+          <Button
+            color="success"
+            onClick={async () => {
+              append({
+                name: "",
+                iconName: "FaRegQuestionCircle",
+              });
+              clearErrors("subcategory");
+            }}
+            className={styles.buttonWidth}
+          >
+            Add
+          </Button>
+          <Button
+            color="error"
+            disabled={fields.length === 0}
+            onClick={async () => {
+              remove(fields.length - 1);
+              clearErrors("subcategory");
+            }}
+            className={styles.buttonWidth}
+          >
+            Delete
+          </Button>
         </Box>
-        <IconPickerToggler<SubcategoryAddData>
-          setValue={setValue}
-          name="subcategory.0.iconName"
-        />
         <Box display="flex" justifyContent="space-around" mt={2}>
           <Button
             variant="contained"
