@@ -80,6 +80,7 @@ export const ModalContent = ({
       return fullCategory ? (
         <AddSubcategoryToExistingCategory category={fullCategory} setModalView={setModalView} />
       ) : null;
+    
 
     default:
       return null;

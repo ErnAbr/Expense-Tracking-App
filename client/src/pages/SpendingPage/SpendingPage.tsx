@@ -4,11 +4,16 @@ import { BasicModal } from "../../components/Modal/BasicModal";
 import { queryCategories } from "../../api/categories.query";
 import { SelectedCategoryProps } from "../../interfaces/expense";
 import { useMonthlyExpenses } from "../../api/expenses.query";
-import { MODAL_VIEWS, modalTitleMap, useModalView } from "../../hooks/useModalView";
+import {
+  MODAL_VIEWS,
+  modalTitleMap,
+  useModalView,
+} from "../../hooks/useModalView";
 import { useCategoryMutations } from "../../hooks/useCategoryMutations";
 import { EditTarget } from "../../interfaces/category";
 import { ModalContent } from "../../components/Modal/ModalContent";
 import { CategoryCardGrid } from "../../components/Grid/CategoryCardGrid";
+import { useConfirmationDialog } from "../../hooks/useConfirmationDialog";
 
 export const SpendingPage = () => {
   const { data: storedCategories } = queryCategories();
@@ -29,12 +34,14 @@ export const SpendingPage = () => {
     handleCloseModal,
   } = useModalView(MODAL_VIEWS.LIST_CATEGORIES);
 
+  const { confirm, ConfirmationModal } = useConfirmationDialog();
+
   const {
     deleteCategory,
     editCategory,
     addCategory,
     addSubcategoryToExistingCategory,
-  } = useCategoryMutations(setEditTarget, handleOpenModal);
+  } = useCategoryMutations(setEditTarget, handleOpenModal, confirm);
 
   const addExpense = (category: SelectedCategoryProps | null) => {
     setSelectedCategory(category);
@@ -70,6 +77,7 @@ export const SpendingPage = () => {
           storedCategories={storedCategories}
         />
       </BasicModal>
+      <ConfirmationModal />
     </Box>
   );
 };
