@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { api } from "../api/api";
-import {  EditTarget } from "../interfaces/category";
+import { EditTarget } from "../interfaces/category";
 import { CategoryMutationTypes } from "../interfaces/categoryMutationType";
 import { MODAL_VIEWS, ModalView } from "./useModalView";
 import { useQueryClient } from "@tanstack/react-query";
@@ -21,7 +21,9 @@ export const useCategoryMutations = (
 
     const confirmed = await confirm({
       title: "Confirm Deletion",
-      description: "Are you sure you want to delete this category?",
+      description: `Are You Sure You Want To Delete This ${
+        type === "cat" ? "Category" : "Subcategory"
+      }?`,
     });
 
     if (!confirmed) return;

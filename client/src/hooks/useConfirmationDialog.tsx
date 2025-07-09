@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useRef } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -11,34 +11,28 @@ import {
 type ConfirmOptions = {
   title?: string;
   description?: string;
-  confirmText?: string;
-  cancelText?: string;
 };
 
 export const useConfirmationDialog = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [options, setOptions] = useState<ConfirmOptions>({});
-  const [resolver, setResolver] = useState<
-    ((confirmed: boolean) => void) | null
-  >(null);
 
-  const confirm = useCallback((opts: ConfirmOptions): Promise<boolean> => {
+  const resolverRef = useRef<((confirmed: boolean) => void) | null>(null);
+
+  const confirm = (opts: ConfirmOptions): Promise<boolean> => {
     setOptions(opts);
     setIsOpen(true);
-    return new Promise((resolve) => {
-      setResolver(() => resolve);
+    return new Promise<boolean>((resolve) => {
+      resolverRef.current = resolve;
     });
-  }, []);
+  };
 
-  const handleClose = useCallback(
-    (confirmed: boolean) => {
-      if (resolver) resolver(confirmed);
-      setIsOpen(false);
-      setOptions({});
-      setResolver(null);
-    },
-    [resolver]
-  );
+  const handleClose = (result: boolean) => {
+    resolverRef.current?.(result);
+    resolverRef.current = null;
+    setIsOpen(false);
+    setOptions({});
+  };
 
   const ConfirmationModal = () => (
     <Dialog open={isOpen} onClose={() => handleClose(false)}>
@@ -49,15 +43,13 @@ export const useConfirmationDialog = () => {
         </DialogContent>
       )}
       <DialogActions>
-        <Button onClick={() => handleClose(false)}>
-          {options.cancelText || "Cancel"}
-        </Button>
+        <Button onClick={() => handleClose(false)}>Cancel</Button>
         <Button
           variant="contained"
           color="error"
           onClick={() => handleClose(true)}
         >
-          {options.confirmText || "Confirm"}
+          Confirm
         </Button>
       </DialogActions>
     </Dialog>
