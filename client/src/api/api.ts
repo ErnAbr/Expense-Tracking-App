@@ -8,9 +8,13 @@ import {
   CategoryDeleteData,
   CategoryObject,
   CategoryPutData,
+  SubcategoryAddDataDto,
 } from "../interfaces/category";
 import { CategoryAddData } from "../components/Forms/CategoryForm/AddCategoryForm";
-import { ExpenseAddData, MontlyExpenseResponseDto } from "../interfaces/expense";
+import {
+  ExpenseAddData,
+  MontlyExpenseResponseDto,
+} from "../interfaces/expense";
 
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
@@ -43,6 +47,8 @@ const Category = {
     requests.get<CategoryObject[]>("/category/getAllCategories"),
   AddUserCatOrSub: (body: CategoryAddData) =>
     requests.post<string>("/category/AddUserCategory", body),
+  addSubcategoryToCategory: (body: SubcategoryAddDataDto) =>
+    requests.put<string>("/category/AddSubcategoryToExistingCategory", body),
   updateUserCatOrSub: (body: CategoryPutData) =>
     requests.put<string>("/category/UpdateUserCategory", body),
   deleteUserCatOrSub: (body: CategoryDeleteData) =>

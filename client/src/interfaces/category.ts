@@ -1,3 +1,5 @@
+import { SubcategoryAddData } from "../components/Forms/CategoryForm/addSubcategoryToExistingCateogry";
+
 export interface CategoryObject {
   id: number;
   name: string;
@@ -48,3 +50,7 @@ export interface EditTarget {
   id: number;
   type: "cat" | "sub";
 }
+
+export type SubcategoryAddDataDto = {
+  categoryId: number;
+} & SubcategoryAddData;

@@ -59,7 +59,8 @@ namespace Server.Controllers
         public IActionResult UpdateUserCategory(EditCategoryDto dto)
         {
             ActionResult<int> userIdResult = GetUserIdFromClaims();
-            if (userIdResult.Result != null) return userIdResult.Result;
+                if (userIdResult.Result != null) 
+                    return userIdResult.Result;
             
             int userId = userIdResult.Value;
 
@@ -101,18 +102,53 @@ namespace Server.Controllers
         }
 
         [Authorize]
+        [HttpPut("AddSubcategoryToExistingCategory")]
+        public IActionResult AddSubcategoryToExistingCategory(AddSubcategoriesToCategoryDto subcategoryAddDto)
+        {
+            ActionResult<int> userIdResult = GetUserIdFromClaims();
+                if (userIdResult.Result != null)
+                    return userIdResult.Result;
+
+            int userId = userIdResult.Value;
+
+            Category? category = _context.Categories
+                .Include(c => c.Subcategories)
+                .FirstOrDefault(c => c.Id == subcategoryAddDto.CategoryId);
+
+            if (category == null)
+                return NotFound("Category not found");
+
+            if (category.UserId != userId)
+                return Forbid("You do not own this category");
+
+            List<Subcategory>? subcategories = _mapper.Map<List<Subcategory>>(subcategoryAddDto.Subcategory);
+            subcategories.ForEach(s => s.CategoryId = category.Id);
+
+            _context.Subcategories.AddRange(subcategories);
+
+            if (_context.SaveChanges() > 0)
+            {
+                return Ok("Subcategories successfully added to category");
+            }
+
+            return StatusCode(500, "Failed to add subcategories due to server error.");
+        }
+
+
+        [Authorize]
         [HttpDelete("DeleteUserCategory")]
         public IActionResult DeleteUserCategory(DeleteCategoryDto dto)
         {
             ActionResult<int> userIdResult = GetUserIdFromClaims();
-            if (userIdResult.Result != null) return userIdResult.Result;
+                if (userIdResult.Result != null) 
+                    return userIdResult.Result;
             
             int userId = userIdResult.Value;
 
             switch (dto.Type)
             {
                 case "cat":
-                    var category = _context.Categories.Find(dto.Id);
+                    Category? category = _context.Categories.Find(dto.Id);
                     if (category == null)
                         return NotFound("Category not found");
 
@@ -123,7 +159,7 @@ namespace Server.Controllers
                     break;
 
                 case "sub":
-                    var subcategory = _context.Subcategories
+                    Subcategory? subcategory = _context.Subcategories
                         .Include(s => s.Category)
                         .SingleOrDefault(s => s.Id == dto.Id);
 

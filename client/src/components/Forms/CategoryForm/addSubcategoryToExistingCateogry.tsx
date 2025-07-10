@@ -8,8 +8,13 @@ import { MODAL_VIEWS } from "../../../hooks/useModalView";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import React from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { api } from "../../../api/api";
+import { useQueryClient } from "@tanstack/react-query";
+import { CATEGORY_QUERY_KEY } from "../../../api/queryKeys";
 
-type SubcategoryAddData = {
+export type SubcategoryAddData = {
   subcategory: {
     name: string;
     iconName: string;
@@ -43,6 +48,7 @@ export const AddSubcategoryToExistingCategory = ({
     control,
     setValue,
     clearErrors,
+    reset,
     formState: { errors },
   } = useForm<SubcategoryAddData>({
     resolver: yupResolver(schema),
@@ -56,11 +62,24 @@ export const AddSubcategoryToExistingCategory = ({
     name: "subcategory",
   });
 
+  const queryClient = useQueryClient();
+
   const handleFormSubmit = async (data: SubcategoryAddData) => {
     const payload = {
       categoryId: category?.id,
       ...data,
     };
+
+    try {
+      const response = await api.Category.addSubcategoryToCategory(payload);
+      toast.success(response);
+      queryClient.invalidateQueries({ queryKey: [CATEGORY_QUERY_KEY] });
+      reset();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data);
+      }
+    }
 
     console.log(payload);
   };
