@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Server.Data;
 using Server.Helpers;
+using Server.Services.Implementations;
+using Server.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<AuthHelper>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 //for Testing

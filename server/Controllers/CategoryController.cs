@@ -6,178 +6,88 @@ using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Dtos;
 using Server.Models;
+using Server.Services.Interfaces;
 
 namespace Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CategoryController(AppDbContext context, IMapper mapper) : BaseController
+    public class CategoryController(ICategoryService service) : BaseController
     {
-        private readonly AppDbContext _context = context;
-        private readonly IMapper _mapper = mapper;
+        private readonly ICategoryService _service = service;
 
         [Authorize]
         [HttpGet("GetAllCategories")]
-        public ActionResult<IEnumerable<Category>> UserCategories()
+        public async Task<IActionResult> UserCategories()
         {
             ActionResult<int> userIdResult = GetUserIdFromClaims();
-                if (userIdResult.Result != null)
-                    return userIdResult.Result;
+            if (userIdResult.Result != null)
+                return userIdResult.Result;
 
-            int userId = userIdResult.Value;
-
-            return _context.Categories
-                        .Where(c => c.UserId == userId)
-                        .Include(c => c.Subcategories)
-                        .ToList();
+            IEnumerable<Category> categories = await _service.GetUserCategoriesAsync(userIdResult.Value);
+            return Ok(categories);
         }
 
         [Authorize]
         [HttpPost("AddUserCategory")]
-        public IActionResult AddUserCategory(AddCategoryDto addCategoryDto)
+        public async Task<IActionResult> AddUserCategory(AddCategoryDto addCategoryDto)
         {
             ActionResult<int> userIdResult = GetUserIdFromClaims();
-                if (userIdResult.Result != null)
-                    return userIdResult.Result;
+            if (userIdResult.Result != null)
+                return userIdResult.Result;
 
-            Category categoryToAdd = _mapper.Map<Category>(addCategoryDto);
-            categoryToAdd.Subcategories = _mapper.Map<List<Subcategory>>(addCategoryDto.Subcategory);
-            categoryToAdd.UserId = userIdResult.Value;
-
-            _context.Categories.Add(categoryToAdd);
-
-            if (_context.SaveChanges() > 0)
-            {
-                return Ok("Category Successfully Added");
-            }
-
-            return StatusCode(500, "Failed to add category due to server error.");
+            bool result = await _service.AddUserCategoryAsync(userIdResult.Value, addCategoryDto);
+            return result ? Ok("Category Successfully Added") : StatusCode(500, "Failed to add category.");
         }
 
         [Authorize]
         [HttpPut("UpdateUserCategory")]
-        public IActionResult UpdateUserCategory(EditCategoryDto dto)
+        public async Task<IActionResult> UpdateUserCategory(EditCategoryDto editCategoryDto)
         {
             ActionResult<int> userIdResult = GetUserIdFromClaims();
                 if (userIdResult.Result != null) 
                     return userIdResult.Result;
-            
-            int userId = userIdResult.Value;
 
-            switch (dto.Type)
+            string? result = await _service.UpdateUserCategoryAsync(userIdResult.Value, editCategoryDto);
+
+            return result switch
             {
-                case "cat":
-                    Category? category = _context.Categories.SingleOrDefault(c => c.Id == dto.Id);
-                    if (category == null)
-                        return NotFound("Category not found");
-
-                    if (category.UserId != userId)
-                        return Forbid("You do not own this category");
-
-                    category.Name = dto.Data.Name;
-                    category.IconName = dto.Data.IconName;
-                    break;
-
-                case "sub":
-                    Subcategory? subcategory = _context.Subcategories
-                        .Include(s => s.Category)
-                        .SingleOrDefault(s => s.Id == dto.Id);
-
-                    if (subcategory == null)
-                        return NotFound("Subcategory not found");
-
-                    if (subcategory.Category.UserId != userId)
-                        return Forbid("You do not own this subcategory");
-
-                    subcategory.Name = dto.Data.Name;
-                    subcategory.IconName = dto.Data.IconName;
-                    break;
-
-                default:
-                    return BadRequest("Invalid type");
-            }
-
-            _context.SaveChanges();
-            return Ok("Update successful");
+                null => Ok("Update successful"),
+                "Forbidden" => Forbid("You do not own this resource"),
+                "Invalid type" => BadRequest(result),
+                _ => NotFound(result)
+            };
         }
 
         [Authorize]
         [HttpPut("AddSubcategoryToExistingCategory")]
-        public IActionResult AddSubcategoryToExistingCategory(AddSubcategoriesToCategoryDto subcategoryAddDto)
+        public async Task<IActionResult> AddSubcategoryToExistingCategory(AddSubcategoriesToCategoryDto subcategoryAddDto)
         {
             ActionResult<int> userIdResult = GetUserIdFromClaims();
-                if (userIdResult.Result != null)
-                    return userIdResult.Result;
+            if (userIdResult.Result != null)
+                return userIdResult.Result;
 
-            int userId = userIdResult.Value;
-
-            Category? category = _context.Categories
-                .Include(c => c.Subcategories)
-                .FirstOrDefault(c => c.Id == subcategoryAddDto.CategoryId);
-
-            if (category == null)
-                return NotFound("Category not found");
-
-            if (category.UserId != userId)
-                return Forbid("You do not own this category");
-
-            List<Subcategory>? subcategories = _mapper.Map<List<Subcategory>>(subcategoryAddDto.Subcategory);
-            subcategories.ForEach(s => s.CategoryId = category.Id);
-
-            _context.Subcategories.AddRange(subcategories);
-
-            if (_context.SaveChanges() > 0)
-            {
-                return Ok("Subcategories successfully added to category");
-            }
-
-            return StatusCode(500, "Failed to add subcategories due to server error.");
+            string? result = await _service.AddSubcategoriesToCategoryAsync(userIdResult.Value, subcategoryAddDto);
+            return result == null ? Ok("Subcategories successfully added to category") : StatusCode(403, result);
         }
 
 
         [Authorize]
         [HttpDelete("DeleteUserCategory")]
-        public IActionResult DeleteUserCategory(DeleteCategoryDto dto)
+        public async Task<IActionResult> DeleteUserCategory(DeleteCategoryDto deleteCategoryDto)
         {
             ActionResult<int> userIdResult = GetUserIdFromClaims();
-                if (userIdResult.Result != null) 
-                    return userIdResult.Result;
-            
-            int userId = userIdResult.Value;
+            if (userIdResult.Result != null)
+                return userIdResult.Result;
 
-            switch (dto.Type)
+            string? result = await _service.DeleteUserCategoryAsync(userIdResult.Value, deleteCategoryDto);
+            return result switch
             {
-                case "cat":
-                    Category? category = _context.Categories.Find(dto.Id);
-                    if (category == null)
-                        return NotFound("Category not found");
-
-                    if (category.UserId != userId)
-                        return Forbid("You do not own this category");
-
-                    _context.Categories.Remove(category);
-                    break;
-
-                case "sub":
-                    Subcategory? subcategory = _context.Subcategories
-                        .Include(s => s.Category)
-                        .SingleOrDefault(s => s.Id == dto.Id);
-
-                    if (subcategory == null)
-                        return NotFound("Subcategory not found");
-
-                    if (subcategory.Category.UserId != userId)
-                        return Forbid("You do not own this subcategory");
-
-                    _context.Subcategories.Remove(subcategory);
-                    break;
-
-                default:
-                    return BadRequest("Invalid type");
-            }
-
-            _context.SaveChanges();
-            return Ok("Deleted successfully");
+                null => Ok("Deleted successfully"),
+                "Forbidden" => Forbid("You do not own this resource"),
+                "Invalid type" => BadRequest(result),
+                _ => NotFound(result)
+            };
         }
     }
 }

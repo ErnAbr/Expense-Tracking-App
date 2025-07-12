@@ -17,7 +17,7 @@ namespace Server.MappingProfiles
         public CategoryMappingProfile()
         {
             CreateMap<AddCategoryDto, Category>();
-            CreateMap<AddSubcategoryDto, Subcategory>();
+            CreateMap<AddSubcategory, Subcategory>();
         }
     }
 
