@@ -7,8 +7,7 @@ import { toast } from "react-toastify";
 import { FullWidhtTab } from "../../components/Tabs/FullWidthTab";
 import { Box, Button, Typography } from "@mui/material";
 
-// mae expense information table Sticky header
-// add table to tabs where data can be represented and filtered
+// add filtering by month ability
 
 export const CategoryExpensePage = () => {
   const [filterExpenseMonth, setFilterExpenseMonth] = useState({

@@ -14,6 +14,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { api } from "../../../api/api";
 import { EXPENSE_QUERY_KEY } from "../../../api/queryKeys";
+import dayjs from "dayjs";
 
 type FormValues = {
   subcategoryId: number;
@@ -46,10 +47,15 @@ export const AddExpenseForm = ({
 
   const handleFormSubmit = async (data: FormValues) => {
     const { amountDate, ...rest } = data;
+
+    console.log(amountDate);
+
     const payload = {
       ...rest,
-      amountDate: amountDate.toISOString(),
+      amountDate: amountDate.toLocaleDateString("lt-LT"),
     };
+    console.log(payload);
+
     try {
       const response = await api.Expense.AddUserExpense(payload);
       toast.success(response);
@@ -106,11 +112,7 @@ export const AddExpenseForm = ({
           <Button variant="contained" color="primary" type="submit">
             Add Expense
           </Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={handleCloseModal}
-          >
+          <Button variant="contained" color="error" onClick={handleCloseModal}>
             Back
           </Button>
         </Box>
