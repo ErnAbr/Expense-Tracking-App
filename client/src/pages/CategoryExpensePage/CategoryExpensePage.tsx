@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { FullWidhtTab } from "../../components/Tabs/FullWidthTab";
 import { Box, Button, Typography } from "@mui/material";
 
-// make information in your Tabs prettier
+// mae expense information table Sticky header
 // add table to tabs where data can be represented and filtered
 
 export const CategoryExpensePage = () => {
