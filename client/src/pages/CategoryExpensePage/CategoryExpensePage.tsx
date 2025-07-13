@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import { FullWidhtTab } from "../../components/Tabs/FullWidthTab";
 import { Box, Button, Typography } from "@mui/material";
 
-// refactor categories controller
 // make information in your Tabs prettier
 // add table to tabs where data can be represented and filtered
 
