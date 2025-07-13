@@ -62,9 +62,9 @@ export const LoginForm = () => {
       >
         <Typography
           color="primary"
-          variant="h5"
           mb={2}
           fontWeight="700 !important"
+          sx={{ typography: { xs: "body1", sm: "subtitle1", md: "h5" } }}
         >
           Please Log In
         </Typography>
