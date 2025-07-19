@@ -1,3 +1,4 @@
+import styles from "./categoryExpensePage.module.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { routes } from "../../navigation/routes/routes";
 import { useEffect, useState } from "react";
@@ -6,14 +7,22 @@ import { queryCategories } from "../../api/categories.query";
 import { toast } from "react-toastify";
 import { FullWidhtTab } from "../../components/Tabs/FullWidthTab";
 import { Box, Button, Typography } from "@mui/material";
+import { FormDatePicker } from "../../components/FormComponents/FormDatePicker/FormDatePicker";
+import { useForm } from "react-hook-form";
+import dayjs from "dayjs";
 
-// add filtering by month ability
+// add edit and delete to expenses
+// CategoryExpensePage -> FullWidthTab -> ExpenseDisplayTable
 
 export const CategoryExpensePage = () => {
   const [filterExpenseMonth, setFilterExpenseMonth] = useState({
     year: new Date().getFullYear(),
     month: new Date().getMonth() + 1,
   });
+
+  const { control, watch, setValue } = useForm();
+
+  const selectedMonth = watch("filterMonth");
 
   const navigate = useNavigate();
   const { categoryId } = useParams();
@@ -34,6 +43,14 @@ export const CategoryExpensePage = () => {
   );
 
   useEffect(() => {
+    if (selectedMonth) {
+      const year = dayjs(selectedMonth).year();
+      const month = dayjs(selectedMonth).month() + 1;
+      setFilterExpenseMonth({ year, month });
+    }
+  }, [selectedMonth]);
+
+  useEffect(() => {
     if (storedCategories && !expenseCategoryData) {
       toast.error("Category Not Found");
     }
@@ -46,6 +63,23 @@ export const CategoryExpensePage = () => {
         alignSelf="center"
         p={2}
       >{`Your ${expenseCategoryData?.name} Expenses`}</Typography>
+      <Box className={styles.monthFilterBox}>
+        <FormDatePicker
+          label="Filter Expenses"
+          name="filterMonth"
+          control={control}
+          views={["year", "month"]}
+          format="MM/YYYY"
+        />
+        <Button
+          size="small"
+          color="info"
+          variant="contained"
+          onClick={() => setValue("filterMonth", dayjs())}
+        >
+          This Month
+        </Button>
+      </Box>
       <FullWidhtTab
         expenseCategoryData={expenseCategoryData}
         categoryExpense={categoryExpense}

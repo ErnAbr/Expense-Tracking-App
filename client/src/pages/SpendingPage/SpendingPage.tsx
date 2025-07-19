@@ -10,14 +10,15 @@ import {
   useModalView,
 } from "../../hooks/useModalView";
 import { useCategoryMutations } from "../../hooks/useCategoryMutations";
-import { EditTarget } from "../../interfaces/category";
+import { EditTargetCategory } from "../../interfaces/category";
 import { ModalContent } from "../../components/Modal/ModalContent";
 import { CategoryCardGrid } from "../../components/Grid/CategoryCardGrid";
 import { useConfirmationDialog } from "../../hooks/useConfirmationDialog";
+import { useExpenseMutations } from "../../hooks/useExpenseMutations";
 
 export const SpendingPage = () => {
   const { data: storedCategories } = queryCategories();
-  const [editTarget, setEditTarget] = useState<EditTarget | null>(null);
+  const [editTarget, setEditTarget] = useState<EditTargetCategory | null>(null);
   const [selectedCategory, setSelectedCategory] =
     useState<SelectedCategoryProps | null>(null);
 
@@ -43,11 +44,11 @@ export const SpendingPage = () => {
     addSubcategoryToExistingCategory,
   } = useCategoryMutations(setEditTarget, handleOpenModal, confirm);
 
-  const addExpense = (category: SelectedCategoryProps | null) => {
-    setSelectedCategory(category);
-    setModalView(MODAL_VIEWS.ADD_EXPENSE);
-    handleOpenModal();
-  };
+  const { addExpense } = useExpenseMutations({
+    setSelectedCategory,
+    setModalView,
+    handleOpenModal,
+  });
 
   return (
     <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>

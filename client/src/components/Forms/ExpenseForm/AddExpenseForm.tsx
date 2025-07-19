@@ -14,7 +14,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { api } from "../../../api/api";
 import { EXPENSE_QUERY_KEY } from "../../../api/queryKeys";
-import dayjs from "dayjs";
 
 type FormValues = {
   subcategoryId: number;

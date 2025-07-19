@@ -89,8 +89,9 @@ export const ExpenseDisplayTable = ({
                 {categoryExpense
                   ?.sort(
                     (a, b) =>
-                      new Date(a.amountDate).getTime() -
-                      new Date(b.amountDate).getTime()
+                      new Date(b.amountDate).getTime() -
+                      new Date(a.amountDate).getTime() 
+                      
                   )
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((exp, index) => {
