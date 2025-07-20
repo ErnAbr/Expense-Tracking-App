@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { CategoryObject, EditTarget } from "../../interfaces/category";
+import { CategoryObject, EditTargetCategory } from "../../interfaces/category";
 import { CategoryMutationTypes } from "../../interfaces/categoryMutationType";
 import { SelectedCategoryProps } from "../../interfaces/expense";
 import { CategoryAccordion } from "../Accordion/CategoryAccordion";
@@ -20,7 +20,7 @@ interface ModalContentProps {
     name: string;
   }) => void;
   setModalView: Dispatch<SetStateAction<ModalView>>;
-  editTarget: EditTarget | null;
+  editTarget: EditTargetCategory | null;
   selectedCategory: SelectedCategoryProps | null;
   handleOpenModal: (newView?: ModalView) => void;
   handleCloseModal: () => void;

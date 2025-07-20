@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { api } from "../api/api";
-import { EditTarget } from "../interfaces/category";
+import { EditTargetCategory } from "../interfaces/category";
 import { CategoryMutationTypes } from "../interfaces/categoryMutationType";
 import { MODAL_VIEWS, ModalView } from "./useModalView";
 import { useQueryClient } from "@tanstack/react-query";
@@ -10,7 +10,7 @@ import { CATEGORY_QUERY_KEY } from "../api/queryKeys";
 import { useConfirmationDialog } from "./useConfirmationDialog";
 
 export const useCategoryMutations = (
-  setEditTarget: React.Dispatch<React.SetStateAction<EditTarget | null>>,
+  setEditTarget: React.Dispatch<React.SetStateAction<EditTargetCategory | null>>,
   handleOpenModal: (view?: ModalView) => void,
   confirm: ReturnType<typeof useConfirmationDialog>["confirm"]
 ) => {

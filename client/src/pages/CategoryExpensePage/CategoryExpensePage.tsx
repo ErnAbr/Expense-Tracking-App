@@ -19,7 +19,7 @@ export const CategoryExpensePage = () => {
     year: new Date().getFullYear(),
     month: new Date().getMonth() + 1,
   });
-
+  const { data: storedCategories } = queryCategories();
   const { control, watch, setValue } = useForm();
 
   const selectedMonth = watch("filterMonth");
@@ -31,8 +31,6 @@ export const CategoryExpensePage = () => {
     filterExpenseMonth.year,
     filterExpenseMonth.month
   );
-
-  const { data: storedCategories } = queryCategories();
 
   const expenseCategoryData = storedCategories?.find(
     (cat) => cat.id === Number(categoryId)

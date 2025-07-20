@@ -80,8 +80,6 @@ export const AddSubcategoryToExistingCategory = ({
         toast.error(error.response?.data);
       }
     }
-
-    console.log(payload);
   };
 
   return (

@@ -17,6 +17,7 @@ export type ExpenseAddData = {
 };
 
 export interface MontlyExpenseResponseDto {
+  id: number;
   amountDate: string;
   amount: number;
   categoryId: number;

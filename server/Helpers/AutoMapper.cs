@@ -26,9 +26,8 @@ namespace Server.MappingProfiles
         public ExpenseMappingProfile()
         {
             CreateMap<AddExpenseDto, Expense>();
-            CreateMap<Expense, MontlyExpenseResponseDto>().
-                ForMember(dest => dest.CategoryId, 
-                    opt => opt.MapFrom(src => src.Subcategory.CategoryId));
+            CreateMap<Expense, MontlyExpenseResponseDto>()
+                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.Subcategory.CategoryId));
         }
     }
 }

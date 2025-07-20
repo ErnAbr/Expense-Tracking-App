@@ -47,13 +47,10 @@ export const AddExpenseForm = ({
   const handleFormSubmit = async (data: FormValues) => {
     const { amountDate, ...rest } = data;
 
-    console.log(amountDate);
-
     const payload = {
       ...rest,
       amountDate: amountDate.toLocaleDateString("lt-LT"),
     };
-    console.log(payload);
 
     try {
       const response = await api.Expense.AddUserExpense(payload);

@@ -62,6 +62,11 @@ const Expense = {
     requests.get<MontlyExpenseResponseDto[]>(
       `/expense/GetMonthlyExpense?year=${year}&month=${month}`
     ),
+  DeleteExpense: (expenseId: number) =>
+    requests.delete<string>(
+      `/expense/DeleteExpense?expenseId=${expenseId}`,
+      {}
+    ),
 };
 
 const Test = {

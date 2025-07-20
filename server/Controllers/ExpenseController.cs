@@ -65,8 +65,29 @@ namespace Server.Controllers
 
 
             List<MontlyExpenseResponseDto> expenseDtos = _mapper.Map<List<MontlyExpenseResponseDto>>(expenses);
-            
+
             return Ok(expenseDtos);
+        }
+
+        [Authorize]
+        [HttpDelete("DeleteExpense")]
+        public IActionResult DeleteExpense(int expenseId)
+        {
+            ActionResult<int> userIdResult = GetUserIdFromClaims();
+            if (userIdResult.Result != null)
+                return userIdResult.Result;
+
+            Expense? expenseToDelete = _context.Expenses.Find(expenseId);
+            if (expenseToDelete == null)
+                return Forbid("You do not own this expense.");
+
+            if (expenseToDelete.UserId != userIdResult.Value)
+                return Forbid("You do not own this expense.");
+
+            _context.Expenses.Remove(expenseToDelete);
+            _context.SaveChanges();
+
+            return Ok("Expense deleted successfully");
         }
     }
 }

@@ -19,6 +19,8 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { getIconComponent } from "../../utils/getIconComponent";
+import { useConfirmationDialog } from "../../hooks/useConfirmationDialog";
+import { useExpenseMutations } from "../../hooks/useExpenseMutations";
 
 interface ExpenseDisplayTableProps {
   expenseCategoryData: CategoryObject | undefined;
@@ -44,13 +46,14 @@ export const ExpenseDisplayTable = ({
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
   const iconSize = isMdUp ? 24 : 16;
 
+  const { confirm, ConfirmationModal } = useConfirmationDialog();
+
   const handleChangePage = (
     _: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
     setPage(newPage);
   };
-  console.log(categoryExpense);
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -58,6 +61,8 @@ export const ExpenseDisplayTable = ({
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const { deleteExpense } = useExpenseMutations({ confirm });
 
   return (
     <Box display="flex" justifyContent="center">
@@ -90,8 +95,7 @@ export const ExpenseDisplayTable = ({
                   ?.sort(
                     (a, b) =>
                       new Date(b.amountDate).getTime() -
-                      new Date(a.amountDate).getTime() 
-                      
+                      new Date(a.amountDate).getTime()
                   )
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((exp, index) => {
@@ -101,7 +105,6 @@ export const ExpenseDisplayTable = ({
                     const Icon = subcategory
                       ? getIconComponent(subcategory.iconName)
                       : null;
-
                     return (
                       <TableRow hover key={index}>
                         <TableCell align="center">
@@ -146,7 +149,10 @@ export const ExpenseDisplayTable = ({
                         </TableCell>
                         <TableCell align="center">
                           <IconButton size="small">
-                            <DeleteIcon sx={{ color: "red" }} />
+                            <DeleteIcon
+                              sx={{ color: "red" }}
+                              onClick={(e) => deleteExpense({ e, id: exp.id })}
+                            />
                           </IconButton>
                         </TableCell>
                       </TableRow>
@@ -176,6 +182,7 @@ export const ExpenseDisplayTable = ({
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      <ConfirmationModal />
     </Box>
   );
 };
