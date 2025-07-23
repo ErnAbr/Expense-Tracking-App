@@ -12,7 +12,7 @@ import { CategoryAddData } from "./AddCategoryForm";
 import React from "react";
 import { IconPickerToggler } from "../../IconPicker/IconPickerToggler";
 
-interface SubcategoryFormProps {
+export interface SubcategoryFormProps {
   control: Control<CategoryAddData>;
   setValue: UseFormSetValue<CategoryAddData>;
   error?: FieldErrors<CategoryAddData>;

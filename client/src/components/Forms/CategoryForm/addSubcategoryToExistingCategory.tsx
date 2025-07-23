@@ -21,7 +21,7 @@ export type SubcategoryAddData = {
   }[];
 };
 
-interface AddSubcategoryToExistingCategoryProps {
+export interface AddSubcategoryToExistingCategoryProps {
   category: CategoryObject;
   setModalView: (view: typeof MODAL_VIEWS.LIST_CATEGORIES) => void;
 }

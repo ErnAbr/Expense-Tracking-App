@@ -17,7 +17,7 @@ export const modalTitleMap: Record<ModalView, string> = {
   [MODAL_VIEWS.ADD_EXPENSE]: "Add Expense",
   [MODAL_VIEWS.LIST_CATEGORIES]: "Edit Your Categories",
   [MODAL_VIEWS.EDIT_CATEGORY]: "Edit Your Categories",
-  [MODAL_VIEWS.ICONS]: "Edit Your Categories",
+  [MODAL_VIEWS.ICONS]: "Edit Your Icons",
 };
 
 export const useModalView = (initialView: typeof MODAL_VIEWS.LIST_CATEGORIES) => {

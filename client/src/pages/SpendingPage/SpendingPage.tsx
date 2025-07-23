@@ -15,6 +15,11 @@ import { ModalContent } from "../../components/Modal/ModalContent";
 import { CategoryCardGrid } from "../../components/Grid/CategoryCardGrid";
 import { useConfirmationDialog } from "../../hooks/useConfirmationDialog";
 import { useExpenseMutations } from "../../hooks/useExpenseMutations";
+import { CategoryAccordion } from "../../components/Accordion/CategoryAccordion";
+import { AddCategoryForm } from "../../components/Forms/CategoryForm/AddCategoryForm";
+import { EditCategoryForm } from "../../components/Forms/CategoryForm/EditCategoryForm";
+import { AddExpenseForm } from "../../components/Forms/ExpenseForm/AddExpenseForm";
+import { AddSubcategoryToExistingCategory } from "../../components/Forms/CategoryForm/addSubcategoryToExistingCategory";
 
 export const SpendingPage = () => {
   const { data: storedCategories } = queryCategories();
@@ -66,16 +71,48 @@ export const SpendingPage = () => {
       >
         <ModalContent
           modalView={modalView}
-          editCategory={editCategory}
-          deleteCategory={deleteCategory}
-          addCategory={addCategory}
-          addSubcategoryToExistingCategory={addSubcategoryToExistingCategory}
-          setModalView={setModalView}
-          editTarget={editTarget}
-          selectedCategory={selectedCategory}
-          handleOpenModal={handleOpenModal}
-          handleCloseModal={handleCloseModal}
-          storedCategories={storedCategories}
+          modalComponents={{
+            [MODAL_VIEWS.LIST_CATEGORIES]: {
+              component: CategoryAccordion,
+              props: {
+                editCategory,
+                deleteCategory,
+                addCategory,
+                addSubcategoryToExistingCategory,
+              },
+            },
+            [MODAL_VIEWS.EDIT_CATEGORY]: {
+              component: EditCategoryForm,
+              props: {
+                setModalView,
+                editTarget,
+                deleteCategory,
+              },
+            },
+            [MODAL_VIEWS.ADD_CATEGORY]: {
+              component: AddCategoryForm,
+              props: {
+                setModalView,
+              },
+            },
+            [MODAL_VIEWS.ADD_EXPENSE]: {
+              component: AddExpenseForm,
+              props: {
+                category: selectedCategory!,
+                setOpenModal: () => handleOpenModal(MODAL_VIEWS.ADD_EXPENSE),
+                handleCloseModal,
+              },
+            },
+            [MODAL_VIEWS.ADD_SUBCATEGORY]: {
+              component: AddSubcategoryToExistingCategory,
+              props: {
+                category: storedCategories?.find(
+                  (cat) => cat.id === editTarget?.id
+                )!,
+                setModalView,
+              },
+            },
+          }}
         />
       </BasicModal>
       <ConfirmationModal />

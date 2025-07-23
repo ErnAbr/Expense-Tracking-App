@@ -15,7 +15,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { CategoryMutationTypes } from "../../interfaces/categoryMutationType";
 import { queryCategories } from "../../api/categories.query";
 
-interface CategoryAccordionProps {
+export interface CategoryAccordionProps {
   editCategory: ({ e, id, type }: CategoryMutationTypes) => void;
   deleteCategory: ({ e, id, type }: CategoryMutationTypes) => void;
   addCategory: () => void;

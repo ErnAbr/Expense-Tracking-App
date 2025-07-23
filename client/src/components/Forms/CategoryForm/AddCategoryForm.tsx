@@ -22,7 +22,7 @@ export type CategoryAddData = {
   }[];
 };
 
-interface CategoryFormProps {
+export interface AddCategoryFormProps {
   setModalView: (view: typeof MODAL_VIEWS.LIST_CATEGORIES) => void;
 }
 
@@ -41,7 +41,7 @@ const schema = yup.object({
     .required("At least one subcategory is required"),
 });
 
-export const AddCategoryForm = ({ setModalView }: CategoryFormProps) => {
+export const AddCategoryForm = ({ setModalView }: AddCategoryFormProps) => {
   const queryClient = useQueryClient();
   const {
     handleSubmit,

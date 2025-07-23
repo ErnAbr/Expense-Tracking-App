@@ -1,4 +1,4 @@
-import { SubcategoryAddData } from "../components/Forms/CategoryForm/addSubcategoryToExistingCateogry";
+import { SubcategoryAddData } from "../components/Forms/CategoryForm/addSubcategoryToExistingCategory";
 
 export interface CategoryObject {
   id: number;

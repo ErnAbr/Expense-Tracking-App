@@ -1,88 +1,50 @@
-import { Dispatch, SetStateAction } from "react";
-import { CategoryObject, EditTargetCategory } from "../../interfaces/category";
-import { CategoryMutationTypes } from "../../interfaces/categoryMutationType";
-import { SelectedCategoryProps } from "../../interfaces/expense";
-import { CategoryAccordion } from "../Accordion/CategoryAccordion";
-import { AddCategoryForm } from "../Forms/CategoryForm/AddCategoryForm";
-import { EditCategoryForm } from "../Forms/CategoryForm/EditCategoryForm";
-import { AddExpenseForm } from "../Forms/ExpenseForm/AddExpenseForm";
 import { MODAL_VIEWS, ModalView } from "../../hooks/useModalView";
-import { AddSubcategoryToExistingCategory } from "../Forms/CategoryForm/addSubcategoryToExistingCateogry";
+import { AddExpenseFormProps } from "../../interfaces/expense";
+import { CategoryAccordionProps } from "../Accordion/CategoryAccordion";
+import { AddCategoryFormProps } from "../Forms/CategoryForm/AddCategoryForm";
+import { AddSubcategoryToExistingCategoryProps } from "../Forms/CategoryForm/addSubcategoryToExistingCategory";
+import { EditCategoryFormProps } from "../Forms/CategoryForm/EditCategoryForm";
 
+export type ModalComponentMap = {
+  [MODAL_VIEWS.LIST_CATEGORIES]: {
+    component: React.ComponentType<CategoryAccordionProps>;
+    props: CategoryAccordionProps;
+  };
+  [MODAL_VIEWS.ADD_CATEGORY]: {
+    component: React.ComponentType<AddCategoryFormProps>;
+    props: AddCategoryFormProps;
+  };
+  [MODAL_VIEWS.ADD_SUBCATEGORY]: {
+    component: React.ComponentType<AddSubcategoryToExistingCategoryProps>;
+    props: AddSubcategoryToExistingCategoryProps;
+  };
+  [MODAL_VIEWS.EDIT_CATEGORY]: {
+    component: React.ComponentType<EditCategoryFormProps>;
+    props: EditCategoryFormProps;
+  };
+  [MODAL_VIEWS.ADD_EXPENSE]: {
+    component: React.ComponentType<AddExpenseFormProps>;
+    props: AddExpenseFormProps;
+  };
+};
 
 interface ModalContentProps {
-  modalView: string;
-  editCategory: ({ e, id, type }: CategoryMutationTypes) => void;
-  deleteCategory: ({ e, id, type }: CategoryMutationTypes) => void;
-  addCategory: () => void;
-  addSubcategoryToExistingCategory: (category: {
-    id: number;
-    name: string;
-  }) => void;
-  setModalView: Dispatch<SetStateAction<ModalView>>;
-  editTarget: EditTargetCategory | null;
-  selectedCategory: SelectedCategoryProps | null;
-  handleOpenModal: (newView?: ModalView) => void;
-  handleCloseModal: () => void;
-  storedCategories: CategoryObject[] | undefined;
+  modalView: ModalView;
+  modalComponents: Partial<ModalComponentMap>;
 }
 
 export const ModalContent = ({
   modalView,
-  editCategory,
-  deleteCategory,
-  addCategory,
-  setModalView,
-  editTarget,
-  selectedCategory,
-  handleOpenModal,
-  handleCloseModal,
-  addSubcategoryToExistingCategory,
-  storedCategories,
+  modalComponents,
 }: ModalContentProps) => {
-  switch (modalView) {
-    case MODAL_VIEWS.LIST_CATEGORIES:
-      return (
-        <CategoryAccordion
-          editCategory={editCategory}
-          deleteCategory={deleteCategory}
-          addCategory={addCategory}
-          addSubcategoryToExistingCategory={addSubcategoryToExistingCategory}
-        />
-      );
+  const entry = modalComponents[modalView as keyof typeof modalComponents];
 
-    case MODAL_VIEWS.EDIT_CATEGORY:
-      return (
-        <EditCategoryForm
-          setModalView={setModalView}
-          editTarget={editTarget}
-          deleteCategory={deleteCategory}
-        />
-      );
+  if (!entry) return null;
 
-    case MODAL_VIEWS.ADD_CATEGORY:
-      return <AddCategoryForm setModalView={setModalView} />;
+  const { component: Component, props } = entry as {
+    component: React.ComponentType<any>;
+    props: Record<string, any>;
+  };
 
-    case MODAL_VIEWS.ADD_EXPENSE:
-      return selectedCategory ? (
-        <AddExpenseForm
-          category={selectedCategory}
-          setOpenModal={() => handleOpenModal(MODAL_VIEWS.ADD_EXPENSE)}
-          handleCloseModal={handleCloseModal}
-        />
-      ) : null;
-
-    case MODAL_VIEWS.ADD_SUBCATEGORY:
-      const fullCategory = storedCategories?.find(
-        (cat) => cat.id === editTarget?.id
-      );
-
-      return fullCategory ? (
-        <AddSubcategoryToExistingCategory category={fullCategory} setModalView={setModalView} />
-      ) : null;
-    
-
-    default:
-      return null;
-  }
+  return <Component {...props} />;
 };

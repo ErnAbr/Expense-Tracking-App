@@ -11,7 +11,7 @@ import { queryCategories } from "../../../api/categories.query";
 import { api } from "../../../api/api";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
-import { CategoryPutData, EditTarget } from "../../../interfaces/category";
+import { CategoryPutData, EditTargetCategory } from "../../../interfaces/category";
 import { MODAL_VIEWS } from "../../../hooks/useModalView";
 import { CATEGORY_QUERY_KEY } from "../../../api/queryKeys";
 
@@ -25,9 +25,9 @@ const schema = yup.object({
   iconName: yup.string().required(),
 });
 
-interface CategoryFormProps {
+export interface EditCategoryFormProps {
   setModalView: (view: typeof MODAL_VIEWS.LIST_CATEGORIES) => void;
-  editTarget: EditTarget | null;
+  editTarget: EditTargetCategory | null;
   deleteCategory: ({ e, id, type }: CategoryMutationTypes) => void;
 }
 
@@ -35,7 +35,7 @@ export const EditCategoryForm = ({
   setModalView,
   editTarget,
   deleteCategory,
-}: CategoryFormProps) => {
+}: EditCategoryFormProps) => {
   const queryClient = useQueryClient();
   const { data: storedCategories } = queryCategories();
 
