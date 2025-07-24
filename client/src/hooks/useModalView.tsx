@@ -6,6 +6,7 @@ export const MODAL_VIEWS = {
   ADD_EXPENSE: "addExpense",
   LIST_CATEGORIES: "listCategories",
   EDIT_CATEGORY: "editCategory",
+  EDIT_EXPENSE: "editExpense",
   ICONS: "icons",
 } as const;
 
@@ -17,15 +18,23 @@ export const modalTitleMap: Record<ModalView, string> = {
   [MODAL_VIEWS.ADD_EXPENSE]: "Add Expense",
   [MODAL_VIEWS.LIST_CATEGORIES]: "Edit Your Categories",
   [MODAL_VIEWS.EDIT_CATEGORY]: "Edit Your Categories",
+  [MODAL_VIEWS.EDIT_EXPENSE]: "Edit You Expense",
   [MODAL_VIEWS.ICONS]: "Edit Your Icons",
 };
 
-export const useModalView = (initialView: typeof MODAL_VIEWS.LIST_CATEGORIES) => {
+export const useModalView = (
+  initialView: typeof MODAL_VIEWS.LIST_CATEGORIES
+) => {
   const [openModal, setOpen] = useState(false);
   const [modalView, setModalView] = useState<ModalView>(initialView);
+  const [modalProps, setModalProps] = useState<Record<string, any>>({});
 
-  const handleOpenModal = (newView?: ModalView) => {
+  const handleOpenModal = (
+    newView?: ModalView,
+    props: Record<string, any> = {}
+  ) => {
     if (newView) setModalView(newView);
+    setModalProps(props);
     setOpen(true);
   };
   const handleCloseModal = () => {
@@ -39,5 +48,6 @@ export const useModalView = (initialView: typeof MODAL_VIEWS.LIST_CATEGORIES) =>
     setModalView,
     handleOpenModal,
     handleCloseModal,
+    modalProps,
   };
 };

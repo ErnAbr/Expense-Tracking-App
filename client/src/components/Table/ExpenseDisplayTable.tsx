@@ -21,6 +21,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { getIconComponent } from "../../utils/getIconComponent";
 import { useConfirmationDialog } from "../../hooks/useConfirmationDialog";
 import { useExpenseMutations } from "../../hooks/useExpenseMutations";
+import {
+  useModalView,
+  MODAL_VIEWS,
+  modalTitleMap,
+} from "../../hooks/useModalView";
+import { BasicModal } from "../Modal/BasicModal";
+import { ModalContent } from "../Modal/ModalContent";
+import {
+  EditExpenseForm,
+  EditExpenseFormProps,
+} from "../Forms/ExpenseForm/EditExpenseForm";
 
 interface ExpenseDisplayTableProps {
   expenseCategoryData: CategoryObject | undefined;
@@ -63,6 +74,14 @@ export const ExpenseDisplayTable = ({
   };
 
   const { deleteExpense } = useExpenseMutations({ confirm });
+
+  const {
+    openModal,
+    modalView,
+    modalProps,
+    handleOpenModal,
+    handleCloseModal,
+  } = useModalView(MODAL_VIEWS.LIST_CATEGORIES);
 
   return (
     <Box display="flex" justifyContent="center">
@@ -144,7 +163,16 @@ export const ExpenseDisplayTable = ({
                         </TableCell>
                         <TableCell align="center">
                           <IconButton size="small">
-                            <EditIcon sx={{ color: "blue" }} />
+                            <EditIcon
+                              sx={{ color: "blue" }}
+                              onClick={() =>
+                                handleOpenModal(MODAL_VIEWS.EDIT_EXPENSE, {
+                                  expenseId: exp.id,
+                                  expenseAmount: exp.amount,
+                                  expenseDate: exp.amountDate,
+                                })
+                              }
+                            />
                           </IconButton>
                         </TableCell>
                         <TableCell align="center">
@@ -182,6 +210,24 @@ export const ExpenseDisplayTable = ({
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      <BasicModal
+        title={modalTitleMap[modalView]}
+        open={openModal}
+        onClose={handleCloseModal}
+      >
+        <ModalContent
+          modalView={modalView}
+          modalComponents={{
+            [MODAL_VIEWS.EDIT_EXPENSE]: {
+              component: EditExpenseForm,
+              props: {
+                ...(modalProps as EditExpenseFormProps),
+                handleCloseModal,
+              },
+            },
+          }}
+        />
+      </BasicModal>
       <ConfirmationModal />
     </Box>
   );

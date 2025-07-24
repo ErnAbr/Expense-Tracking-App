@@ -4,6 +4,7 @@ import { CategoryAccordionProps } from "../Accordion/CategoryAccordion";
 import { AddCategoryFormProps } from "../Forms/CategoryForm/AddCategoryForm";
 import { AddSubcategoryToExistingCategoryProps } from "../Forms/CategoryForm/addSubcategoryToExistingCategory";
 import { EditCategoryFormProps } from "../Forms/CategoryForm/EditCategoryForm";
+import { EditExpenseFormProps } from "../Forms/ExpenseForm/EditExpenseForm";
 
 export type ModalComponentMap = {
   [MODAL_VIEWS.LIST_CATEGORIES]: {
@@ -25,6 +26,10 @@ export type ModalComponentMap = {
   [MODAL_VIEWS.ADD_EXPENSE]: {
     component: React.ComponentType<AddExpenseFormProps>;
     props: AddExpenseFormProps;
+  };
+  [MODAL_VIEWS.EDIT_EXPENSE]: {
+    component: React.ComponentType<EditExpenseFormProps>;
+    props: EditExpenseFormProps;
   };
 };
 

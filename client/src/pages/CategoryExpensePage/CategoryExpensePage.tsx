@@ -11,9 +11,6 @@ import { FormDatePicker } from "../../components/FormComponents/FormDatePicker/F
 import { useForm } from "react-hook-form";
 import dayjs from "dayjs";
 
-// add edit and delete to expenses
-// CategoryExpensePage -> FullWidthTab -> ExpenseDisplayTable
-
 export const CategoryExpensePage = () => {
   const [filterExpenseMonth, setFilterExpenseMonth] = useState({
     year: new Date().getFullYear(),
