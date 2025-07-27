@@ -170,6 +170,8 @@ export const ExpenseDisplayTable = ({
                                   expenseId: exp.id,
                                   expenseAmount: exp.amount,
                                   expenseDate: exp.amountDate,
+                                  category: expenseCategoryData,
+                                  subcategory: subcategory,
                                 })
                               }
                             />
