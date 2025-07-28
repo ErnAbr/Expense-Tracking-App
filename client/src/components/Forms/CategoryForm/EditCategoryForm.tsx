@@ -11,7 +11,10 @@ import { queryCategories } from "../../../api/categories.query";
 import { api } from "../../../api/api";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
-import { CategoryPutData, EditTargetCategory } from "../../../interfaces/category";
+import {
+  CategoryPutData,
+  EditTargetCategory,
+} from "../../../interfaces/category";
 import { MODAL_VIEWS } from "../../../hooks/useModalView";
 import { CATEGORY_QUERY_KEY } from "../../../api/queryKeys";
 
@@ -42,7 +45,9 @@ export const EditCategoryForm = ({
   if (!editTarget) {
     return (
       <Box>
-        <Button onClick={() => setModalView(MODAL_VIEWS.LIST_CATEGORIES)}>Back</Button>
+        <Button onClick={() => setModalView(MODAL_VIEWS.LIST_CATEGORIES)}>
+          Back
+        </Button>
       </Box>
     );
   }
@@ -96,7 +101,6 @@ export const EditCategoryForm = ({
             type="text"
           />
         </Box>
-
         <IconPickerToggler<FormValues>
           setValue={setValue}
           initialIcon={
@@ -104,7 +108,7 @@ export const EditCategoryForm = ({
           }
           name="iconName"
         />
-        <Box display="flex" justifyContent="space-around" mt={2} gap={5}>
+        <Box className={styles.buttonBox} mt={2} gap={1}>
           <Button
             variant="contained"
             type="submit"
@@ -121,14 +125,15 @@ export const EditCategoryForm = ({
             Delete
           </Button>
         </Box>
+        <Button
+          variant="contained"
+          color="secondary"
+          fullWidth
+          onClick={() => setModalView(MODAL_VIEWS.LIST_CATEGORIES)}
+        >
+          Back
+        </Button>
       </Paper>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={() => setModalView(MODAL_VIEWS.LIST_CATEGORIES)}
-      >
-        Back
-      </Button>
     </Box>
   );
 };

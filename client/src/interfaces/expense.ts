@@ -23,3 +23,11 @@ export interface MontlyExpenseResponseDto {
   categoryId: number;
   subcategoryId: number;
 }
+
+export type ExpenseUpdateData = {
+  expenseId: number;
+  categoryId: string;
+  subcategoryId: string;
+  expenseAmount: number;
+  expenseDate: string;
+};

@@ -9,12 +9,17 @@ import { queryCategories } from "../../../api/categories.query";
 import { useMemo } from "react";
 import { FormInputText } from "../../FormComponents/FormInputText/FormInputText";
 import { FormDatePicker } from "../../FormComponents/FormDatePicker/FormDatePicker";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { api } from "../../../api/api";
+import { useQueryClient } from "@tanstack/react-query";
+import { EXPENSE_QUERY_KEY } from "../../../api/queryKeys";
 
 export interface EditExpenseFormProps {
   expenseId: number;
   expenseAmount: number;
-  expenseDate: string;
+  expenseDate: Date;
   category: CategoryObject;
   subcategory: Subcategory;
   handleCloseModal: () => void;
@@ -24,7 +29,7 @@ type FormValues = {
   categoryId: string;
   subcategoryId: string;
   expenseAmount: number;
-  expenseDate: Dayjs;
+  expenseDate: Date;
 };
 
 const schema = yup.object({
@@ -42,16 +47,17 @@ export const EditExpenseForm = ({
   subcategory,
   handleCloseModal,
 }: EditExpenseFormProps) => {
+  const queryClient = useQueryClient();
   const { data: storedCategories } = queryCategories();
 
-  const { handleSubmit, control } = useForm<FormValues>({
-    resolver: yupResolver(schema) as any,
+  const { handleSubmit, control, reset } = useForm<FormValues>({
+    resolver: yupResolver(schema),
     defaultValues: {
       categoryId: category.id.toString(),
       subcategoryId: subcategory.id.toString(),
       expenseAmount,
       expenseDate: dayjs(expenseDate),
-    },
+    } as any,
   });
 
   const selectedCategoryId = useWatch({
@@ -80,9 +86,22 @@ export const EditExpenseForm = ({
     );
   }, [storedCategories, selectedCategoryId]);
 
-  const handleFormSubmit = (data: FormValues) => {
-    const payload = { expenseId: expenseId, ...data };
-    console.log("payload", payload);
+  const handleFormSubmit = async (data: FormValues) => {
+    const payload = {
+      ...data,
+      expenseId: expenseId,
+      expenseDate: data.expenseDate.toLocaleDateString("lt-LT"),
+    };
+
+    try {
+      const response = await api.Expense.UpdateExpense(payload);
+      toast.success(response);
+      queryClient.invalidateQueries({ queryKey: [EXPENSE_QUERY_KEY] });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data);
+      }
+    }
   };
 
   return (
@@ -121,10 +140,18 @@ export const EditExpenseForm = ({
           <Button variant="contained" color="primary" type="submit">
             Edit Expense
           </Button>
-          <Button variant="contained" color="error" onClick={handleCloseModal}>
-            Back
+          <Button variant="contained" color="error" onClick={() => reset()}>
+            Reset
           </Button>
         </Box>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleCloseModal}
+          fullWidth
+        >
+          Back
+        </Button>
       </Paper>
     </Box>
   );

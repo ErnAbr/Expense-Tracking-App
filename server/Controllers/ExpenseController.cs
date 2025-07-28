@@ -70,6 +70,36 @@ namespace Server.Controllers
         }
 
         [Authorize]
+        [HttpPut("UpdateExpense")]
+        public IActionResult UpdateExpense(EditExpenseDto dto)
+        {
+            ActionResult<int> userIdResult = GetUserIdFromClaims();
+            if (userIdResult.Result != null)
+                return userIdResult.Result;
+
+            Expense? expenseToUpdate = _context.Expenses.Find(dto.ExpenseId);
+            if (expenseToUpdate == null)
+                return Forbid("You do not own this expense.");
+
+            if (expenseToUpdate.UserId != userIdResult.Value)
+                return Forbid("You do not own this expense.");
+
+            Subcategory? expenseSubcategory = _context.Subcategories
+                .FirstOrDefault(s => s.Id == int.Parse(dto.SubcategoryId) && s.CategoryId == int.Parse(dto.CategoryId));
+
+            if (expenseSubcategory == null)
+                return BadRequest("Invalid subcategory or category selection");
+
+            expenseToUpdate.AmountDate = dto.ExpenseDate;
+            expenseToUpdate.Amount = dto.ExpenseAmount;
+            expenseToUpdate.SubcategoryId = int.Parse(dto.SubcategoryId);
+
+            _context.SaveChanges();
+
+            return Ok("Expense updated successfully");
+        }
+
+        [Authorize]
         [HttpDelete("DeleteExpense")]
         public IActionResult DeleteExpense(int expenseId)
         {

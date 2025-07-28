@@ -26,3 +26,13 @@
 .buttonWidth {
   width: 45%;
 }
+
+.buttonBox {
+  display: flex;
+  justify-content: center;
+}
+
+.buttonBox button {
+  //   padding: 10px;
+  width: 100%;
+}

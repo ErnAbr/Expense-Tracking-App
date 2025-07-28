@@ -13,6 +13,7 @@ import {
 import { CategoryAddData } from "../components/Forms/CategoryForm/AddCategoryForm";
 import {
   ExpenseAddData,
+  ExpenseUpdateData,
   MontlyExpenseResponseDto,
 } from "../interfaces/expense";
 
@@ -62,6 +63,8 @@ const Expense = {
     requests.get<MontlyExpenseResponseDto[]>(
       `/expense/GetMonthlyExpense?year=${year}&month=${month}`
     ),
+  UpdateExpense: (body: ExpenseUpdateData) =>
+    requests.put<string>("Expense/UpdateExpense", body),
   DeleteExpense: (expenseId: number) =>
     requests.delete<string>(
       `/expense/DeleteExpense?expenseId=${expenseId}`,
