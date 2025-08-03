@@ -84,7 +84,12 @@ export const ExpenseDisplayTable = ({
   } = useModalView(MODAL_VIEWS.LIST_CATEGORIES);
 
   return (
-    <Box display="flex" justifyContent="center">
+    <Box
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+    >
       <Paper
         sx={{
           width: {
@@ -100,10 +105,25 @@ export const ExpenseDisplayTable = ({
                 {tableHeaderElements.map((element) => (
                   <TableCell
                     key={element.id}
-                    align={"center"}
-                    style={{ minWidth: "auto", backgroundColor: "#0288D1" }}
+                    align="center"
+                    style={{
+                      backgroundColor: "#0288D1",
+                      width: `${100 / tableHeaderElements.length}%`,
+                    }}
                   >
-                    {element.fieldName}
+                    <Typography
+                      sx={{
+                        fontSize: {
+                          xs: "0.55rem",
+                          sm: "0.6rem",
+                          md: "0.7rem",
+                          lg: "0.8rem",
+                        },
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {element.fieldName}
+                    </Typography>
                   </TableCell>
                 ))}
               </TableRow>
