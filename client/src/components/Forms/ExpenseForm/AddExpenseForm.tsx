@@ -102,7 +102,7 @@ export const AddExpenseForm = ({
           control={control}
           label="Expense Amount"
           type="number"
-          inputProps={{ step: "0.01", min: "0" }}
+          inputSlotProps={{ step: "0.01", min: "0" }}
         />
         <Box className={styles.buttonBox} mt={2} gap={1}>
           <Button variant="contained" color="primary" type="submit">

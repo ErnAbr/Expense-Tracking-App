@@ -8,7 +8,9 @@ export const FormInputText = <T extends FieldValues>({
   control,
   label,
   type,
-  inputProps,
+  inputSlotProps,
+  placeholder,
+  InputLabelProps,
 }: InputFormProps<T>) => {
   return (
     <Controller
@@ -24,7 +26,11 @@ export const FormInputText = <T extends FieldValues>({
           variant="outlined"
           type={type}
           className={styles.inputStyle}
-          inputProps={inputProps}
+          placeholder={placeholder}
+          slotProps={{
+            input: inputSlotProps,
+            inputLabel: InputLabelProps,
+          }}
         />
       )}
     />
