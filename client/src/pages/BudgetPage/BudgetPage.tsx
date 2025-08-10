@@ -1,6 +1,8 @@
 import styles from "./budgetPage.module.scss";
+import debounce from "lodash/debounce";
 import {
   Box,
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -18,6 +20,7 @@ import { useMonthlyExpenses } from "../../api/expenses.query";
 import { getIconComponent } from "../../utils/getIconComponent";
 import { FormInputText } from "../../components/FormComponents/FormInputText/FormInputText";
 import { useForm } from "react-hook-form";
+import { useEffect, useMemo } from "react";
 
 const tableHeaderElements = [
   { id: "icon-id", fieldName: "Icon" },
@@ -37,7 +40,14 @@ export const BudgetPage = () => {
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
   const iconSize = isMdUp ? 24 : 16;
 
-  const { handleSubmit, control } = useForm();
+  const { control } = useForm();
+
+  const debouncedBudgetUpdate = useMemo(() => {
+    return debounce((subcategoryId: number, plannedExpense: number) => {
+      //api call
+      console.log(subcategoryId, plannedExpense);
+    }, 500);
+  }, []);
 
   if (isLoading || isLoadingExpenses) {
     return (
@@ -46,9 +56,6 @@ export const BudgetPage = () => {
       </Box>
     );
   }
-
-  console.log("categories", storedCategories);
-  console.log("expenses", monthlyExpenses);
 
   return (
     <Box mb={2}>
@@ -121,6 +128,18 @@ export const BudgetPage = () => {
                     const Icon = category
                       ? getIconComponent(sub.iconName)
                       : null;
+
+                    const categoryExpense = monthlyExpenses?.filter(
+                      (e) => e.subcategoryId === sub.id
+                    );
+
+                    const subcategoryExpenseAmount = categoryExpense?.reduce(
+                      (acc, item) => {
+                        return acc + item.amount;
+                      },
+                      0
+                    );
+
                     return (
                       <TableRow key={sub.id}>
                         <TableCell align="center">
@@ -153,8 +172,29 @@ export const BudgetPage = () => {
                             type="number"
                             label="Planned"
                             InputLabelProps={{ shrink: true }}
-                            placeholder="10"
+                            placeholder="1000"
+                            onValueChange={(newValue) => {
+                              debouncedBudgetUpdate(
+                                sub.id,
+                                parseFloat(newValue)
+                              );
+                            }}
                           />
+                        </TableCell>
+                        <TableCell align="center">
+                          <Typography
+                            sx={{
+                              fontSize: {
+                                xs: "0.75rem",
+                                md: "1rem",
+                              },
+                            }}
+                          >
+                            {subcategoryExpenseAmount}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="center">
+                          <CircularProgress variant="determinate" value={150} />
                         </TableCell>
                       </TableRow>
                     );

@@ -11,6 +11,7 @@ export const FormInputText = <T extends FieldValues>({
   inputSlotProps,
   placeholder,
   InputLabelProps,
+  onValueChange,
 }: InputFormProps<T>) => {
   return (
     <Controller
@@ -20,7 +21,12 @@ export const FormInputText = <T extends FieldValues>({
         <TextField
           size="small"
           error={!!error}
-          onChange={onChange}
+          onChange={(e) => {
+            onChange(e); 
+            if (onValueChange) {
+              onValueChange(e.target.value); 
+            }
+          }}
           value={value ?? ""}
           label={label}
           variant="outlined"

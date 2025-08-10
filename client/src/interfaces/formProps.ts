@@ -13,6 +13,7 @@ export interface InputFormProps<T extends FieldValues>
   inputSlotProps?: any;
   InputLabelProps?: Partial<InputLabelProps> | undefined;
   placeholder?: string;
+  onValueChange?: (value: string) => void;
 }
 
 export interface SelectFormProps<T extends FieldValues>

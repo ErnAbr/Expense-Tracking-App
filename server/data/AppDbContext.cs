@@ -9,6 +9,6 @@ namespace Server.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Subcategory> Subcategories { get; set; }
         public DbSet<Expense> Expenses { get; set; }
-
+        public DbSet<Budget> Budgets { get; set; }
     }
 }

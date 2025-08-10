@@ -10,5 +10,6 @@ namespace Server.Models
         public Category Category { get; set; } = null!;
 
         public ICollection<Expense> Expenses { get; set; } = [];
+        public ICollection<Budget> Budgets { get; set; } = [];
     }
 }

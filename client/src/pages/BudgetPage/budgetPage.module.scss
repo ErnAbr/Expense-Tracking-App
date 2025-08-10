@@ -1,3 +1,12 @@
+.plannedInput {
+  padding: 0 !important;
+}
+
 .plannedInput > div {
   width: 100%;
+}
+
+.plannedInput div > input {
+  font-size: 0.75rem;
+  padding: 5px;
 }
