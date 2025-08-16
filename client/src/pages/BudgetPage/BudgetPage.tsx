@@ -20,7 +20,7 @@ import { useMonthlyExpenses } from "../../api/expenses.query";
 import { getIconComponent } from "../../utils/getIconComponent";
 import { FormInputText } from "../../components/FormComponents/FormInputText/FormInputText";
 import { useForm } from "react-hook-form";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 const tableHeaderElements = [
   { id: "icon-id", fieldName: "Icon" },
@@ -29,6 +29,10 @@ const tableHeaderElements = [
   { id: "spendedAmount-id", fieldName: "Spended Amount (€)" },
   { id: "progress-id", fieldName: "Progress" },
 ];
+
+//Make get all budget data on page load
+//TEST the BudgetController Endpoint
+
 
 export const BudgetPage = () => {
   const { data: storedCategories, isLoading } = queryCategories();
@@ -44,8 +48,12 @@ export const BudgetPage = () => {
 
   const debouncedBudgetUpdate = useMemo(() => {
     return debounce((subcategoryId: number, plannedExpense: number) => {
+      const payload = {
+        subcategoryId: subcategoryId,
+        plannedExpense: plannedExpense,
+      };
       //api call
-      console.log(subcategoryId, plannedExpense);
+      console.log(payload);
     }, 500);
   }, []);
 

@@ -30,4 +30,13 @@ namespace Server.MappingProfiles
                 .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.Subcategory.CategoryId));
         }
     }
+
+    public class BudgetMappingProfile : Profile
+    {
+    public BudgetMappingProfile()
+        {
+            CreateMap<AddSubcategoryBudgetDto, Budget>();
+        }
+    }
+  
 }

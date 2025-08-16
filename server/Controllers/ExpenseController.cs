@@ -35,7 +35,8 @@ namespace Server.Controllers
                 return Forbid("You do not own this subcategory");
 
             Expense expenseToAdd = _mapper.Map<Expense>(expenseDto);
-            expenseToAdd.UserId = userIdResult.Value;
+            
+            
 
             _context.Expenses.Add(expenseToAdd);
 
