@@ -26,6 +26,15 @@ namespace Server.Services.Implementations
             category.UserId = userId;
             category.Subcategories = _mapper.Map<List<Subcategory>>(dto.Subcategory);
 
+            category.Subcategories.ToList().ForEach(s =>
+            {
+                s.Budgets.Add(new Budget
+                {
+                    UserId = userId,
+                    PlannedExpense = 0
+                });
+            });
+
             _context.Categories.Add(category);
             return await _context.SaveChangesAsync() > 0;
         }
@@ -82,7 +91,15 @@ namespace Server.Services.Implementations
                 return "Forbidden";
 
             List<Subcategory>? subcategories = _mapper.Map<List<Subcategory>>(dto.Subcategory);
-            subcategories.ForEach(s => s.CategoryId = category.Id);
+            subcategories.ForEach(s =>
+            {
+                s.CategoryId = category.Id;
+                s.Budgets.Add(new Budget
+                {
+                    UserId = userId,
+                    PlannedExpense = 0
+                });
+            });
 
             _context.Subcategories.AddRange(subcategories);
             await _context.SaveChangesAsync();

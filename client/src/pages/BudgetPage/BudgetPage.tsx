@@ -30,9 +30,8 @@ const tableHeaderElements = [
   { id: "progress-id", fieldName: "Progress" },
 ];
 
-//Make get all budget data on page load
-//TEST the BudgetController Endpoint
-
+//make client side api call to retrieve budget data
+//and mutate when plannedexpense changes
 
 export const BudgetPage = () => {
   const { data: storedCategories, isLoading } = queryCategories();

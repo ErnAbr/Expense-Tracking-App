@@ -34,16 +34,18 @@ namespace Server.Controllers
                 rng.GetNonZeroBytes(passwordSalt);
             }
 
-            User userToAdd = _mapper.Map<User>(registerUser);
-            userToAdd.PasswordHash = _authHelper.CreatePasswordHash(registerUser.Password, passwordSalt);
-            userToAdd.PasswordSalt = passwordSalt;
-
             List<Category> globalCategories = await _context.Categories
                 .Include(c => c.Subcategories)
                 .Where(c => c.UserId == null)
                 .ToListAsync();
 
-            userToAdd.Categories = [.. globalCategories.Select(CategoryHelper.CloneCategory)];
+            User userToAdd = _mapper.Map<User>(registerUser);
+            userToAdd.PasswordHash = _authHelper.CreatePasswordHash(registerUser.Password, passwordSalt);
+            userToAdd.PasswordSalt = passwordSalt;
+
+            userToAdd.Categories = globalCategories
+                .Select(c => CategoryHelper.CloneCategory(c, userToAdd))
+                .ToList();
 
             _context.Users.Add(userToAdd);
             if (await _context.SaveChangesAsync() > 0)

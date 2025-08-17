@@ -78,7 +78,7 @@ namespace Server.Data
                 context.SaveChanges();
             }
 
-            if (!context.Users.Any())
+         if (!context.Users.Any())
             {
                 var globalCategories = context.Categories
                     .Where(c => c.UserId == null)
@@ -95,9 +95,11 @@ namespace Server.Data
                     PasswordHash = authHelper.CreatePasswordHash("1", salt1),
                     Gender = "Male",
                     Country = "LT",
-                    BirthDate = new DateTime(2000, 1, 1),
-                    Categories = [.. globalCategories.Select(CategoryHelper.CloneCategory)]
+                    BirthDate = new DateTime(2000, 1, 1)
                 };
+                user1.Categories = globalCategories
+                    .Select(c => CategoryHelper.CloneCategory(c, user1))
+                    .ToList();
 
                 byte[] salt2 = new byte[16];
                 RandomNumberGenerator.Fill(salt2);
@@ -109,9 +111,11 @@ namespace Server.Data
                     PasswordHash = authHelper.CreatePasswordHash("password123", salt2),
                     Gender = "Female",
                     Country = "PL",
-                    BirthDate = new DateTime(2000, 1, 1),
-                    Categories = [.. globalCategories.Select(CategoryHelper.CloneCategory)]
+                    BirthDate = new DateTime(2000, 1, 1)
                 };
+                user2.Categories = globalCategories
+                    .Select(c => CategoryHelper.CloneCategory(c, user2))
+                    .ToList();
 
                 context.Users.AddRange(user1, user2);
                 context.SaveChanges();
