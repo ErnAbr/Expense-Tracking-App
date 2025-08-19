@@ -16,6 +16,10 @@ import {
   ExpenseUpdateData,
   MontlyExpenseResponseDto,
 } from "../interfaces/expense";
+import {
+  BudgetClientPayload,
+  BudgetServerResponse,
+} from "../interfaces/budget";
 
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
@@ -72,6 +76,13 @@ const Expense = {
     ),
 };
 
+const Budget = {
+  GetAllUserBudget: () =>
+    requests.get<BudgetServerResponse[]>("/Budget/UserBudgetData"),
+  AddSubcategoryBudget: (body: BudgetClientPayload) =>
+    requests.put<string>("/Budget/ChangeSubcategoryBudget", body),
+};
+
 const Test = {
   allUSers: () => requests.get("/user/auth/"),
   allUSersPost: () => requests.post("/user/auth/", {}),
@@ -82,4 +93,5 @@ export const api = {
   Category,
   Expense,
   Test,
+  Budget,
 };

@@ -21,6 +21,12 @@ import { getIconComponent } from "../../utils/getIconComponent";
 import { FormInputText } from "../../components/FormComponents/FormInputText/FormInputText";
 import { useForm } from "react-hook-form";
 import { useMemo } from "react";
+import { queryBudget } from "../../api/budget.query";
+import { api } from "../../api/api";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { BUDGET_QUERY_KEY } from "../../api/queryKeys";
+import { useQueryClient } from "@tanstack/react-query";
 
 const tableHeaderElements = [
   { id: "icon-id", fieldName: "Icon" },
@@ -30,14 +36,17 @@ const tableHeaderElements = [
   { id: "progress-id", fieldName: "Progress" },
 ];
 
-//make client side api call to retrieve budget data
-//and mutate when plannedexpense changes
+//make a progress bar for planned/spended amount with circular with label
+//refactor the page 
 
 export const BudgetPage = () => {
+  const queryClient = useQueryClient();
   const { data: storedCategories, isLoading } = queryCategories();
 
   const { data: monthlyExpenses, isLoading: isLoadingExpenses } =
     useMonthlyExpenses(new Date().getFullYear(), new Date().getMonth() + 1);
+
+  const { data: userBudget } = queryBudget();
 
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
@@ -46,13 +55,21 @@ export const BudgetPage = () => {
   const { control } = useForm();
 
   const debouncedBudgetUpdate = useMemo(() => {
-    return debounce((subcategoryId: number, plannedExpense: number) => {
+    return debounce(async (subcategoryId: number, plannedExpense: number) => {
       const payload = {
         subcategoryId: subcategoryId,
         plannedExpense: plannedExpense,
       };
-      //api call
-      console.log(payload);
+
+      try {
+        const response = await api.Budget.AddSubcategoryBudget(payload);
+        toast.success(response);
+        queryClient.invalidateQueries({ queryKey: [BUDGET_QUERY_KEY] });
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response?.data);
+        }
+      }
     }, 500);
   }, []);
 
@@ -132,6 +149,10 @@ export const BudgetPage = () => {
                 </TableHead>
                 <TableBody>
                   {category.subcategories.map((sub) => {
+                    const budgetedValue = userBudget?.find(
+                      (b) => b.subcategoryId === sub.id
+                    );
+
                     const Icon = category
                       ? getIconComponent(sub.iconName)
                       : null;
@@ -179,7 +200,7 @@ export const BudgetPage = () => {
                             type="number"
                             label="Planned"
                             InputLabelProps={{ shrink: true }}
-                            placeholder="1000"
+                            placeholder={budgetedValue?.plannedExpense?.toString()}
                             onValueChange={(newValue) => {
                               debouncedBudgetUpdate(
                                 sub.id,

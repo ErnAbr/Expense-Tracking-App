@@ -35,7 +35,7 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPut("ChangeSubcategoryBudget")]
-        public ActionResult<List<Budget>> AddSubcategoryBudget(AddSubcategoryBudgetDto dto)
+        public IActionResult AddSubcategoryBudget(AddSubcategoryBudgetDto dto)
         {
             ActionResult<int> userIdResult = GetUserIdFromClaims();
             if (userIdResult.Result != null)
@@ -68,7 +68,7 @@ namespace Server.Controllers
 
             _context.SaveChanges();
 
-            return NoContent();
+            return Ok("Budget Updated");
         }
     }
 }
