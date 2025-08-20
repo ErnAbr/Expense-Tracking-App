@@ -2,7 +2,6 @@ import styles from "./budgetPage.module.scss";
 import debounce from "lodash/debounce";
 import {
   Box,
-  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -27,6 +26,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { BUDGET_QUERY_KEY } from "../../api/queryKeys";
 import { useQueryClient } from "@tanstack/react-query";
+import { CircularWithValueLabel } from "../../components/CircularProgress/CircularProgress";
 
 const tableHeaderElements = [
   { id: "icon-id", fieldName: "Icon" },
@@ -36,8 +36,8 @@ const tableHeaderElements = [
   { id: "progress-id", fieldName: "Progress" },
 ];
 
-//make a progress bar for planned/spended amount with circular with label
-//refactor the page 
+//change budgeting model to accept date and add filtering by date ability for budget page
+//refactor the page
 
 export const BudgetPage = () => {
   const queryClient = useQueryClient();
@@ -62,8 +62,7 @@ export const BudgetPage = () => {
       };
 
       try {
-        const response = await api.Budget.AddSubcategoryBudget(payload);
-        toast.success(response);
+        await api.Budget.AddSubcategoryBudget(payload);
         queryClient.invalidateQueries({ queryKey: [BUDGET_QUERY_KEY] });
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -149,13 +148,13 @@ export const BudgetPage = () => {
                 </TableHead>
                 <TableBody>
                   {category.subcategories.map((sub) => {
-                    const budgetedValue = userBudget?.find(
-                      (b) => b.subcategoryId === sub.id
-                    );
-
                     const Icon = category
                       ? getIconComponent(sub.iconName)
                       : null;
+
+                    const budgetedValue = userBudget?.find(
+                      (b) => b.subcategoryId === sub.id
+                    );
 
                     const categoryExpense = monthlyExpenses?.filter(
                       (e) => e.subcategoryId === sub.id
@@ -222,7 +221,10 @@ export const BudgetPage = () => {
                           </Typography>
                         </TableCell>
                         <TableCell align="center">
-                          <CircularProgress variant="determinate" value={150} />
+                          <CircularWithValueLabel
+                            plannedValue={budgetedValue?.plannedExpense}
+                            spendedAmount={subcategoryExpenseAmount}
+                          />
                         </TableCell>
                       </TableRow>
                     );
