@@ -44,7 +44,7 @@ namespace Server.Controllers
             userToAdd.PasswordSalt = passwordSalt;
 
             userToAdd.Categories = globalCategories
-                .Select(c => CategoryHelper.CloneCategory(c, userToAdd))
+                .Select(c => CategoryHelper.CloneCategory(c))
                 .ToList();
 
             _context.Users.Add(userToAdd);

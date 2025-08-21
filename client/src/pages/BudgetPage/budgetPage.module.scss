@@ -10,3 +10,24 @@
   font-size: 0.75rem;
   padding: 5px;
 }
+
+.monthFilterBox {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  > * {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  button {
+    margin-bottom: 5px;
+  }
+
+  svg {
+    margin: 3px 0 0 0;
+  }
+}

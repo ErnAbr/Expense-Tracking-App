@@ -17,20 +17,24 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpGet("UserBudgetData")]
-        public ActionResult<List<Budget>> GetUserBudgetData()
+        public ActionResult<List<Budget>> GetUserBudgetData(int year, int month)
         {
             ActionResult<int> userIdResult = GetUserIdFromClaims();
             if (userIdResult.Result != null)
                 return userIdResult.Result;
 
-            List<Budget>? userBudget = _context.Budgets
-                .Where(b => b.UserId == userIdResult.Value)
+            List<Budget>? userBudgets = _context.Budgets
+                .Where(b => b.UserId == userIdResult.Value &&
+                            b.PlannedExpenseDate.Year == year &&
+                            b.PlannedExpenseDate.Month == month)
                 .ToList();
 
-            if (userBudget == null)
+            if (userBudgets == null)
                 return NotFound("User Budget Data Not Found");
 
-            return Ok(userBudget);
+            List<BudgetResponseDto> userBudgetDtos = _mapper.Map<List<BudgetResponseDto>>(userBudgets);
+
+            return Ok(userBudgetDtos);
         }
 
         [Authorize]
@@ -52,8 +56,11 @@ namespace Server.Controllers
                 return Forbid("You do not own this subcategory");
 
             Budget? existingBudget = _context.Budgets
-                .FirstOrDefault(b => b.SubcategoryId == dto.SubcategoryId
-                    && b.UserId == userIdResult.Value);
+                .FirstOrDefault(b =>
+                    b.SubcategoryId == dto.SubcategoryId &&
+                    b.UserId == userIdResult.Value &&
+                    b.PlannedExpenseDate.Year == dto.PlannedExpenseDate.Year &&
+                    b.PlannedExpenseDate.Month == dto.PlannedExpenseDate.Month);
 
             if (existingBudget != null)
             {

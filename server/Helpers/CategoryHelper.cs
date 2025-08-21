@@ -2,7 +2,7 @@ using Server.Models;
 
 public static class CategoryHelper
 {
-    public static Category CloneCategory(Category original, User user)
+    public static Category CloneCategory(Category original)
     {
         return new Category
         {
@@ -12,14 +12,6 @@ public static class CategoryHelper
             {
                 Name = s.Name,
                 IconName = s.IconName,
-                Budgets = new List<Budget>
-                {
-                    new Budget
-                    {
-                        PlannedExpense = 0,
-                        User = user
-                    }
-                }
             }).ToList()
         };
     }

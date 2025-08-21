@@ -1,6 +1,7 @@
 export type BudgetClientPayload = {
   subcategoryId: number;
   plannedExpense: number;
+  plannedExpenseDate: string;
 };
 
 export type BudgetServerResponse = {
@@ -8,4 +9,5 @@ export type BudgetServerResponse = {
   userId: number;
   subcategoryId: number;
   plannedExpense: number;
+  plannedExpenseDate: string;
 };

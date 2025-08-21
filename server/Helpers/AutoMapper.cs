@@ -33,9 +33,10 @@ namespace Server.MappingProfiles
 
     public class BudgetMappingProfile : Profile
     {
-    public BudgetMappingProfile()
+        public BudgetMappingProfile()
         {
             CreateMap<AddSubcategoryBudgetDto, Budget>();
+            CreateMap<Budget, BudgetResponseDto>();
         }
     }
   

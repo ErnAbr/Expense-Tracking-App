@@ -77,8 +77,8 @@ const Expense = {
 };
 
 const Budget = {
-  GetAllUserBudget: () =>
-    requests.get<BudgetServerResponse[]>("/Budget/UserBudgetData"),
+  GetAllUserBudget: (year: number, month: number) =>
+    requests.get<BudgetServerResponse[]>(`/Budget/UserBudgetData?year=${year}&month=${month}`),
   AddSubcategoryBudget: (body: BudgetClientPayload) =>
     requests.put<string>("/Budget/ChangeSubcategoryBudget", body),
 };

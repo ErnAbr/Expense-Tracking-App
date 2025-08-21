@@ -1,10 +1,9 @@
-namespace Server.Dtos
+namespace Server.Dtos 
 {
-    public class AddSubcategoryBudgetDto
+    public class BudgetResponseDto
     {
-        public int SubcategoryId { get; set; }
         public decimal PlannedExpense { get; set; }
         public DateTime PlannedExpenseDate { get; set; }
+        public int SubcategoryId { get; set; }
     }
-    
 }

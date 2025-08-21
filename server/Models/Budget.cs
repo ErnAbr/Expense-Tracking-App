@@ -4,6 +4,7 @@ namespace Server.Models
     {
         public int Id { get; set; }
         public decimal PlannedExpense { get; set; }
+        public DateTime PlannedExpenseDate { get; set; }
         public int SubcategoryId { get; set; }
         public Subcategory Subcategory { get; set; } = null!;
         public int UserId { get; set; }
