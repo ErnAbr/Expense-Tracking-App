@@ -1,6 +1,6 @@
 import styles from "./budgetPage.module.scss";
 import debounce from "lodash/debounce";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { queryCategories } from "../../api/categories.query";
 import { LoadingComponent } from "../../components/LoadingComponent/LoadingComponent";
 import { useMonthlyExpenses } from "../../api/expenses.query";
@@ -79,8 +79,13 @@ export const BudgetPage = () => {
   return (
     <Box mb={2}>
       <Box className={styles.monthFilterBox} marginTop={2}>
+        <Typography
+          variant="h6"
+          textAlign="center"
+          p={1}
+        >{`Your Budget Plan`}</Typography>
         <FormDatePicker
-          label="Filter Expenses"
+          label="Budget Month"
           name="filterMonth"
           control={control}
           views={["year", "month"]}
