@@ -26,9 +26,10 @@ export const FormDropdown = <T extends FieldValues>({
             labelId={`${name}-label`}
             onChange={onChange}
             value={value ?? ""}
+            label={label}
           >
             {options.map((opt) => (
-              <MenuItem key={opt.value} value={opt.label}>
+              <MenuItem key={opt.value} value={opt.value}>
                 {opt.label}
               </MenuItem>
             ))}

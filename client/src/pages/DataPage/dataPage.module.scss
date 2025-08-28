@@ -1,0 +1,9 @@
+.dataPageContainer > div {
+  width: 100%;
+}
+
+@media (min-width: 900px) {
+  .dataPageContainer > div {
+    width: 35%;
+  }
+}
