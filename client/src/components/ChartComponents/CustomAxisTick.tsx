@@ -4,12 +4,14 @@ interface CustomAxisTickProps {
   x?: number;
   y?: number;
   iconName?: string;
+  payload?: { value: string };
 }
 
 export const CustomAxisTick = ({
   x = 0,
   y = 0,
   iconName,
+  payload,
 }: CustomAxisTickProps) => {
   const Icon = getIconComponent(iconName ?? "");
 
@@ -22,7 +24,7 @@ export const CustomAxisTick = ({
       viewBox="0 0 1024 1024"
       fill="#666"
     >
-      <Icon size={20} />
+      <Icon size={20} title={payload?.value} />
     </foreignObject>
   );
 };

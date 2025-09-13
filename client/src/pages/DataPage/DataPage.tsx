@@ -11,8 +11,7 @@ import { FormDropdown } from "../../components/FormComponents/FormDropdown/FormD
 import { SubcategorySpendingBarChart } from "../../components/ChartComponents/SubcategorySpendingBarChart";
 
 //add total spent of by month graph of total spendings
-//add line graph of daily expenses
-//make graphs responsive
+//add line graph of daily expenses use monthlyExpenses
 //add monthly filtering for the data
 
 export const DataPage = () => {
@@ -31,7 +30,7 @@ export const DataPage = () => {
     filterBudgetMonth.month
   );
 
-  const merged = budgetAndExpenseMerger(
+  const budgetAndExpenseObject = budgetAndExpenseMerger(
     storedCategories ?? [],
     userBudget ?? [],
     monthlyExpenses ?? []
@@ -43,8 +42,9 @@ export const DataPage = () => {
 
   const selectedCategoryId = watch("selectedCategoryId");
   const selectedCategory =
-    merged.find((cat) => cat.categoryId.toString() === selectedCategoryId) ||
-    null;
+    budgetAndExpenseObject.find(
+      (cat) => cat.categoryId.toString() === selectedCategoryId
+    ) || null;
 
   if (isLoading) {
     return (
@@ -66,7 +66,7 @@ export const DataPage = () => {
         name="selectedCategoryId"
         control={control}
         label="Select Category"
-        options={merged.map((cat) => ({
+        options={budgetAndExpenseObject.map((cat) => ({
           label: cat.categoryName,
           value: cat.categoryId.toString(),
         }))}
