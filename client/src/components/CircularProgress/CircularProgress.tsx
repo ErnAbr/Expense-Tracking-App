@@ -11,7 +11,7 @@ interface CircularWithValueLabelProps {
 }
 
 const CircularProgressWithLabel = (
-  props: CircularProgressProps & { value: number; rawProgress: number }
+  { rawProgress, ...props }: CircularProgressProps & { value: number; rawProgress: number }
 ) => {
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>
@@ -32,7 +32,7 @@ const CircularProgressWithLabel = (
           variant="caption"
           component="div"
           sx={{ color: "text.secondary" }}
-        >{`${Math.round(props.rawProgress)}%`}</Typography>
+        >{`${Math.round(rawProgress)}%`}</Typography>
       </Box>
     </Box>
   );

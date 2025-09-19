@@ -9,8 +9,9 @@ import { budgetAndExpenseMerger } from "../../utils/budgetAndExpenseMerger";
 import { useForm } from "react-hook-form";
 import { FormDropdown } from "../../components/FormComponents/FormDropdown/FormDropdown";
 import { SubcategorySpendingBarChart } from "../../components/ChartComponents/SubcategorySpendingBarChart";
+import { accumulateExpensesByDay } from "../../utils/accumulateExpensesByDay";
+import { MonthlySpendingLineGraph } from "../../components/ChartComponents/MonthlySpendingLineGraph";
 
-//add total spent of by month graph of total spendings
 //add line graph of daily expenses use monthlyExpenses
 //add monthly filtering for the data
 
@@ -29,6 +30,8 @@ export const DataPage = () => {
     filterBudgetMonth.year,
     filterBudgetMonth.month
   );
+
+  const sumOfExpenses = accumulateExpensesByDay(monthlyExpenses ?? []);
 
   const budgetAndExpenseObject = budgetAndExpenseMerger(
     storedCategories ?? [],
@@ -62,6 +65,9 @@ export const DataPage = () => {
       m={3}
       className={styles.dataPageContainer}
     >
+      {sumOfExpenses && (
+        <MonthlySpendingLineGraph sumOfExpenses={sumOfExpenses} />
+      )}
       <FormDropdown
         name="selectedCategoryId"
         control={control}
@@ -71,7 +77,6 @@ export const DataPage = () => {
           value: cat.categoryId.toString(),
         }))}
       />
-
       {selectedCategory && (
         <SubcategorySpendingBarChart selectedCategory={selectedCategory} />
       )}
