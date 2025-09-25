@@ -1,35 +1,39 @@
 import { Box, Typography } from "@mui/material";
-import { LineChart, ResponsiveContainer } from "recharts";
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import {
+  getAllDaysOfMonth,
+  getMonthName,
+  mergeExpensesWithDays,
+} from "./helpers/MonthlySpendingHelperFunctions";
 
 interface MonthlySpendingLineGraphProps {
   sumOfExpenses: { date: string; total: number }[];
 }
 
-function getMonthName(monthName: number) {
-  const date = new Date();
-  date.setMonth(monthName - 1);
-
-  return date.toLocaleString("en-US", { month: "long" });
-}
-
-function getAllDaysOfMonth(year: number, month: number) {
-  const date = new Date(year, month - 1, 1);
-  const days: { date: string; total: number | null }[] = [];
-
-  while (date.getMonth() === month - 1) {
-    const dd = String(date.getDate()).padStart(2, "0");
-    days.push({ date: `${dd}`, total: null });
-    date.setDate(date.getDate() + 1);
-  }
-  return days;
-}
-
 export const MonthlySpendingLineGraph = ({
   sumOfExpenses,
 }: MonthlySpendingLineGraphProps) => {
-  console.log("sumOfExpensess", sumOfExpenses);
-  const monthNameNumber = sumOfExpenses[0].date.split("-")[1];
-  const monthName = getMonthName(Number(monthNameNumber));
+  if (!sumOfExpenses.length) {
+    return (
+      <Typography variant="h2" margin={5}>
+        No expenses found
+      </Typography>
+    );
+  }
+  const [year, month] = sumOfExpenses[0].date.split("-").map(Number);
+  const monthName = getMonthName(month);
+
+  const allDays = getAllDaysOfMonth(year, month);
+  const merged = mergeExpensesWithDays(allDays, sumOfExpenses);
 
   return (
     <Box m={3} marginTop={0} marginLeft={0}>
@@ -37,7 +41,14 @@ export const MonthlySpendingLineGraph = ({
         {monthName}
       </Typography>
       <ResponsiveContainer width="100%" height={300}>
-        <LineChart></LineChart>
+        <LineChart data={merged}>
+          <CartesianGrid />
+          <XAxis dataKey="date" label={{ value: "Days", position: "bottom" }} />
+          <YAxis tickFormatter={(v) => `${v}€`}></YAxis>
+          <Legend align="right" />
+          <Tooltip />
+          <Line dataKey="total" stroke="black" activeDot={{ r: 8 }} />
+        </LineChart>
       </ResponsiveContainer>
     </Box>
   );

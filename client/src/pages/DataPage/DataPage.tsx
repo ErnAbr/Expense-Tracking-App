@@ -3,7 +3,7 @@ import { useState } from "react";
 import { queryBudget } from "../../api/budget.query";
 import { queryCategories } from "../../api/categories.query";
 import { useMonthlyExpenses } from "../../api/expenses.query";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { LoadingComponent } from "../../components/LoadingComponent/LoadingComponent";
 import { budgetAndExpenseMerger } from "../../utils/budgetAndExpenseMerger";
 import { useForm } from "react-hook-form";
@@ -54,6 +54,14 @@ export const DataPage = () => {
       <Box sx={{ pt: 10 }}>
         <LoadingComponent loadingMessage={"Loading..."} />;
       </Box>
+    );
+  }
+
+  if (!sumOfExpenses.length) {
+    return (
+      <Typography variant="h2" margin={5}>
+        No expenses found
+      </Typography>
     );
   }
 
