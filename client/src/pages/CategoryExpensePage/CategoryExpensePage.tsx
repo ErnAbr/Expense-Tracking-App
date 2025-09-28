@@ -1,4 +1,3 @@
-import styles from "./categoryExpensePage.module.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { routes } from "../../navigation/routes/routes";
 import { useEffect, useState } from "react";
@@ -6,10 +5,10 @@ import { useMonthlyExpenses } from "../../api/expenses.query";
 import { queryCategories } from "../../api/categories.query";
 import { toast } from "react-toastify";
 import { FullWidhtTab } from "../../components/Tabs/FullWidthTab";
-import { Box, Button, Typography } from "@mui/material";
-import { FormDatePicker } from "../../components/FormComponents/FormDatePicker/FormDatePicker";
+import { Box, Button } from "@mui/material";
 import { useForm } from "react-hook-form";
 import dayjs from "dayjs";
+import { MonthFilter } from "../../components/FilterComponents/MonthFilter/MonthFilter";
 
 export const CategoryExpensePage = () => {
   const [filterExpenseMonth, setFilterExpenseMonth] = useState({
@@ -53,28 +52,11 @@ export const CategoryExpensePage = () => {
 
   return (
     <Box display="flex" flexDirection="column">
-      <Typography
-        variant="h6"
-        alignSelf="center"
-        p={2}
-      >{`Your ${expenseCategoryData?.name} Expenses`}</Typography>
-      <Box className={styles.monthFilterBox}>
-        <FormDatePicker
-          label="Filter Expenses"
-          name="filterMonth"
-          control={control}
-          views={["year", "month"]}
-          format="MM/YYYY"
-        />
-        <Button
-          size="small"
-          color="info"
-          variant="contained"
-          onClick={() => setValue("filterMonth", dayjs())}
-        >
-          This Month
-        </Button>
-      </Box>
+      <MonthFilter
+        name={`Your ${expenseCategoryData?.name || ""} Expenses`}
+        control={control}
+        setValue={setValue}
+      />
       <FullWidhtTab
         expenseCategoryData={expenseCategoryData}
         categoryExpense={categoryExpense}

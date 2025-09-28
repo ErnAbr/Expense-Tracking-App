@@ -1,6 +1,5 @@
-import styles from "./budgetPage.module.scss";
 import debounce from "lodash/debounce";
-import { Box, Button, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { queryCategories } from "../../api/categories.query";
 import { LoadingComponent } from "../../components/LoadingComponent/LoadingComponent";
 import { useMonthlyExpenses } from "../../api/expenses.query";
@@ -12,9 +11,9 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { BUDGET_QUERY_KEY } from "../../api/queryKeys";
 import { useQueryClient } from "@tanstack/react-query";
-import { FormDatePicker } from "../../components/FormComponents/FormDatePicker/FormDatePicker";
 import dayjs from "dayjs";
 import { BudgetingDisplayTable } from "../../components/Table/BudgetingDisplayTable";
+import { MonthFilter } from "../../components/FilterComponents/MonthFilter/MonthFilter";
 
 export const BudgetPage = () => {
   const [filterBudgetMonth, setFilterBudgetMonth] = useState({
@@ -77,29 +76,12 @@ export const BudgetPage = () => {
   }
 
   return (
-    <Box mb={2}>
-      <Box className={styles.monthFilterBox} marginTop={2}>
-        <Typography
-          variant="h6"
-          textAlign="center"
-          p={1}
-        >{`Your Budget Plan`}</Typography>
-        <FormDatePicker
-          label="Budget Month"
-          name="filterMonth"
-          control={control}
-          views={["year", "month"]}
-          format="MM/YYYY"
-        />
-        <Button
-          size="small"
-          color="info"
-          variant="contained"
-          onClick={() => setValue("filterMonth", dayjs())}
-        >
-          This Month
-        </Button>
-      </Box>
+    <Box display="flex" flexDirection="column">
+      <MonthFilter
+        name="Your Budget Plan"
+        control={control}
+        setValue={setValue}
+      />
       <BudgetingDisplayTable
         storedCategories={storedCategories}
         userBudget={userBudget}

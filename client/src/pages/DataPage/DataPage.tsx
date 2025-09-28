@@ -1,5 +1,5 @@
 import styles from "./dataPage.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { queryBudget } from "../../api/budget.query";
 import { queryCategories } from "../../api/categories.query";
 import { useMonthlyExpenses } from "../../api/expenses.query";
@@ -11,24 +11,23 @@ import { FormDropdown } from "../../components/FormComponents/FormDropdown/FormD
 import { SubcategorySpendingBarChart } from "../../components/ChartComponents/SubcategorySpendingBarChart";
 import { accumulateExpensesByDay } from "../../utils/accumulateExpensesByDay";
 import { MonthlySpendingLineGraph } from "../../components/ChartComponents/MonthlySpendingLineGraph";
-
-//add line graph of daily expenses use monthlyExpenses
-//add monthly filtering for the data
+import { MonthFilter } from "../../components/FilterComponents/MonthFilter/MonthFilter";
+import dayjs from "dayjs";
 
 export const DataPage = () => {
-  const [filterBudgetMonth, setFilterBudgetMonth] = useState({
+  const [filterDataMonth, setFilterDataMonth] = useState({
     year: new Date().getFullYear(),
     month: new Date().getMonth() + 1,
   });
 
   const { data: storedCategories, isLoading } = queryCategories();
   const { data: monthlyExpenses } = useMonthlyExpenses(
-    filterBudgetMonth.year,
-    filterBudgetMonth.month
+    filterDataMonth.year,
+    filterDataMonth.month
   );
   const { data: userBudget } = queryBudget(
-    filterBudgetMonth.year,
-    filterBudgetMonth.month
+    filterDataMonth.year,
+    filterDataMonth.month
   );
 
   const sumOfExpenses = accumulateExpensesByDay(monthlyExpenses ?? []);
@@ -39,11 +38,23 @@ export const DataPage = () => {
     monthlyExpenses ?? []
   );
 
-  const { control, watch } = useForm({
+  const { control: categoryControl, watch: watchCategory } = useForm({
     defaultValues: { selectedCategoryId: "" },
   });
 
-  const selectedCategoryId = watch("selectedCategoryId");
+  const { control: monthControl, watch: watchMonth, setValue } = useForm();
+
+  const selectedMonth = watchMonth("filterMonth");
+  const selectedCategoryId = watchCategory("selectedCategoryId");
+
+  useEffect(() => {
+    if (selectedMonth) {
+      const year = dayjs(selectedMonth).year();
+      const month = dayjs(selectedMonth).month() + 1;
+      setFilterDataMonth({ year, month });
+    }
+  }, [selectedMonth]);
+
   const selectedCategory =
     budgetAndExpenseObject.find(
       (cat) => cat.categoryId.toString() === selectedCategoryId
@@ -57,28 +68,28 @@ export const DataPage = () => {
     );
   }
 
-  if (!sumOfExpenses.length) {
-    return (
-      <Typography variant="h2" margin={5}>
-        No expenses found
-      </Typography>
-    );
-  }
-
   return (
     <Box
       display="flex"
       flexDirection="column"
       alignItems="center"
-      m={3}
       className={styles.dataPageContainer}
     >
-      {sumOfExpenses && (
+      <MonthFilter
+        name="Your Spending Data"
+        control={monthControl}
+        setValue={setValue}
+      />
+      {sumOfExpenses ? (
         <MonthlySpendingLineGraph sumOfExpenses={sumOfExpenses} />
+      ) : (
+        <Typography variant="h2" margin={5}>
+          No expenses found
+        </Typography>
       )}
       <FormDropdown
         name="selectedCategoryId"
-        control={control}
+        control={categoryControl}
         label="Select Category"
         options={budgetAndExpenseObject.map((cat) => ({
           label: cat.categoryName,

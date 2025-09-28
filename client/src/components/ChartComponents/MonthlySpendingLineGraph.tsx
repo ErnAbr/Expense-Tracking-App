@@ -47,7 +47,12 @@ export const MonthlySpendingLineGraph = ({
           <YAxis tickFormatter={(v) => `${v}€`}></YAxis>
           <Legend align="right" />
           <Tooltip />
-          <Line dataKey="total" stroke="black" activeDot={{ r: 8 }} />
+          <Line
+            dataKey="total"
+            stroke=" #990000
+"
+            activeDot={{ r: 8 }}
+          />
         </LineChart>
       </ResponsiveContainer>
     </Box>
